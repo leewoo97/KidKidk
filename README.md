@@ -9,9 +9,9 @@
 
 ## 페르소나 분석
 
-![김딸_페르소나](/uploads/847d56e492498c60b52aecd27534a49f/김딸_페르소나.png){: width="50%"}
+![김딸_페르소나](/uploads/a0c9eda340a4829598ed6c1ac41d7763/김딸_페르소나.png){: width="50%"}
 
-![김주부_페르소나](/uploads/55d32b455de2c40d28c7c4f84194bb88/김주부_페르소나.png){: width="50%"}
+![김주부_페르소나](/uploads/689dc4de97ea22df989c9412dcaf1736/김주부_페르소나.png){: width="50%"}
 
 
 ## 개발 환경 통일

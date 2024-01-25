@@ -11,7 +11,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -26,6 +25,8 @@ import lombok.NoArgsConstructor;
 public class Deposit {
 
     @Id
+    @GeneratedValue
+    @Column(name = "deposit_id")
     private Long id;
 
     @Column(name = "data_log")
@@ -43,8 +44,7 @@ public class Deposit {
     @Column(name = "money")
     private int money;
 
-    @MapsId
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "deposit_id")
+    @JoinColumn(name = "child_id")
     private Child child;
 }

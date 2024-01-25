@@ -17,10 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "roi")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Rol {
+public class Roi {
 
     @Id
     private Long id;
@@ -33,6 +33,6 @@ public class Rol {
 
     @MapsId
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "rol_id")
+    @JoinColumn(name = "roi_id")
     private Child child;
 }

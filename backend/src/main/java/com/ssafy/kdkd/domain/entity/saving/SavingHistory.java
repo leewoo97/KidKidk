@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -25,6 +25,8 @@ import lombok.NoArgsConstructor;
 public class SavingHistory {
 
     @Id
+    @GeneratedValue
+    @Column(name = "saving_history_id")
     private Long id;
 
     @Column(name = "data_log")
@@ -39,8 +41,7 @@ public class SavingHistory {
     @Column(name = "amount")
     private int amount;
 
-    @MapsId
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "saving_history_id")
+    @JoinColumn(name = "child_id")
     private Child child;
 }

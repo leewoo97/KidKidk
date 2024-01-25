@@ -6,8 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
@@ -19,10 +17,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "profile")
-@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class Profile {
+public class Profile {
 
     @Id
     @GeneratedValue
@@ -43,6 +40,6 @@ public abstract class Profile {
     private boolean type;
 
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "uid_id")
+    @JoinColumn(name = "user_id")
     private Account account;
 }

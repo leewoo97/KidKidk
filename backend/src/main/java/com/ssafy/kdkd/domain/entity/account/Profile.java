@@ -1,5 +1,8 @@
 package com.ssafy.kdkd.domain.entity.account;
 
+import com.ssafy.kdkd.domain.entity.user.Child;
+import com.ssafy.kdkd.domain.entity.user.Parent;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
@@ -8,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -23,7 +27,7 @@ public class Profile {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "profile_id")
     private Long id;
 
     @Column(name = "nickname")
@@ -39,7 +43,13 @@ public class Profile {
     @Column(name = "type")
     private boolean type;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
-    private Account account;
+    private User user;
+
+    @OneToOne(mappedBy = "profile", fetch = LAZY)
+    private Child child;
+
+    @OneToOne(mappedBy = "profile", fetch = LAZY)
+    private Parent parent;
 }

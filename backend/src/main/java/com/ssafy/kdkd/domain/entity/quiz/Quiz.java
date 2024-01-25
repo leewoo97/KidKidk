@@ -23,7 +23,7 @@ public class Quiz {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "quiz_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)

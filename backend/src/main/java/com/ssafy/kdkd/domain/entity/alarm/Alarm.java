@@ -18,7 +18,7 @@ public class Alarm {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "alarm_id")
     private Long id;
 
     @Column(name = "type")
@@ -27,9 +27,9 @@ public class Alarm {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "profile_id1")
-    private String profileId1;
+    @Column(name = "sender_id")
+    private Long senderId;
 
-    @Column(name = "profile_id2")
-    private String profileId2;
+    @Column(name = "receiver_id")
+    private Long receiverId;
 }

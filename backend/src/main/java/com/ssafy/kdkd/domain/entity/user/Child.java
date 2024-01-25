@@ -6,9 +6,9 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -23,8 +23,6 @@ import lombok.NoArgsConstructor;
 public class Child {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "coin")
@@ -33,7 +31,8 @@ public class Child {
     @Column(name = "fund_money")
     private int fundMoney;
 
+    @MapsId
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "child_id")
     private Profile profile;
 }

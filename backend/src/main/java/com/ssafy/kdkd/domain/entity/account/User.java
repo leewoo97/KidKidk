@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account {
+public class User {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "access_token", length = 2000)

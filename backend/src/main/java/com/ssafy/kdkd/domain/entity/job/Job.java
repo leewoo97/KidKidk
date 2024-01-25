@@ -7,9 +7,9 @@ import static jakarta.persistence.FetchType.LAZY;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -24,8 +24,6 @@ import lombok.NoArgsConstructor;
 public class Job {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
     private Long id;
 
     @Embedded
@@ -34,7 +32,8 @@ public class Job {
     @Column(name = "done_count")
     private int doneCount;
 
+    @MapsId
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "job_id")
     private Child child;
 }

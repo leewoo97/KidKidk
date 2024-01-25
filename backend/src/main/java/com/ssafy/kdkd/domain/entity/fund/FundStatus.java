@@ -4,9 +4,9 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -21,8 +21,6 @@ import lombok.NoArgsConstructor;
 public class FundStatus {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "submit")
@@ -31,7 +29,8 @@ public class FundStatus {
     @Column(name = "answer")
     private boolean answer;
 
+    @MapsId
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "fund_id")
+    @JoinColumn(name = "fund_status_id")
     private Fund fund;
 }

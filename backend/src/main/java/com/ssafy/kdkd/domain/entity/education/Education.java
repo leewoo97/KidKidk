@@ -23,7 +23,7 @@ public class Education {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "education_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)

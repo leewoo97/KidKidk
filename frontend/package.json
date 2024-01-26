@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "classnames": "^2.5.1",
     "framer-motion": "^11.0.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.3",

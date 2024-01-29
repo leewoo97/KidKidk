@@ -1,4 +1,4 @@
-package com.ssafy.kdkd.repository.child;
+package com.ssafy.kdkd.service.child;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.kdkd.domain.entity.user.Child;
-import com.ssafy.kdkd.repository.ChildRepository;
+import com.ssafy.kdkd.repository.user.ChildRepository;
 
 import lombok.RequiredArgsConstructor;
 

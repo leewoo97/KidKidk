@@ -1,3 +1,9 @@
-export default function ChildStateManagement() {
-    return <p>아이 투자-상태 페이지</p>;
+import styles from "./ChildMainStateMent.module.css";
+
+export default function ChildMainStateMent() {
+  return (
+    <div className={styles.container}>
+      <p>아이 메인-상태 페이지</p>
+    </div>
+  );
 }

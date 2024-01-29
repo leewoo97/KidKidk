@@ -1,3 +1,9 @@
+import styles from "./ChildEducation.module.css";
+
 export default function ChildEducation() {
-    return <p>아이 공부방 페이지</p>;
+  return (
+    <div className={styles.container}>
+      <p>교육 페이지</p>
+    </div>
+  );
 }

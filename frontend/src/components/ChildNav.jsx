@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import styles from "./ChildNav.module.css";
 import s from "classnames"; /* 클래스네임을 여러개 쓰기 위함 */
 import { useState } from "react";
@@ -51,6 +51,7 @@ function ChildNav() {
           </div>
         </div>
       </div>
+      <Outlet></Outlet>
     </div>
   );
 }

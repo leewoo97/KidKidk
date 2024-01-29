@@ -1,4 +1,4 @@
-package com.ssafy.kdkd.repository;
+package com.ssafy.kdkd.repository.Deposit;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.domain.entity.fund;
 
+import com.ssafy.kdkd.domain.dto.fund.FundHistoryDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -44,4 +45,23 @@ public class FundHistory {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "child_id")
     private Child child;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setChild(Child child) {
+        this.child = child;
+    }
+
+    /**
+     * 투자내역 생성
+     */
+    public static FundHistory createFundHistory(FundHistoryDto fundHistoryDto) {
+        FundHistory fundHistory = new FundHistory();
+        fundHistory.dataLog = fundHistoryDto.getDataLog();
+        fundHistory.seedMoney = fundHistory.getSeedMoney();
+        fundHistory.yield = fundHistoryDto.getYield();
+        fundHistory.pnl = fundHistoryDto.getPnl();
+        return fundHistory;
+    }
 }

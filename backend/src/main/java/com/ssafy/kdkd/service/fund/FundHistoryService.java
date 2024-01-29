@@ -6,22 +6,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.kdkd.domain.entity.fund.FundHistory;
+import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class FundHistorySerivce {
+public class FundHistoryService {
 
-    private final FundHistorySerivce fundHistorySerivce;
+    private final FundHistoryRepository fundHistoryRepository;
 
     public void save(FundHistory fundHistory) {
-        fundHistorySerivce.save(fundHistory);
+        fundHistoryRepository.save(fundHistory);
     }
 
     public List<FundHistory> findFundHistoryByChildId(Long childId) {
-        return fundHistorySerivce.findFundHistoryByChildId(childId);
+        return fundHistoryRepository.findFundHistoryByChildId(childId);
     }
 
 }

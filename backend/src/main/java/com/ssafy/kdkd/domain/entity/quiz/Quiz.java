@@ -36,4 +36,15 @@ public class Quiz {
 
     @Column(name = "answer")
     private boolean answer;
+
+    /**
+     * 퀴즈 생성
+     */
+    public static Quiz createQuiz(Category category, String question, boolean answer) {
+        Quiz quiz = new Quiz();
+        quiz.category = category;
+        quiz.question = question;
+        quiz.answer = answer;
+        return quiz;
+    }
 }

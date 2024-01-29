@@ -1,0 +1,139 @@
+.divContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.childProfile > p {
+    color: var(--component-title);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-align: center;
+}
+
+.childProfileFrame {
+    display: grid;
+    grid-template-columns: 3fr 1fr 2fr 1fr;
+    background-color: var(--component-background);
+
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    margin-top: 10px;
+    border-color: var(--component-border);
+    border-width: thick;
+    border-radius: 15px;
+}
+
+.childProfileFrame > div:first-child {
+    display: flex;
+    justify-content: center;
+}
+
+.childProfileTitle {
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    text-transform: uppercase;
+    border-left: 5px solid black;
+    padding-left: 10px;
+}
+
+.childProfileContent {
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.childProfileTitle li,
+.childProfileContent li {
+    line-height: 40px;
+}
+
+.childProfileFrame > div:last-child {
+    margin-top: 120px;
+}
+
+.jobDeleteButton {
+    background-color: var(--component-title);
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    padding: 10px 20px 10px 20px;
+}
+
+.jobReservationStatus > p {
+    color: var(--component-title);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.jobReservationStatusFrame {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: var(--component-background);
+    justify-content: space-around;
+    align-items: center;
+    width: 748.53px;
+    padding: 20px;
+    margin-top: 10px;
+    border-color: var(--component-border);
+    border-width: thick;
+    border-radius: 15px;
+}
+
+.jobReservationStatusFrame > div:first-child {
+    display: flex;
+    justify-content: center;
+}
+
+.jobReservationStatusTitle {
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    text-transform: uppercase;
+    border-left: 5px solid black;
+    padding-left: 10px;
+}
+
+.jobReservationStatusContent {
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.jobReservationStatusTitle li,
+.jobReservationStatusContent li {
+    line-height: 40px;
+}
+
+.jobReservationStatusFrame > div:last-child {
+    margin-top: 120px;
+}
+
+.jobReservationUpdateButton,
+.jobReservationDeleteButton {
+    background-color: var(--component-title);
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    padding: 10px 20px 10px 20px;
+}

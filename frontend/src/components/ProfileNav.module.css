@@ -1,0 +1,8 @@
+.chakraHeading {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.profile > .chakraCard {
+    background-color: var(--nav-background-hover);
+}

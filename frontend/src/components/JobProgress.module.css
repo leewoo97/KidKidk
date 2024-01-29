@@ -1,0 +1,64 @@
+.noJobProgress {
+    background-color: var(--component-background);
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-color: var(--component-border);
+    border-width: thick;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.jobProgress {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.jobProgress > p {
+    color: var(--component-title);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.jobProgress > ul {
+    background-color: var(--component-background);
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-color: var(--component-border);
+    border-width: thick;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.jobProgress > ul > li {
+    color: var(--component-title);
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bolder;
+    line-height: normal;
+}
+
+.jobProgress > ul > li:nth-child(2) {
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+.jobProgress > ul > li:nth-child(3) {
+    padding-right: 30px;
+}
+
+.jobProgressButton {
+    background-color: var(--component-title);
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    padding: 10px 20px 10px 20px;
+}

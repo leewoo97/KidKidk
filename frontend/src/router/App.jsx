@@ -4,6 +4,8 @@ import {
     createBrowserRouter,
 } from 'react-router-dom';
 
+import './App.css';
+
 import ParentNav from '../components/ParentNav.jsx';
 import ParentMain from '../views/ParentMain.jsx';
 import ParentJob from '../views/ParentJob.jsx';
@@ -18,7 +20,7 @@ import ChildSavingStatement from '../views/ChildSavingStatement.jsx';
 import ChildEducation from '../views/ChildEducation.jsx';
 import Welcome from '../views/Welcome.jsx';
 import Profile from '../views/Profile.jsx';
-
+import '../assets/css/common.css';
 /*
     로그인 여부에 따라 달라져야...
     로그인 되어있으면 해당 프로필의 메인페이지로

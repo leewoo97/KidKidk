@@ -1,0 +1,113 @@
+.divContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.childAssetProgress > p {
+    color: var(--component-title);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-align: center;
+}
+
+.childAssetProgress > ul {
+    background-color: var(--component-background);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 20px;
+    margin-top: 10px;
+    border-color: var(--component-border);
+    border-width: thick;
+    border-radius: 15px;
+}
+
+.childAssetProgress > ul > li {
+    list-style: none;
+    padding: 20px;
+}
+
+.childInvestProgress {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.childInvestProgress > p {
+    text-align: center;
+    color: var(--component-title);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.childInvestProgressFrame {
+    background-color: var(--component-background);
+    width: 768.53px;
+    height: 280px;
+    border-color: var(--component-border);
+    border-width: thick;
+    border-radius: 15px;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.childInvestProgressInfo > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.childInvestProgressInfo > ul > li {
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bolder;
+    line-height: normal;
+}
+
+.childInvestProgressInfo > ul > li > p {
+    margin-top: 7px;
+}
+
+.investQuitButton {
+    background-color: var(--component-title);
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    padding: 10px 20px 10px 20px;
+}
+
+.childInvestProgressWeekTable {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.childInvestProgressWeekTable > table {
+    align-items: center;
+    text-align: center;
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bolder;
+    line-height: normal;
+    margin-top: 15px;
+}
+
+.childInvestProgressWeekTable > table th {
+    width: 100px;
+    border-bottom: 3px solid var(--component-title);
+}
+
+.childInvestProgressWeekTable > table td {
+    padding-top: 10px;
+    width: 100px;
+}

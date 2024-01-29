@@ -1,0 +1,76 @@
+.divContainer {
+    display: grid;
+    grid-template-columns: 2fr 8fr 2fr;
+    height: 100vh;
+    padding: 20px;
+}
+
+.layoutNav {
+    background-color: var(--nav-background);
+    color: var(--nav-text-default);
+    border-radius: 30px 0 0 30px;
+}
+
+.nav {
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+    margin-top: 50%;
+}
+
+.navLogo {
+    color: var(--nav-text-logo);
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.nav > li {
+    list-style: none;
+    margin-left: 95px;
+}
+
+.nav > li:nth-child(2),
+.nav > li:nth-child(3) {
+    margin-top: 10%;
+}
+
+.navLogout {
+    font-size: 20px;
+    margin-top: 50%;
+}
+
+.layoutSection {
+    background-color: var(--nav-background-hover);
+    border-radius: 0 30px 30px 0;
+}
+
+.layoutProfile {
+    padding: 0 20px 0 20px;
+    border-radius: 30px;
+}
+
+.profileChildrenTabs {
+    margin-top: 50px;
+}
+
+.profileChildrenTabs button {
+    justify-content: flex-start;
+    background-color: #90c354;
+}
+
+.profileChildrenTabs ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profileChildrenTabs li {
+    list-style: none;
+    padding: 0 10px 0 10px;
+}

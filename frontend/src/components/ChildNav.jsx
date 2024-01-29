@@ -1,19 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./ChildNav.module.css";
 import s from "classnames"; /* 클래스네임을 여러개 쓰기 위함 */
-import Container from "./Container";
 import { useState } from "react";
 
 function ChildNav() {
   const navigate = useNavigate();
+  const [top, setTop] = useState(0);
+  const a = ["25px", "99px", "173px", "247px"];
 
   const handleMain = (num) => {
     setTop(num);
-    navigate("/child/main/management");
-  };
 
-  const [top, setTop] = useState(0);
-  const a = ["25px", "99px", "173px", "247px", "320px"];
+    const pathMap = {
+      0: "/child/main/management",
+      1: "/child/fund/management",
+      2: "/child/saving/management",
+      3: "/child/education",
+    };
+
+    const newPath = pathMap[num] || "/child/main/management";
+    navigate(newPath);
+  };
 
   function Component({ num, title }) {
     return (
@@ -34,8 +41,7 @@ function ChildNav() {
           <Component num={0} title={"메인"} />
           <Component num={1} title={"투자"} />
           <Component num={2} title={"적금"} />
-          <Component num={3} title={"나의 주머니"} />
-          <Component num={4} title={"공부방"} />
+          <Component num={3} title={"공부방"} />
         </div>
         <div className={styles.현재위치} style={{ top: a[top] }}>
           <div className={styles.rectangleRow}></div>

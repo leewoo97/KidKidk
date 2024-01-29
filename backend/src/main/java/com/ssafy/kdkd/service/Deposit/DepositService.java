@@ -17,8 +17,8 @@ public class DepositService {
 
     private final DepositRepository depositRepository;
 
-    public List<Deposit> findDepositByChild(Long childId) {
-        return depositRepository.findDepositByChild(childId);
+    public List<Deposit> findDepositByChildId(Long childId) {
+        return depositRepository.findDepositByChildId(childId);
     }
 
 }

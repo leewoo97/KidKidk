@@ -11,6 +11,6 @@ import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 public interface DepositRepository extends JpaRepository<Deposit, Long> {
 
     @Query("SELECT d FROM Deposit d WHERE d.child.id = :childId")
-    List<Deposit> findDepositByChild(@Param("childId") Long childId);
+    List<Deposit> findDepositByChildId(@Param("childId") Long childId);
 
 }

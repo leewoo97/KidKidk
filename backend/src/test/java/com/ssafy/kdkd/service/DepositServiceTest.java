@@ -47,7 +47,7 @@
 //         em.flush();
 //
 //         //then
-//         List<Deposit> findDeposits = depositService.findDepositByChild(1L);
+//         List<Deposit> findDeposits = depositService.findDepositByChildId(1L);
 //         int size = findDeposits.size();
 //
 //         System.out.println("===== 내역 출력 =====");
@@ -79,7 +79,7 @@
 //         em.flush();
 //
 //         //when
-//         List<Deposit> deposits = depositService.findDepositByChild(1L);
+//         List<Deposit> deposits = depositService.findDepositByChildId(1L);
 //
 //         //then
 //         int size = deposits.size();

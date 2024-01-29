@@ -40,3 +40,37 @@
 .read-the-docs {
   color: #888;
 } */
+
+@font-face {
+  font-family: "ImcreSoojin";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.3/ImcreSoojin.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --gmarket-sans: "ImcreSoojin";
+  --noto-sans: -apple-system, "Noto Sans KR", sans-serif;
+}
+
+html {
+  font-family: var(--noto-sans);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+textarea,
+input,
+div,
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+button {
+  font-family: var(--gmarket-sans);
+  font-weight: 600;
+  color: var(--main2);
+}

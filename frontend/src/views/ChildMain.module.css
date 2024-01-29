@@ -1,0 +1,63 @@
+.container {
+  background-color: #f8f3e7;
+  position: absolute;
+  top: 0px;
+  left: 220px;
+  width: 1000px;
+  height: 100%;
+  border-radius: 0 15px 15px 0;
+  z-index: -100;
+}
+.main {
+  position: absolute;
+  top: 30px;
+  left: 80px;
+  width: 870px;
+  height: 90%;
+  z-index: -90;
+}
+.toggle {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  z-index: 10;
+}
+.textselected {
+  color: #ffb700;
+  font-size: 30px;
+  font-weight: 600;
+  width: 100px;
+  text-align: center;
+}
+.textunselected {
+  color: #b4b4b4;
+  font-size: 25px;
+  font-weight: 600;
+  width: 100px;
+  text-align: center;
+  margin-top: 6.8px;
+}
+.lineselected {
+  background-color: #ffb700;
+  width: 100%;
+  height: 3px;
+  border: 0;
+  margin-top: 5px;
+}
+.lineunselected {
+  background-color: #b4b4b4;
+  width: 100%;
+  height: 3px;
+  border: 0;
+  margin-top: 5px;
+}
+.circle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 41px;
+  border-radius: 50%;
+  background-color: #ffb700;
+  z-index: 0;
+  left: 190px;
+}

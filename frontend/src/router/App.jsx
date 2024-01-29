@@ -9,8 +9,7 @@ import ParentMain from "../views/ParentMain.jsx";
 import ParentJob from "../views/ParentJob.jsx";
 import ParentFundSaving from "../views/ParentFundSaving.jsx";
 import ChildNav from "../components/ChildNav.jsx";
-import ChildMainManagement from "../views/ChildMainManagement.jsx";
-import ChildMainStatement from "../views/ChildMainStateMent.jsx";
+import ChildMain from "../views/ChildMain.jsx";
 import ChildFundManagement from "../views/ChildFundManagement.jsx";
 import ChildFundStatement from "../views/ChildFundStatement.jsx";
 import ChildSavingManagement from "../views/ChildSavingManagement.jsx";
@@ -71,15 +70,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/child",
-        element: <ChildMainManagement />,
+        element: <ChildMain />,
       },
       {
         path: "/child/main/management",
-        element: <ChildMainManagement />,
-      },
-      {
-        path: "/child/main/statement",
-        element: <ChildMainStatement />,
+        element: <ChildMain />,
       },
       {
         path: "/child/fund/management",

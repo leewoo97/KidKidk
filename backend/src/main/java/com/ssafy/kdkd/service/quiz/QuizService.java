@@ -1,12 +1,12 @@
-package com.ssafy.kdkd.service;
-
-import com.ssafy.kdkd.domain.entity.quiz.Quiz;
-import com.ssafy.kdkd.repository.quiz.QuizRepository;
+package com.ssafy.kdkd.service.quiz;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ssafy.kdkd.domain.entity.quiz.Quiz;
+import com.ssafy.kdkd.repository.quiz.QuizRepository;
 
 import lombok.RequiredArgsConstructor;
 

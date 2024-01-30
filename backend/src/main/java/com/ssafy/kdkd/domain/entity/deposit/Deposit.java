@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.domain.entity.deposit;
 
+import com.ssafy.kdkd.domain.dto.Deposit.DepositDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -47,4 +48,24 @@ public class Deposit {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "child_id")
     private Child child;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setChild(Child child) {
+        this.child = child;
+    }
+
+    /**
+     * 내역 생성
+     */
+    public static Deposit createDeposit(DepositDto depositDto) {
+        Deposit deposit = new Deposit();
+        deposit.dataLog = depositDto.getDataLog();
+        deposit.detail = depositDto.getDetail();
+        deposit.type = depositDto.isType();
+        deposit.amount = depositDto.getAmount();
+        deposit.money = depositDto.getMoney();
+        return deposit;
+    }
 }

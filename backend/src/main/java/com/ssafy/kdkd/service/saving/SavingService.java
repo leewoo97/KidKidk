@@ -66,28 +66,28 @@ public class SavingService {
             // 등록일로 부터 7 * N일이 지난 saving 레코드를 조회
             LocalDateTime startDate = saving.getStartDate();
             LocalDateTime currentDate = LocalDateTime.now();
-            long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate);
-
-            if (daysBetween % 7 == 0) {
+            long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate) - 1;
+            System.out.println(daysBetween);
+            if (daysBetween % 7 <= 0) {
                 //  남은 납입 횟수, 남은 납입 기회 확인
                 Long childId = saving.getId();
                 Child child = childService.findChild(childId).get();
                 int requiredCount = 4;
                 int payment = saving.getPayment();
                 int coin = child.getCoin();
-                int left = requiredCount - ((int)daysBetween / 7);
+                int left = requiredCount - ((int)daysBetween / 7 + 1);
                 int isOk = coin >= payment ? 1 : 0;
                 int count = saving.getCount() - isOk;
                 int payCount = requiredCount - count;
                 int state = left + payCount;
-                boolean isExpired = state > 2;
+                boolean isNotExpired = state > 2 && isOk == 1;
                 int updateCoin = coin;
                 int money = payment;
                 String detail = "적금";
                 boolean type = true;
 
-                // 적금 지속 여부 확인
-                if (left > 0 && isExpired) {
+                // 적금 납입
+                if (left > 0 && isNotExpired) {
                     // 남은 납입 횟수 업데이트
                     saving.updateSaving(count);
 
@@ -100,12 +100,16 @@ public class SavingService {
                     type = false;
                 } else {
                     // 적금 만료(납입액에 이자 적용된 금액만큼 지급)
-                    if (isExpired) {
+                    if (isNotExpired) {
                         double rate = (100D + saving.getRate()) / 100;
                         int amount = payCount * saving.getPayment();
                         money = (int)Math.floor(amount * rate);
 
                         updateCoin -= payment;
+                        DepositDto depositDto = new DepositDto(LocalDateTime.now(), detail + " 납입", false, payment, updateCoin, childId);
+                        Deposit deposit = createDeposit(depositDto);
+                        deposit.setChild(child);
+                        depositRepository.save(deposit);
                         updateCoin += money;
                         detail += " 만기";
                     } else {
@@ -117,7 +121,7 @@ public class SavingService {
 
                     // 적금 강제 해지(납입 횟수 미납) or 적금 만료 해지(만기일)
                     delete(saving);
-                    savingHistoryRepository.deleteSavingHistoryByChhildId(saving.getId());
+                    savingHistoryRepository.deleteSavingHistoryByChhildId(childId);
                 }
 
                 // coin 업데이트

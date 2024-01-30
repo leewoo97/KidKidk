@@ -35,4 +35,11 @@ public class Child {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "child_id")
     private Profile profile;
+
+    /**
+     * 자식 업데이트
+     */
+    public void updateChild(int coin) {
+        this.coin = coin;
+    }
 }

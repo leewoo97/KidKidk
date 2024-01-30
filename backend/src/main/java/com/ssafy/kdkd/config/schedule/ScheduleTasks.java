@@ -18,7 +18,7 @@ public class ScheduleTasks {
     /**
      * 적금 자동 납부 스케줄러
      */
-    @Scheduled(cron = "0 0 1 * *")
+    @Scheduled(cron = "* * * * * ?")
     public void scheduleSaving() {
         log.info("schedule: scheduleSaving() Enter");
         try {

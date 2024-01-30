@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.domain.entity.fund;
 
+import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -38,4 +39,31 @@ public class Fund {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "fund_id")
     private Child child;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setChild(Child child) {
+        this.child = child;
+    }
+
+    /**
+     * 투자 생성
+     */
+    public static Fund createFund(FundReservationDto fundReservationDto) {
+        Fund fund = new Fund();
+        fund.name = fundReservationDto.getName();
+        fund.content = fundReservationDto.getContent();
+        fund.yield = fundReservationDto.getYield();
+        return fund;
+    }
+
+    /**
+     * 투자 수정
+     */
+    public void updateFund(FundReservationDto fundReservationDto) {
+        this.name = fundReservationDto.getName();
+        this.content = fundReservationDto.getContent();
+        this.yield = fundReservationDto.getYield();
+    }
 }

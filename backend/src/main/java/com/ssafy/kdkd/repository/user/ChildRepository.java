@@ -1,4 +1,5 @@
 package com.ssafy.kdkd.repository.user;
+package com.ssafy.kdkd.repository.child;
 
 import java.util.Optional;
 

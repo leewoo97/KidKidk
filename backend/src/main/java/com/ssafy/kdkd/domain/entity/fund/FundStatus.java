@@ -33,4 +33,22 @@ public class FundStatus {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "fund_status_id")
     private Fund fund;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setFund(Fund fund) {
+        this.fund = fund;
+    }
+
+    /**
+     * 투자상태 생성
+     */
+    public static FundStatus createFundStatus(boolean submit, boolean answer) {
+        FundStatus fundStatus = new FundStatus();
+        fundStatus.submit = submit;
+        fundStatus.answer = answer;
+        return fundStatus;
+    }
+
 }

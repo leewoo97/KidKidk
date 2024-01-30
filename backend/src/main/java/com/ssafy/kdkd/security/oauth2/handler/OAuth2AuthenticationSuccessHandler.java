@@ -42,6 +42,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl;
 
         targetUrl = determineTargetUrl(request, response, authentication);
+        
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -56,7 +57,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) {
 
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue);
+            .map(Cookie::getValue);
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
@@ -71,14 +72,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("error", "Login failed")
                     .build().toUriString();
         }
-
+        System.out.println(principal.getUserInfo().getEmail()+" | "+principal.getUserInfo().getAccessToken()+" | "+principal.getUserInfo().getId());
         if ("login".equalsIgnoreCase(mode)) {
             // TODO: DB 저장
             // TODO: 액세스 토큰, 리프레시 토큰 발급
             // TODO: 리프레시 토큰 DB 저장
-            log.info("email={}, name={}, nickname={}, accessToken={}", principal.getUserInfo().getEmail(),
-                    principal.getUserInfo().getName(),
-                    principal.getUserInfo().getNickname(),
+            log.info("email={}, accessToken={}", principal.getUserInfo().getEmail(),
                     principal.getUserInfo().getAccessToken()
             );
 
@@ -110,7 +109,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private OAuth2UserPrincipal getOAuth2UserPrincipal(Authentication authentication) {
         Object principal = authentication.getPrincipal();
-
         if (principal instanceof OAuth2UserPrincipal) {
             return (OAuth2UserPrincipal) principal;
         }

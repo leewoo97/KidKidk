@@ -49,6 +49,11 @@ public class OAuth2UserPrincipal implements OAuth2User, UserDetails {
     }
 
     @Override
+    public <A> A getAttribute(String name) {
+        return OAuth2User.super.getAttribute(name);
+    }
+
+    @Override
     public Map<String, Object> getAttributes() {
         return userInfo.getAttributes();
     }

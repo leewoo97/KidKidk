@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SavingHistoryDto {
 
-    private Long id;
-
     private LocalDateTime dataLog;
 
     private String detail;
@@ -26,8 +24,7 @@ public class SavingHistoryDto {
 
     private Long childId;
 
-    public SavingHistoryDto(Long id, LocalDateTime dataLog, String detail, boolean type, int amount, Long childId) {
-        this.id = id;
+    public SavingHistoryDto(LocalDateTime dataLog, String detail, boolean type, int amount, Long childId) {
         this.dataLog = dataLog;
         this.detail = detail;
         this.type = type;

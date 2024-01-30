@@ -13,4 +13,7 @@ public interface SavingHistoryRepository extends JpaRepository<SavingHistory, Lo
     @Query("SELECT sh FROM SavingHistory sh WHERE sh.child.id = :childId")
     List<SavingHistory> findSavingHistoriesByChild_Id(@Param("childId") Long childId);
 
+    @Query("DELETE FROM SavingHistory sh WHERE sh.child.id = :childId")
+    void deleteSavingHistoryByChhildId(@Param("childId") Long childId);
+
 }

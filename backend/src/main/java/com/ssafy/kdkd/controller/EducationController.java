@@ -14,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class EducationController {
 
     private final EducationService educationService;
@@ -24,14 +26,10 @@ public class EducationController {
     @GetMapping("/education")
     public ResponseEntity<?> list() {
         try {
+            log.info("education list");
             List<Education> result = educationService.findAll();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-            System.out.println("=== education ===");
-            for (Education education : result) {
-                System.out.println(education.getCategory());
-            }
-            System.out.println("=== education ===");
             return ResponseEntity.ok().headers(header).body(result);
         } catch (Exception e) {
             return exceptionHandling(e);

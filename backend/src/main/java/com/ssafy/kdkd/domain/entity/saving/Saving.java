@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.domain.entity.saving;
 
+import com.ssafy.kdkd.domain.dto.saving.SavingDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -43,4 +44,30 @@ public class Saving {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "saving_id")
     private Child child;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setChild(Child child) {
+        this.child = child;
+    }
+
+    /**
+     * 적금 생성
+     */
+    public static Saving createSaving(SavingDto savingDto) {
+        Saving saving = new Saving();
+        saving.startDate = savingDto.getStartDate();
+        saving.count = savingDto.getCount();
+        saving.payment = savingDto.getPayment();
+        saving.rate = savingDto.getRate();
+        return saving;
+    }
+
+    /**
+     * 적금 업데이트
+     */
+    public void updateSaving(int count) {
+        this.count = count;
+    }
 }

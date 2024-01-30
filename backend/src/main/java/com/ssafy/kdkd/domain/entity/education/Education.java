@@ -33,4 +33,14 @@ public class Education {
     @Lob
     @Column(name = "content")
     private String content;
+
+    /**
+     * 교육 생성
+     */
+    public static Education createEducation(Category category, String content) {
+        Education education = new Education();
+        education.category = category;
+        education.content = content;
+        return education;
+    }
 }

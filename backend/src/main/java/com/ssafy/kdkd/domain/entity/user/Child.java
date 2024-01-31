@@ -42,4 +42,8 @@ public class Child {
     public void updateChild(int coin) {
         this.coin = coin;
     }
+
+    public void transferChild(int fundMoney) {
+        this.fundMoney = fundMoney;
+    }
 }

@@ -1,13 +1,15 @@
 package com.ssafy.kdkd.service.fund;
 
+import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
+import com.ssafy.kdkd.domain.entity.fund.Fund;
+import com.ssafy.kdkd.domain.entity.fund.FundStatus;
+import com.ssafy.kdkd.repository.fund.FundStatusRepository;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.ssafy.kdkd.domain.entity.fund.FundStatus;
-import com.ssafy.kdkd.repository.fund.FundStatusRepository;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,18 @@ public class FundStatusService {
 
     public List<FundStatus> findAll() {
         return fundStatusRepository.findAll();
+    }
+
+    @Transactional
+    public void insertStatus(FundStatusDto fundStatusDto, Fund fund) {
+        FundStatus fundStatus = FundStatus.createFundStatus(fundStatusDto);
+        fundStatus.setFund(fund);
+        save(fundStatus);
+    }
+
+    @Transactional
+    public void updateStatus(FundStatus fundStatus) {
+        save(fundStatus);
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package com.ssafy.kdkd.config.schedule;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.kdkd.service.saving.SavingService;
 
@@ -39,7 +40,7 @@ public class ScheduleTasks {
         try {
 
         } catch (Exception e) {
-
+            log.info(e.toString());
         }
     }
 

@@ -5,10 +5,12 @@ import com.ssafy.kdkd.domain.entity.saving.Saving;
 import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SavingDto {
 
@@ -21,14 +23,6 @@ public class SavingDto {
     private int rate;
 
     private Long childId;
-
-    public SavingDto(LocalDateTime startDate, int count, int payment, int rate, Long childId) {
-        this.startDate = startDate;
-        this.count = count;
-        this.payment = payment;
-        this.rate = rate;
-        this.childId = childId;
-    }
 
     public static SavingDto mappingSavingDto(Saving saving) {
         SavingDto savingDto = new SavingDto();

@@ -1,0 +1,75 @@
+.alarmContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2vh;
+  position: relative;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #a0a0a0; /* 스크롤바 색상 */
+  border-radius: 6px; /* 스크롤바의 둥근 경계 */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* 스크롤바 트랙의 배경색 */
+}
+.title {
+  background-color: #f7f5f1;
+  color: #4d4637;
+  font-weight: 600;
+  font-size: 30px;
+  height: 15vh;
+
+  position: sticky;
+  top: 0;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+.cardHead {
+  background-color: #f7f5f1;
+  color: #4d4637;
+  font-weight: 600;
+  font-size: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: sticky;
+  top: 7vh;
+}
+.alarmDel {
+  cursor: pointer;
+  border: 2px solid #4d4637;
+  border-radius: 10px;
+  width: 10vw;
+  padding: 1%;
+  text-align: center;
+}
+.alarmDel:hover {
+  background-color: #4d4637;
+  color: #f7f5f1;
+}
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  overflow-y: auto;
+  color: #8e4865;
+}
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 2px solid #8e4865;
+  border-radius: 10px;
+  padding: 3%;
+}

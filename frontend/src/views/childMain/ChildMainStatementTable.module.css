@@ -16,7 +16,9 @@
 }
 .table {
   width: 100%;
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
+  border-collapse: separate;
+  border-spacing: 0;
   color: #4d4637;
   /* position: relative; */
 }
@@ -26,7 +28,11 @@ table th {
   font-size: 18px;
   font-weight: 900;
 
-  background-color: #f0f0f0;
+  position: sticky;
+  top: 0;
+
+  border-bottom: 2px solid #c4c4c4;
+  background-color: #f8f3e7;
 }
 
 table td {
@@ -34,13 +40,4 @@ table td {
   text-align: center;
   border-bottom: none;
   font-weight: 600;
-}
-
-table thead {
-  border-bottom: 2px solid #c4c4c4;
-  position: sticky;
-  top: 0;
-}
-
-.headtr {
 }

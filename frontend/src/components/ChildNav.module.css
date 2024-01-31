@@ -44,11 +44,19 @@
   font-size: 15px;
   font-weight: 600;
 }
+.alarm {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+}
 .logo {
   color: #ffb700;
   font-size: 30px;
   font-weight: 600;
-  z-index: 999;
+  z-index: 1;
   margin: 10%;
 }
 .menu {
@@ -59,7 +67,7 @@
   flex-direction: column;
   gap: 7vh;
   position: relative;
-  z-index: 999;
+  z-index: 1;
 }
 .light {
   position: absolute;

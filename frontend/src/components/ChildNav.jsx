@@ -1,12 +1,16 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import kidImg from "@images/kidImg.jpg";
+import bell from "@images/bell.png";
 import styles from "./ChildNav.module.css";
 import s from "classnames"; /* 클래스네임을 여러개 쓰기 위함 */
 import { useState } from "react";
+import Modal from "react-modal";
+import ChildAlarm from "./ChildAlarm.jsx";
 
 function ChildNav() {
   const navigate = useNavigate();
   const [top, setTop] = useState(0);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const a = ["5.5%", "18%", "29.5%", "41.5%"];
 
   const handleMain = (num) => {
@@ -63,6 +67,30 @@ function ChildNav() {
         <div>직업 : 펫시터</div>
         <div>엄마 : 봉미선</div>
       </div>
+      <div onClick={() => setModalIsOpen(true)}>
+        <img src={bell} className={styles.alarm} />
+      </div>
+      <Modal
+        appElement={document.getElementById("root")}
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: "999" },
+          content: {
+            backgroundColor: "#F7F5F1",
+            borderRadius: "15px",
+            width: "30vw",
+            height: "90vh",
+            margin: "auto",
+            padding: "30px",
+            position: "absolute",
+            left: "65vw",
+            zIndex: "999",
+          },
+        }}
+      >
+        <ChildAlarm />
+      </Modal>
     </div>
   );
 }

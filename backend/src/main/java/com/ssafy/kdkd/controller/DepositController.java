@@ -34,7 +34,7 @@ public class DepositController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
         try {
-            log.info("saving controller: info() Enter");
+            log.info("deposit controller: list() Enter");
             // 현재 childId에 대한 권한 확인
             boolean isValid = false;
 

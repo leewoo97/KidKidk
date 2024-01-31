@@ -77,8 +77,10 @@ public class FundService {
 
     @Transactional
     public void updateFund() {
-        // 투자
-        // 투자예약
+        // 투자 결과 반영
+
+        // 투자예약 반영
+
     }
 
 }

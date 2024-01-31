@@ -16,19 +16,20 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/saving")
@@ -38,6 +39,7 @@ public class SavingController {
     private final SavingHistoryService savingHistoryService;
 
     @GetMapping("/info/{childId}")
+    @Operation(summary = "적금 조회")
     public ResponseEntity<?> info(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
@@ -65,6 +67,7 @@ public class SavingController {
     }
 
     @PostMapping("/create")
+    @Operation(summary = "적금 생성")
     public ResponseEntity<?> create(@RequestBody SavingDto savingDto, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.CREATED;
@@ -92,6 +95,7 @@ public class SavingController {
     }
 
     @GetMapping("/history/{childId}")
+    @Operation(summary = "적금 내역 조회")
     public ResponseEntity<?> history(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;

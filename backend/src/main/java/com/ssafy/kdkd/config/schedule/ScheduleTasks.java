@@ -2,8 +2,8 @@ package com.ssafy.kdkd.config.schedule;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.saving.SavingService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduleTasks {
 
     private final SavingService savingService;
+    private final FundService fundService;
 
     /**
      * 직업 스케줄러
@@ -38,7 +39,7 @@ public class ScheduleTasks {
     public void scheduleFund() {
         log.info("schedule: scheduleFund() Enter");
         try {
-
+            fundService.updateFund();
         } catch (Exception e) {
             log.info(e.toString());
         }

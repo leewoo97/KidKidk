@@ -37,7 +37,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    // .formLogin(AbstractHttpConfigurer::disable)
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 

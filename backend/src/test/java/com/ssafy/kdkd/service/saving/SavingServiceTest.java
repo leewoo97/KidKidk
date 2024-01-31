@@ -3,14 +3,13 @@
 // import com.ssafy.kdkd.domain.dto.saving.SavingDto;
 // import com.ssafy.kdkd.domain.entity.saving.Saving;
 // import com.ssafy.kdkd.domain.entity.user.Child;
-// import com.ssafy.kdkd.service.child.ChildService;
+// import com.ssafy.kdkd.service.user.ChildService;
 //
 // import static com.ssafy.kdkd.domain.entity.saving.Saving.createSaving;
 // import static org.junit.Assert.*;
 //
 // import java.time.LocalDateTime;
 // import java.util.NoSuchElementException;
-// import java.util.Optional;
 //
 // import jakarta.persistence.EntityManager;
 //
@@ -27,9 +26,21 @@
 // @Transactional(readOnly = true)
 // public class SavingServiceTest {
 //
-//     @Autowired SavingService savingService;
-//     @Autowired ChildService childService;
-//     @Autowired EntityManager em;
+//     @Autowired
+//     SavingService savingService;
+//     @Autowired
+//     ChildService childService;
+//     @Autowired
+//     EntityManager em;
+//
+//     @Test
+//     @Transactional
+//     @Rollback(value = false)
+//     public void 적금_스케줄러() throws Exception {
+//         System.out.println("==== updateSaving ====");
+//         savingService.updateSaving();
+//         System.out.println("==== updateSaving ====");
+//     }
 //
 //     @Test
 //     @Transactional
@@ -40,7 +51,7 @@
 //         Child child = childService.findChild(childId).get();
 //
 //         //when
-//         SavingDto savingDto = new SavingDto(1L, LocalDateTime.now(), 5, 50000, 1, childId);
+//         SavingDto savingDto = new SavingDto(LocalDateTime.now(), 5, 50000, 1, childId);
 //         Saving saving = createSaving(savingDto);
 //         saving.setChild(child);
 //         savingService.save(saving);

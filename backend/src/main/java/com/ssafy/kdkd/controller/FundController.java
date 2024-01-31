@@ -3,13 +3,16 @@ package com.ssafy.kdkd.controller;
 import com.ssafy.kdkd.domain.dto.fund.FundDto;
 import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
+import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.fund.FundStatus;
+import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.service.fund.FundReservationService;
 import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundStatusService;
+import com.ssafy.kdkd.service.fund.RoiService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +43,7 @@ public class FundController {
     private final FundService fundService;
     private final FundReservationService fundReservationService;
     private final FundStatusService fundStatusService;
+    private final RoiService roiService;
 
     @PostMapping("/child/submit")
     @Operation(summary = "투자 항목 아이 선택")
@@ -325,6 +329,35 @@ public class FundController {
                     status = HttpStatus.NO_CONTENT;
                 } else {
                     fundReservationService.delete(resultFundReservation.get());
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @GetMapping("/roi/{childId}")
+    @Operation(summary = "투자 성공률 조회")
+    public ResponseEntity<?> roi(@PathVariable("childId") Long childId, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            log.info("fund controller: roi() Enter");
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                // childId가 가진 roi 테이블 확인
+                Optional<Roi> result = roiService.findById(childId);
+
+                if (result.isEmpty()) {
+                    status = HttpStatus.NO_CONTENT;
+                } else {
+                    RoiDto roiDto = RoiDto.mappingRoiDto(result.get());
+                    resultMap.put("roi", roiDto);
                 }
             }
         } catch (Exception e) {

@@ -2,9 +2,14 @@ package com.ssafy.kdkd.domain.dto.fund;
 
 import java.time.LocalDateTime;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FundHistoryDto {
 
     private Long id;
@@ -19,12 +24,4 @@ public class FundHistoryDto {
 
     private Long childId;
 
-    public FundHistoryDto(Long id, LocalDateTime dataLog, int seedMoney, int yield, int pnl, Long childId) {
-        this.id = id;
-        this.dataLog = dataLog;
-        this.seedMoney = seedMoney;
-        this.yield = yield;
-        this.pnl = pnl;
-        this.childId = childId;
-    }
 }

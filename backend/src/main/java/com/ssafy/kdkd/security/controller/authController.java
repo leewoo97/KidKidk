@@ -5,9 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class authController {
-    @GetMapping("/api/auth")
+    @GetMapping("/api/login")
     public String myPage() {
 
-        return "my";
+        return "login";
+    }
+    @GetMapping("/hi")
+    public String hi() {
+
+        return "hi";
     }
 }

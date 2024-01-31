@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.kdkd.security.oauth2.service.OAuth2UserPrincipal;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -64,17 +66,18 @@ public class TokenProvider {
         return false;
     }
 
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
 
         Date date = new Date();
         Date expiryDate = new Date(date.getTime() + ACCESS_TOKEN_EXPIRE_TIME_IN_MILLISECONDS);
-
-        return Jwts.builder()
+        String jwtToken  = Jwts.builder()
                 .setSubject(authentication.getName())
                 .setIssuedAt(date)
                 .setExpiration(expiryDate)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
+        System.out.println("jwtToken : " + jwtToken);
+        return jwtToken;
     }
 
     public Authentication getAuthentication(String token) {

@@ -13,12 +13,15 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.ssafy.kdkd.domain.dto.account.UserDto;
+import com.ssafy.kdkd.repository.account.UserRepository;
 import com.ssafy.kdkd.security.jwt.TokenProvider;
 import com.ssafy.kdkd.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.ssafy.kdkd.security.oauth2.service.OAuth2UserPrincipal;
 import com.ssafy.kdkd.security.oauth2.user.OAuth2Provider;
 import com.ssafy.kdkd.security.oauth2.user.OAuth2UserUnlinkManager;
 import com.ssafy.kdkd.security.oauth2.util.CookieUtils;
+import com.ssafy.kdkd.service.account.UserService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +37,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
     private final TokenProvider tokenProvider;
+    private final UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -42,7 +46,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl;
 
         targetUrl = determineTargetUrl(request, response, authentication);
-        
+        System.out.println("targetUrl : " + targetUrl);
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -77,12 +81,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // TODO: DB 저장
             // TODO: 액세스 토큰, 리프레시 토큰 발급
             // TODO: 리프레시 토큰 DB 저장
-            log.info("email={}, accessToken={}", principal.getUserInfo().getEmail(),
-                    principal.getUserInfo().getAccessToken()
-            );
-
-            String accessToken = tokenProvider.createToken(authentication);
+            String accessToken = tokenProvider.createAccessToken(authentication);
             String refreshToken = "test_refresh_token";
+
+            UserDto userDto = new UserDto();
+            userDto.setEmail(principal.getUserInfo().getEmail());
+            userDto.setAccessToken(accessToken);
+            log.info("email={}, accessToken={}", principal.getUserInfo().getEmail(),
+                accessToken
+            );
+            userService.saveUser(userDto);
 
             return UriComponentsBuilder.fromUriString(targetUrl)
                     .queryParam("access_token", accessToken)

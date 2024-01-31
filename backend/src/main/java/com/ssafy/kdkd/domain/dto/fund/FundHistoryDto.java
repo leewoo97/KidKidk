@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FundHistoryDto {
 
-    private Long id;
-
     private LocalDateTime dataLog;
 
     private int seedMoney;

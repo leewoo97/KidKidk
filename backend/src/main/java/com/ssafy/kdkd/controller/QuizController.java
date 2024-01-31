@@ -1,5 +1,7 @@
 package com.ssafy.kdkd.controller;
 
+import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
+
 import com.ssafy.kdkd.domain.entity.quiz.Quiz;
 import com.ssafy.kdkd.service.quiz.QuizService;
 
@@ -7,7 +9,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,4 @@ public class QuizController {
         }
     }
 
-    private ResponseEntity<String> exceptionHandling(Exception e) {
-        e.printStackTrace();
-        return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

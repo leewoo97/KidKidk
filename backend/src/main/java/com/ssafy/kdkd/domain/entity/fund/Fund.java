@@ -1,6 +1,5 @@
 package com.ssafy.kdkd.domain.entity.fund;
 
-import com.ssafy.kdkd.domain.dto.fund.FundDto;
 import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 

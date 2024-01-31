@@ -48,12 +48,10 @@ public class Job {
     /**
      * 직업 생성
      */
-    public static Job createJob(JobReservationDto jobReservationDto) {
+    public static Job createJob(JobReservation jobReservation) {
         Job job = new Job();
-        job.jobInfo = new JobInfo(jobReservationDto.getName(),
-            jobReservationDto.getWage(),
-            jobReservationDto.getTask(),
-            jobReservationDto.getTaskAmount());
+        job.jobInfo = jobReservation.getJobInfo();
+        job.doneCount = 0;
         return job;
     }
 

@@ -7,7 +7,6 @@ import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
-import com.ssafy.kdkd.domain.entity.fund.FundStatus;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.service.fund.FundReservationService;
 import com.ssafy.kdkd.service.fund.FundService;
@@ -45,6 +44,31 @@ public class FundController {
     private final FundStatusService fundStatusService;
     private final RoiService roiService;
 
+    @PostMapping("/transfer")
+    @Operation(summary = "코인계좌로 이체")
+    public ResponseEntity<?> transfer(@RequestBody TransferDto transferDto, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            log.info("fund controller: transfer() Enter");
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                boolean isOk = fundService.transfer(transferDto);
+
+                if (!isOk) {
+                    status = HttpStatus.NOT_ACCEPTABLE;
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
     @PostMapping("/child/submit")
     @Operation(summary = "투자 항목 아이 선택")
     public ResponseEntity<?> submitChild(@RequestBody FundStatusDto fundStatusDto, HttpServletRequest request) {
@@ -59,19 +83,11 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 fund, fund_status 테이블 확인
-                Optional<Fund> result_fund = fundService.findById(childId);
-                Optional<FundStatus> result_fundStatus = fundStatusService.findById(childId);
-                if (result_fund.isEmpty()) {
-                    status = HttpStatus.NO_CONTENT;
-                } else {
-                    if (result_fundStatus.isEmpty()) {
-                        fundStatusService.insertStatus(fundStatusDto, result_fund.get());
-                    } else {
-                        FundStatus fundStatus = result_fundStatus.get();
-                        fundStatus.updateChild(fundStatusDto.isSubmit());
-                        fundStatusService.updateStatus(fundStatus);
-                    }
+                boolean isChild = true;
+                boolean isRejected = fundStatusService.setFundStatus(fundStatusDto, isChild);
+
+                if (isRejected) {
+                    status = HttpStatus.NOT_ACCEPTABLE;
                 }
             }
         } catch (Exception e) {
@@ -94,72 +110,11 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 fund, fund_status 테이블 확인
-                Optional<Fund> result_fund = fundService.findById(childId);
-                Optional<FundStatus> result_fundStatus = fundStatusService.findById(childId);
-                if (result_fund.isEmpty()) {
+                boolean isChild = false;
+                boolean isRejected = fundStatusService.setFundStatus(fundStatusDto, isChild);
+
+                if (isRejected) {
                     status = HttpStatus.NO_CONTENT;
-                } else {
-                    if (result_fundStatus.isEmpty()) {
-                        fundStatusService.insertStatus(fundStatusDto, result_fund.get());
-                    } else {
-                        FundStatus fundStatus = result_fundStatus.get();
-                        fundStatus.updateParent(fundStatusDto.isAnswer());
-                        fundStatusService.updateStatus(fundStatus);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
-    }
-
-    @PostMapping("/transfer")
-    @Operation(summary = "코인계좌로 이체")
-    public ResponseEntity<?> transfer(@RequestBody TransferDto transferDto, HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.OK;
-        try {
-            log.info("fund controller: transfer() Enter");
-            // 현재 childId에 대한 권한 확인
-            boolean isValid = false;
-
-            if (isValid) {
-                status = HttpStatus.UNAUTHORIZED;
-            } else {
-                boolean isOk = fundService.transfer(transferDto);
-                if (!isOk) {
-                    status = HttpStatus.NOT_ACCEPTABLE;
-                }
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
-    }
-
-    @PostMapping("/create")
-    @Operation(summary = "투자 항목 생성")
-    public ResponseEntity<?> create(@RequestBody FundDto fundDto, HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.CREATED;
-        try {
-            log.info("fund controller: create-fund() Enter");
-            Long childId = fundDto.getChildId();
-            // 현재 childId에 대한 권한 확인
-            boolean isValid = false;
-
-            if (isValid) {
-                status = HttpStatus.UNAUTHORIZED;
-            } else {
-                // childId가 가진 fund, fund_reservation 테이블 확인
-                Optional<Fund> resultFund = fundService.findById(childId);
-                Optional<FundReservation> resultFundReservation = fundReservationService.findById(childId);
-                if (resultFund.isEmpty() && resultFundReservation.isEmpty()) {
-                    resultMap.put("Fund", fundReservationService.createFundReservation(fundDto, true));
-                } else {
-                    status = HttpStatus.CONFLICT;
                 }
             }
         } catch (Exception e) {
@@ -195,63 +150,6 @@ public class FundController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @DeleteMapping("/delete/{childId}")
-    @Operation(summary = "투자 항목 제거")
-    public ResponseEntity<?> deleteFund(@PathVariable("childId") Long childId, HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.OK;
-        try {
-            log.info("fund controller: deleteFund() Enter");
-            // 현재 childId에 대한 권한 확인
-            boolean isValid = false;
-
-            if (isValid) {
-                status = HttpStatus.UNAUTHORIZED;
-            } else {
-                // childId가 가진 fund 테이블 확인
-                Optional<Fund> resultFund = fundService.findById(childId);
-                if (resultFund.isEmpty()) {
-                    status = HttpStatus.NO_CONTENT;
-                } else {
-                    FundDto fundDto = FundDto.mappingFundDto(resultFund.get());
-                    fundReservationService.createFundReservation(fundDto, false);
-                }
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
-    }
-
-
-    @PostMapping("/reservation/create")
-    @Operation(summary = "투자 예약 생성")
-    public ResponseEntity<?> create(@RequestBody FundReservationDto fundReservationDto, HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.CREATED;
-        try {
-            log.info("fund controller: create-reservation() Enter");
-            Long childId = fundReservationDto.getChildId();
-            // 현재 childId에 대한 권한 확인
-            boolean isValid = false;
-
-            if (isValid) {
-                status = HttpStatus.UNAUTHORIZED;
-            } else {
-                // childId가 가진 fund_reservation 테이블 확인
-                Optional<FundReservation> resultFundReservation = fundReservationService.findById(childId);
-                if (resultFundReservation.isEmpty()) {
-                    resultMap.put("FundReservation", fundReservationService.createFundReservation(fundReservationDto));
-                } else {
-                    status = HttpStatus.CONFLICT;
-                }
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
-    }
-
     @GetMapping("/reservation/confirm/{childId}")
     @Operation(summary = "투자 예약 조회")
     public ResponseEntity<?> confirmReservation(@PathVariable("childId") Long childId, HttpServletRequest request) {
@@ -271,8 +169,66 @@ public class FundController {
                     status = HttpStatus.NO_CONTENT;
                 } else {
                     FundReservationDto fundReservationDto = FundReservationDto.mappingFundReservationDto(
-                        fundReservationService.findById(childId).get());
+                        resultFundReservation.get());
                     resultMap.put("FundReservation", fundReservationDto);
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @PostMapping("/create")
+    @Operation(summary = "투자 항목 생성")
+    public ResponseEntity<?> createFund(@RequestBody FundReservationDto fundReservationDto, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.CREATED;
+        try {
+            log.info("fund controller: create-fund() Enter");
+            Long childId = fundReservationDto.getChildId();
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                boolean type = false;
+                FundReservationDto result = fundReservationService.createFundReservation(fundReservationDto, type);
+
+                if (result == null) {
+                    status = HttpStatus.CONFLICT;
+                } else {
+                    resultMap.put("Fund", result);
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @PostMapping("/reservation/create")
+    @Operation(summary = "투자 예약 생성")
+    public ResponseEntity<?> createReservation(@RequestBody FundReservationDto fundReservationDto, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.CREATED;
+        try {
+            log.info("fund controller: create-reservation() Enter");
+            Long childId = fundReservationDto.getChildId();
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                boolean type = false;
+                FundReservationDto result = fundReservationService.createFundReservation(fundReservationDto, type);
+
+                if (result == null) {
+                    resultMap.put("FundReservation", result);
+                } else {
+                    status = HttpStatus.CONFLICT;
                 }
             }
         } catch (Exception e) {
@@ -295,13 +251,13 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 fund_reservation 테이블 확인
-                Optional<FundReservation> resultFundReservation = fundReservationService.findById(childId);
-                if (resultFundReservation.isEmpty()) {
+                FundReservationDto result =
+                    fundReservationService.modifyFundReservation(childId, fundReservationDto);
+
+                if (result == null) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
-                    fundReservationService.modifyFundReservation(resultFundReservation.get(), fundReservationDto);
-                    resultMap.put("FundReservation", fundReservationDto);
+                    resultMap.put("FundReservation", result);
                 }
             }
         } catch (Exception e) {
@@ -323,12 +279,35 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 fund_reservation 테이블 확인
-                Optional<FundReservation> resultFundReservation = fundReservationService.findById(childId);
-                if (resultFundReservation.isEmpty()) {
+                boolean isEmpty = fundReservationService.delete(childId);
+
+                if (isEmpty) {
                     status = HttpStatus.NO_CONTENT;
-                } else {
-                    fundReservationService.delete(resultFundReservation.get());
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @DeleteMapping("/delete/{childId}")
+    @Operation(summary = "투자 항목 제거")
+    public ResponseEntity<?> deleteFund(@PathVariable("childId") Long childId, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            log.info("fund controller: deleteFund() Enter");
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                FundReservationDto result = fundReservationService.deleteFundReservation(childId);
+
+                if (result == null) {
+                    status = HttpStatus.NO_CONTENT;
                 }
             }
         } catch (Exception e) {

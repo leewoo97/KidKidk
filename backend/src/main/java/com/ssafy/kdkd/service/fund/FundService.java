@@ -37,10 +37,22 @@ public class FundService {
         return fundRepository.findById(childId);
     }
 
+    @Transactional
     public void delete(Fund fund) {
         fundRepository.delete(fund);
     }
 
+    @Transactional
+    public void deleteById(Long childId) {
+        fundRepository.deleteById(childId);
+    }
+
+    /**
+     * 투자계좌 -> 예금계좌 이체
+     *
+     * @param transferDto 이체 금액, 자식 아이디
+     * @return boolean(이체가능 금액확인)
+     */
     @Transactional
     public boolean transfer(TransferDto transferDto) {
         int fundMoney = transferDto.getFundMoney();
@@ -56,7 +68,7 @@ public class FundService {
         child.updateChild(updateCoin);
 
         // deposit
-        String detail = "투자금 이체";
+        String detail = "투자 이체";
         boolean type = true;
         int money = fundMoney;
 
@@ -67,20 +79,17 @@ public class FundService {
         return true;
     }
 
+    /**
+     * 투자예약 -> 투자 생성
+     *
+     * @param fundReservation 투자예약
+     */
     @Transactional
     public void insertFund(FundReservation fundReservation) {
         Child child = childService.findChild(fundReservation.getId()).get();
         Fund fund = Fund.createFund(fundReservation);
         fund.setChild(child);
         save(fund);
-    }
-
-    @Transactional
-    public void updateFund() {
-        // 투자 결과 반영
-
-        // 투자예약 반영
-
     }
 
 }

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FundStatusDto {
 
+    private int amount;
+
     private boolean submit;
 
     private boolean answer;

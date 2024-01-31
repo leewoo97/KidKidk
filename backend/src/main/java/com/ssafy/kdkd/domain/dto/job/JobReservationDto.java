@@ -1,8 +1,16 @@
 package com.ssafy.kdkd.domain.dto.job;
 
+import com.ssafy.kdkd.domain.entity.job.JobInfo;
+import com.ssafy.kdkd.domain.entity.job.JobReservation;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JobReservationDto {
 
     private String name;
@@ -17,12 +25,16 @@ public class JobReservationDto {
 
     private Long childId;
 
-    public JobReservationDto(String name, int wage, String task, int taskAmount, boolean state, Long childId) {
-        this.name = name;
-        this.wage = wage;
-        this.task = task;
-        this.taskAmount = taskAmount;
-        this.state = state;
-        this.childId = childId;
+    public static JobReservationDto mappingJobReservationDto(JobReservation jobReservation) {
+        JobReservationDto jobReservationDto = new JobReservationDto();
+        JobInfo jobInfo = jobReservation.getJobInfo();
+        jobReservationDto.name = jobInfo.getName();
+        jobReservationDto.wage = jobInfo.getWage();
+        jobReservationDto.task = jobInfo.getTask();
+        jobReservationDto.taskAmount = jobInfo.getTaskAmount();
+        jobReservationDto.state = jobReservation.isState();
+        jobReservationDto.childId = jobReservation.getId();
+        return jobReservationDto;
     }
+
 }

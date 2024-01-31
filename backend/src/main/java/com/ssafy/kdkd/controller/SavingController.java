@@ -2,6 +2,7 @@ package com.ssafy.kdkd.controller;
 
 import static com.ssafy.kdkd.domain.dto.saving.SavingDto.mappingSavingDto;
 import static com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto.mappingSavingHistoryDto;
+import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
 
 import com.ssafy.kdkd.domain.dto.saving.SavingDto;
 import com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto;
@@ -80,12 +81,11 @@ public class SavingController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 saving 테이블 확인
-                Optional<Saving> result = savingService.findById(childId);
-                if (result.isEmpty()) {
-                    resultMap.put("Saving", savingService.insertSaving(savingDto));
-                } else {
+                SavingDto reslut =  savingService.createSaving(savingDto);
+                if (reslut == null) {
                     status = HttpStatus.CONFLICT;
+                } else {
+                    resultMap.put("Saving", reslut);
                 }
             }
         } catch (Exception e) {
@@ -108,13 +108,12 @@ public class SavingController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 // childId가 가진 saving 테이블 확인
-                Optional<Saving> result = savingService.findById(childId);
-                if (result.isEmpty()) {
+                List<SavingHistoryDto> result =
+                    mappingSavingHistoryDto(savingHistoryService.findSavingHistoriesByChildId(childId));
+                if (result == null) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
-                    List<SavingHistoryDto> list =
-                        mappingSavingHistoryDto(savingHistoryService.findSavingHistoriesByChild_Id(childId));
-                    resultMap.put("SavingHistories", list);
+                    resultMap.put("SavingHistories", result);
                 }
             }
         } catch (Exception e) {
@@ -123,8 +122,4 @@ public class SavingController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    private ResponseEntity<String> exceptionHandling(Exception e) {
-        e.printStackTrace();
-        return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

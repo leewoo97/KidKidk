@@ -118,17 +118,14 @@ public class FundReservationServiceTest {
     public void 투자예약_삭제() throws Exception {
         //given
         Long childId = 1L;
-        FundReservation findFundReservation = fundReservationService.findById(childId).get();
 
         //when
-        if (!findFundReservation.isState()) {
-            fundReservationService.delete(findFundReservation);
-        }
+        fundReservationService.delete(childId);
         em.flush();
         em.clear();
 
         //then
-        findFundReservation = fundReservationService.findById(childId).get();
+        FundReservation findFundReservation = fundReservationService.findById(childId).get();
 
         fail("투자예약이 없어야 합니다.");
     }

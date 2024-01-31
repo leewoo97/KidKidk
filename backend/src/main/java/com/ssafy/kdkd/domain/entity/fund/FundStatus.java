@@ -25,6 +25,9 @@ public class FundStatus {
     @Id
     private Long id;
 
+    @Column(name = "amount")
+    private int amount;
+
     @Column(name = "submit")
     private boolean submit;
 
@@ -48,6 +51,7 @@ public class FundStatus {
      */
     public static FundStatus createFundStatus(FundStatusDto fundStatusDto) {
         FundStatus fundStatus = new FundStatus();
+        fundStatus.amount = fundStatusDto.getAmount();
         fundStatus.submit = fundStatusDto.isSubmit();
         fundStatus.answer = fundStatusDto.isAnswer();
         return fundStatus;
@@ -57,8 +61,9 @@ public class FundStatus {
         this.answer = answer;
     }
 
-    public void updateChild(boolean submit) {
+    public void updateChild(boolean submit, int amount) {
         this.submit = submit;
+        this.amount = amount;
     }
 
 }

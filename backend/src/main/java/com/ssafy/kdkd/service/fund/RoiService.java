@@ -25,6 +25,11 @@ public class RoiService {
         return roiRepository.findById(childId);
     }
 
+    /**
+     * roi 생성
+     * 
+     * @param roiDto 생성할 roi 정보
+     */
     @Transactional
     public void createRoi(RoiDto roiDto) {
         Child child = childService.findChild(roiDto.getChildId()).get();
@@ -33,6 +38,12 @@ public class RoiService {
         roiRepository.save(roi);
     }
 
+    /**
+     * roi 수정
+     * 
+     * @param roi 기존 roi
+     * @param roiDto 업데이트할 roi 정보
+     */
     @Transactional
     public void updateRoi(Roi roi, RoiDto roiDto) {
         Child child = childService.findChild(roiDto.getChildId()).get();

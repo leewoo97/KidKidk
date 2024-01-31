@@ -1,11 +1,7 @@
 import styles from "./ChildMain.module.css";
 import ChildMainManagement from "./ChildMainManagement.jsx";
-import { Outlet, useNavigate } from "react-router-dom";
+import ChildMainStatement from "./ChildMainStateMent.jsx";
 import { useState } from "react";
-
-// function StatementContent() {
-//   return <div> 내역 컴포넌트 내용 </div>;
-// }
 
 function ChildMain() {
   const [left, setLeft] = useState(0);
@@ -45,6 +41,7 @@ function ChildMain() {
         <div className={styles.circle} style={{ left: `${left}px` }}></div>
         <div className={styles.content}>
           {selectedToggle === 0 && <ChildMainManagement />}
+          {selectedToggle === 1 && <ChildMainStatement />}
         </div>
       </div>
     </div>

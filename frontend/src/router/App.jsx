@@ -5,18 +5,18 @@ import {
 } from "react-router-dom";
 
 import ParentNav from "../components/ParentNav.jsx";
-import ParentMain from "../views/ParentMain.jsx";
-import ParentJob from "../views/ParentJob.jsx";
-import ParentFundSaving from "../views/ParentFundSaving.jsx";
+import ParentMain from "../views/parent/ParentMain.jsx";
+import ParentJob from "../views/parent/ParentJob.jsx";
+import ParentFundSaving from "../views/parent/ParentFundSaving.jsx";
+
 import ChildNav from "../components/ChildNav.jsx";
-import ChildMain from "../views/ChildMain.jsx";
-import ChildFundManagement from "../views/ChildFundManagement.jsx";
-import ChildFundStatement from "../views/ChildFundStatement.jsx";
-import ChildSavingManagement from "../views/ChildSavingManagement.jsx";
-import ChildSavingStatement from "../views/ChildSavingStatement.jsx";
-import ChildEducation from "../views/ChildEducation.jsx";
-import Welcome from "../views/Welcome.jsx";
-import Profile from "../views/Profile.jsx";
+import ChildMain from "../views/childMain/ChildMain.jsx";
+import ChildFund from "../views/childFund/ChildFund.jsx";
+import ChildSaving from "../views/childSaving/ChildSaving.jsx";
+import ChildEdu from "../views/childEdu/ChildEdu.jsx";
+
+import Welcome from "../views/welcome/Welcome.jsx";
+import Profile from "../views/profile/Profile.jsx";
 
 /*
     로그인 여부에 따라 달라져야...
@@ -73,28 +73,20 @@ const router = createBrowserRouter([
         element: <ChildMain />,
       },
       {
-        path: "/child/main/management",
+        path: "/child/main",
         element: <ChildMain />,
       },
       {
-        path: "/child/fund/management",
-        element: <ChildFundManagement />,
+        path: "/child/fund",
+        element: <ChildFund />,
       },
       {
-        path: "/child/fund/statement",
-        element: <ChildFundStatement />,
+        path: "/child/saving",
+        element: <ChildSaving />,
       },
       {
-        path: "/child/saving/management",
-        element: <ChildSavingManagement />,
-      },
-      {
-        path: "/child/saving/statement",
-        element: <ChildSavingStatement />,
-      },
-      {
-        path: "/child/education",
-        element: <ChildEducation />,
+        path: "/child/edu",
+        element: <ChildEdu />,
       },
     ],
   },

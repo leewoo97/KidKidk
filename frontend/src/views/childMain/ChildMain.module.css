@@ -1,9 +1,9 @@
-.container {
+/* .mainContainer {
   position: relative;
   width: 70vw;
   height: 90vh;
   border-radius: 15px;
-}
+} */
 .main {
   position: absolute;
   left: 7.5vw;
@@ -49,10 +49,10 @@
   position: absolute;
   width: 10px;
   height: 10px;
-  top: 76px;
+  top: 10.5vh;
   border-radius: 50%;
   background-color: #ffb700;
 }
-.content {
+/* .content {
   height: 75vh;
-}
+} */

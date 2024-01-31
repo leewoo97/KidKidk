@@ -26,19 +26,19 @@ function ChildMain() {
     return (
       <div className={`${textClass}`} onClick={() => handleToggleClick(num)}>
         {title}
-        <hr className={`${lineClass}`} />
+        <div className={`${lineClass}`} />
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.mainContainer}>
       <div className={styles.main}>
         <div className={styles.toggle}>
           <Toggle num={0} title={"관리"} />
           <Toggle num={1} title={"내역"} />
+          <div className={styles.circle} style={{ left: `${left}px` }}></div>
         </div>
-        <div className={styles.circle} style={{ left: `${left}px` }}></div>
         <div className={styles.content}>
           {selectedToggle === 0 && <ChildMainManagement />}
           {selectedToggle === 1 && <ChildMainStatement />}

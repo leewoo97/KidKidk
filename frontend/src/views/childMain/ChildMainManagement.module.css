@@ -1,15 +1,14 @@
-.container {
+.manageContainer {
+  margin-top: 2vh;
   display: flex;
   flex-direction: column;
   gap: 3vh;
 }
-
 .card1 {
   display: flex;
   justify-content: space-around;
   height: 30vh;
 }
-
 .card1_1 {
   width: 20vw;
   padding: 15px;

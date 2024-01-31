@@ -35,7 +35,7 @@ export default function ManagementContent() {
   const ChartComponent = () => <Doughnut data={Data} options={Options} />;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.manageContainer}>
       <div className={styles.card1}>
         <div className={styles.card1_1}>
           <div className={styles.title}> 현재 짱아의 주머니 </div>

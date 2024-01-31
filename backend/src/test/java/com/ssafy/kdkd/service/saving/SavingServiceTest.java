@@ -26,9 +26,12 @@
 // @Transactional(readOnly = true)
 // public class SavingServiceTest {
 //
-//     @Autowired SavingService savingService;
-//     @Autowired ChildService childService;
-//     @Autowired EntityManager em;
+//     @Autowired
+//     SavingService savingService;
+//     @Autowired
+//     ChildService childService;
+//     @Autowired
+//     EntityManager em;
 //
 //     @Test
 //     @Transactional

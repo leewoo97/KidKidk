@@ -67,7 +67,7 @@ public class SavingService {
             LocalDateTime startDate = saving.getStartDate();
             LocalDateTime currentDate = LocalDateTime.now();
             long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate) - 1;
-            System.out.println(daysBetween);
+
             if (daysBetween % 7 <= 0) {
                 //  남은 납입 횟수, 남은 납입 기회 확인
                 Long childId = saving.getId();

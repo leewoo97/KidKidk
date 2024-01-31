@@ -16,7 +16,36 @@ public class ScheduleTasks {
     private final SavingService savingService;
 
     /**
-     * 적금 자동 납부 스케줄러
+     * 직업 스케줄러
+     * 상세: 매주 월요일 오전 09시
+     */
+    @Scheduled(cron = "0 0 9 * * MON")
+    public void scheduleJob() {
+        log.info("schedule: scheduleFund() Enter");
+        try {
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    /**
+     * 투자 스케줄러
+     * 상세: 매일 오전 09시
+     */
+    @Scheduled(cron = "0 0 9 * * *")
+    public void scheduleFund() {
+        log.info("schedule: scheduleFund() Enter");
+        try {
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    /**
+     * 적금 스케줄러
+     * 상세: 매일 오전 09시
      */
     @Scheduled(cron = "* * * * * ?")
     public void scheduleSaving() {
@@ -27,5 +56,5 @@ public class ScheduleTasks {
             log.info(e.toString());
         }
     }
-
 }
+

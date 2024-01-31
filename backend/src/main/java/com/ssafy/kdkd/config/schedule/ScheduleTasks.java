@@ -47,7 +47,7 @@ public class ScheduleTasks {
      * 적금 스케줄러
      * 상세: 매일 오전 09시
      */
-    @Scheduled(cron = "* * * * * ?")
+    @Scheduled(cron = "0 0 9 * * *")
     public void scheduleSaving() {
         log.info("schedule: scheduleSaving() Enter");
         try {

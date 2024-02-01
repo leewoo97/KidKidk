@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.domain.entity.account;
 
+import com.ssafy.kdkd.domain.dto.account.UserDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,4 +27,20 @@ public class User {
 
     @Column(name = "email", length = 2000)
     private String email;
+
+    /**
+     * 유저 생성
+     */
+
+    public User(UserDto userDto) {
+        this.accessToken = userDto.getAccessToken();
+        this.email = userDto.getEmail();
+    }
+
+    public static User createUser(UserDto userDto) {
+        User user = new User();
+        user.accessToken = userDto.getAccessToken();
+        user.email = userDto.getEmail();
+        return user;
+    }
 }

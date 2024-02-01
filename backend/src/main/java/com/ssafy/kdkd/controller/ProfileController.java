@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+//feat/BE-profile로 브랜치명을 변경하였습니다.
 @RestController
 @RequestMapping("/users")
 public class ProfileController {

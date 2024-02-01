@@ -1,6 +1,5 @@
 package com.ssafy.kdkd.domain.entity.job;
 
-import com.ssafy.kdkd.domain.dto.job.JobReservationDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -58,11 +57,12 @@ public class Job {
     /**
      * 직업 업데이트
      */
-    public void updateJob(JobReservationDto jobReservationDto) {
-        this.jobInfo = new JobInfo(jobReservationDto.getName(),
-            jobReservationDto.getWage(),
-            jobReservationDto.getTask(),
-            jobReservationDto.getTaskAmount());
+    public void updateJob(JobReservation jobReservation) {
+        JobInfo updateJobInfo = jobReservation.getJobInfo();
+        this.jobInfo = new JobInfo(updateJobInfo.getName(),
+            updateJobInfo.getWage(),
+            updateJobInfo.getTask(),
+            updateJobInfo.getTaskAmount());
     }
 
     public void updateJob(int doneCount) {

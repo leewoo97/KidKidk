@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SavingHistoryDto {
 
@@ -33,13 +35,13 @@ public class SavingHistoryDto {
     }
 
     public static SavingHistoryDto mappingSavingHistoryDto(SavingHistory savingHistory) {
-        SavingHistoryDto savingHistoryDto = new SavingHistoryDto();
-        savingHistoryDto.dataLog = savingHistory.getDataLog();
-        savingHistoryDto.detail = savingHistory.getDetail();
-        savingHistoryDto.type = savingHistory.isType();
-        savingHistoryDto.amount = savingHistory.getAmount();
-        savingHistoryDto.childId = savingHistory.getId();
-        return savingHistoryDto;
+        return SavingHistoryDto.builder()
+            .dataLog(savingHistory.getDataLog())
+            .detail(savingHistory.getDetail())
+            .type(savingHistory.isType())
+            .amount(savingHistory.getAmount())
+            .childId(savingHistory.getId())
+            .build();
     }
 
     public static List<SavingHistoryDto> mappingSavingHistoryDto(List<SavingHistory> list) {
@@ -49,4 +51,5 @@ public class SavingHistoryDto {
         }
         return savingHistoryDtoList;
     }
+
 }

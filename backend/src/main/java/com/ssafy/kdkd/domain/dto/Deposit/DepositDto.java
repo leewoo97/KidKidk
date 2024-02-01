@@ -7,10 +7,12 @@ import java.util.List;
 import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DepositDto {
 
@@ -36,14 +38,14 @@ public class DepositDto {
     }
 
     public static DepositDto mappingDepositDto(Deposit deposit) {
-        DepositDto depositDto = new DepositDto();
-        depositDto.dataLog = deposit.getDataLog();
-        depositDto.detail = deposit.getDetail();
-        depositDto.type = deposit.isType();
-        depositDto.amount = deposit.getAmount();
-        depositDto.money = deposit.getMoney();
-        depositDto.childId = deposit.getId();
-        return depositDto;
+        return DepositDto.builder()
+            .dataLog(deposit.getDataLog())
+            .detail(deposit.getDetail())
+            .type(deposit.isType())
+            .amount(deposit.getAmount())
+            .money(deposit.getMoney())
+            .childId(deposit.getId())
+            .build();
     }
 
     public static List<DepositDto> mappingDepositDto(List<Deposit> deposits) {

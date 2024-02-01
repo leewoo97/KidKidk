@@ -2,10 +2,13 @@ import styles from "./ChildMainManagement.module.css";
 import acornImg from "@images/acorn.png";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ManagementContent() {
+  const navigate = useNavigate();
+
   const Data = {
     labels: ["주머니", "투자", "적금"],
     datasets: [
@@ -49,7 +52,12 @@ export default function ManagementContent() {
             </div>
           </div>
           <div className={styles.refundContainer}>
-            <div className={styles.refundBtn}>환전하기</div>
+            <div
+              className={styles.refundBtn}
+              onClick={() => navigate("/child/refund")}
+            >
+              환전하기
+            </div>
           </div>
         </div>
         <div className={styles.card1_2}>

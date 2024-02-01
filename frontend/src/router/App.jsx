@@ -11,6 +11,7 @@ import ParentFundSaving from "../views/parent/ParentFundSaving.jsx";
 
 import ChildNav from "../components/ChildNav.jsx";
 import ChildMain from "../views/childMain/ChildMain.jsx";
+import ChildRefund from "../views/childMain/ChildRefund.jsx";
 import ChildFund from "../views/childFund/ChildFund.jsx";
 import ChildSaving from "../views/childSaving/ChildSaving.jsx";
 import ChildEdu from "../views/childEdu/ChildEdu.jsx";
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: "/child",
         element: <ChildMain />,
+      },
+      {
+        path: "/child/refund",
+        element: <ChildRefund />,
       },
       {
         path: "/child/main",

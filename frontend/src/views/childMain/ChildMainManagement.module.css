@@ -87,6 +87,7 @@
   border-radius: 15px;
   text-align: center;
   padding: 8px 0;
+  cursor: pointer;
 }
 .refundContainer {
   margin: 0 auto;

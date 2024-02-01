@@ -2,8 +2,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 2vh;
+  /* margin-bottom: 2vh; */
   position: relative;
+  overflow: auto;
 }
 ::-webkit-scrollbar {
   width: 6px;
@@ -16,13 +17,26 @@
 
 ::-webkit-scrollbar-track {
   background-color: #f0f0f0; /* 스크롤바 트랙의 배경색 */
+  border-radius: 6px;
+}
+/* 스크롤 위아래 여백 추가 */
+::-webkit-scrollbar-button:start {
+  height: 10px;
+  width: 6px;
+  display: block;
+}
+
+::-webkit-scrollbar-button:end {
+  height: 10px;
+  width: 6px;
+  display: block;
 }
 .title {
   background-color: #f7f5f1;
   color: #4d4637;
   font-weight: 600;
   font-size: 30px;
-  height: 15vh;
+  padding-bottom: 1vh;
 
   position: sticky;
   top: 0;
@@ -43,7 +57,7 @@
   justify-content: space-between;
 
   position: sticky;
-  top: 7vh;
+  top: 7.2vh;
 }
 .alarmDel {
   cursor: pointer;
@@ -61,7 +75,7 @@
   display: flex;
   flex-direction: column;
   gap: 2vh;
-  overflow-y: auto;
+  /* overflow: auto; */
   color: #8e4865;
 }
 .card {

@@ -1,4 +1,4 @@
-package com.ssafy.kdkd.domain.dto.Deposit;
+package com.ssafy.kdkd.domain.dto.deposit;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,12 +7,14 @@ import java.util.List;
 import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DepositDto {
 
@@ -22,15 +24,6 @@ public class DepositDto {
     private int amount;
     private int money;
     private Long childId;
-
-    public DepositDto(LocalDateTime dataLog, String detail, boolean type, int amount, int money, Long childId) {
-        this.dataLog = dataLog;
-        this.detail = detail;
-        this.type = type;
-        this.amount = amount;
-        this.money = money;
-        this.childId = childId;
-    }
 
     public static DepositDto mappingDepositDto(Deposit deposit) {
         return DepositDto.builder()
@@ -50,4 +43,5 @@ public class DepositDto {
         }
         return depositDtoList;
     }
+
 }

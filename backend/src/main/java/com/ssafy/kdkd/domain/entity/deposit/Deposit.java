@@ -1,6 +1,6 @@
 package com.ssafy.kdkd.domain.entity.deposit;
 
-import com.ssafy.kdkd.domain.dto.Deposit.DepositDto;
+import com.ssafy.kdkd.domain.dto.deposit.DepositDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 
 import static jakarta.persistence.FetchType.LAZY;

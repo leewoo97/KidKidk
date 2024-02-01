@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SavingHistoryDto {
 
@@ -21,14 +23,6 @@ public class SavingHistoryDto {
     private boolean type;
     private int amount;
     private Long childId;
-
-    public SavingHistoryDto(LocalDateTime dataLog, String detail, boolean type, int amount, Long childId) {
-        this.dataLog = dataLog;
-        this.detail = detail;
-        this.type = type;
-        this.amount = amount;
-        this.childId = childId;
-    }
 
     public static SavingHistoryDto mappingSavingHistoryDto(SavingHistory savingHistory) {
         return SavingHistoryDto.builder()

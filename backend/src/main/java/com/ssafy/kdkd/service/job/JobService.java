@@ -3,13 +3,13 @@ package com.ssafy.kdkd.service.job;
 import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
 import static com.ssafy.kdkd.domain.entity.job.Job.createJob;
 
-import com.ssafy.kdkd.domain.dto.Deposit.DepositDto;
+import com.ssafy.kdkd.domain.dto.deposit.DepositDto;
 import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 import com.ssafy.kdkd.domain.entity.job.Job;
 import com.ssafy.kdkd.domain.entity.job.JobInfo;
 import com.ssafy.kdkd.domain.entity.job.JobReservation;
 import com.ssafy.kdkd.domain.entity.user.Child;
-import com.ssafy.kdkd.repository.Deposit.DepositRepository;
+import com.ssafy.kdkd.repository.deposit.DepositRepository;
 import com.ssafy.kdkd.repository.job.JobRepository;
 import com.ssafy.kdkd.repository.job.JobReservationRepository;
 import com.ssafy.kdkd.service.user.ChildService;

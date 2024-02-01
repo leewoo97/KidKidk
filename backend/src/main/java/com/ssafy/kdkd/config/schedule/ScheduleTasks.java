@@ -1,11 +1,11 @@
 package com.ssafy.kdkd.config.schedule;
 
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.ssafy.kdkd.service.fund.FundUpdateService;
 import com.ssafy.kdkd.service.job.JobService;
 import com.ssafy.kdkd.service.saving.SavingService;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class ScheduleTasks {
      */
     @Scheduled(cron = "0 0 9 * * MON")
     public void scheduleJob() {
-        log.info("schedule: scheduleFund() Enter");
+        log.info("schedule: scheduleJob() Enter");
         try {
             jobService.updateJob();
         } catch (Exception e) {

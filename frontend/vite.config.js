@@ -5,6 +5,14 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [react()],
     assetsInclude: ['**/*.PNG'],
+    resolve: {
+        alias: {
+            '@images': '/src/assets/images',
+            '@components': '/src/components',
+            // 다른 별칭들 추가 가능
+        },
+    },
+
     server: {
         proxy: {
             '/api': {

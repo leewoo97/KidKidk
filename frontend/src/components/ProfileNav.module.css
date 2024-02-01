@@ -1,8 +1,18 @@
-.chakraHeading {
-    text-align: center;
-    margin-top: 20px;
+.profileNavContainerStart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.profile > .chakraCard {
-    background-color: var(--nav-background-hover);
+.profileImageContainer {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.profileImageContainer img {
+    width: 150%;
+    height: auto;
+    display: block;
 }

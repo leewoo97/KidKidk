@@ -7,20 +7,19 @@ import {
 import './App.css';
 
 import ParentNav from '../components/ParentNav.jsx';
-import ParentMain from '../views/ParentMain.jsx';
-import ParentJob from '../views/ParentJob.jsx';
-import ParentFundSaving from '../views/ParentFundSaving.jsx';
+import ParentMain from '../views/parent/ParentMain.jsx';
+import ParentJob from '../views/parent/ParentJob.jsx';
+import ParentFundSaving from '../views/parent/ParentFundSaving.jsx';
 import ChildNav from '../components/ChildNav.jsx';
-import ChildMainManagement from '../views/ChildMainManagement.jsx';
-import ChildMainStatement from '../views/ChildMainStateMent.jsx';
-import ChildFundManagement from '../views/ChildFundManagement.jsx';
-import ChildFundStatement from '../views/ChildFundStatement.jsx';
-import ChildSavingManagement from '../views/ChildSavingManagement.jsx';
-import ChildSavingStatement from '../views/ChildSavingStatement.jsx';
-import ChildEducation from '../views/ChildEducation.jsx';
-import Welcome from '../views/Welcome.jsx';
-import Profile from '../views/Profile.jsx';
-import '../assets/css/common.css';
+import ChildMain from '../views/childMain/ChildMain.jsx';
+import ChildFundManagement from '../views/childFund/ChildFundManagement.jsx';
+import ChildFundStatement from '../views/childFund/ChildFundStatement.jsx';
+import ChildSavingManagement from '../views/childSaving/ChildSavingManagement.jsx';
+import ChildSavingStatement from '../views//childSaving/ChildSavingStatement.jsx';
+import ChildEducation from '../views/childEdu/ChildEducation.jsx';
+import Welcome from '../views/welcome/Welcome.jsx';
+import Profile from '../views/profile/Profile.jsx';
+
 /*
     로그인 여부에 따라 달라져야...
     로그인 되어있으면 해당 프로필의 메인페이지로
@@ -73,15 +72,11 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/child',
-                element: <ChildMainManagement />,
+                element: <ChildMain />,
             },
             {
                 path: '/child/main/management',
-                element: <ChildMainManagement />,
-            },
-            {
-                path: '/child/main/statement',
-                element: <ChildMainStatement />,
+                element: <ChildMain />,
             },
             {
                 path: '/child/fund/management',

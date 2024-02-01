@@ -1,75 +1,63 @@
-import { Link, Outlet } from 'react-router-dom';
-import ProfileNav from './ProfileNav';
-
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import { Image } from '@chakra-ui/react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import styles from './ParentNav.module.css';
+import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
+import ProfileNav from './ProfileNav';
+import { useState } from 'react';
 
-export default function ParentNav() {
+function ParentNav() {
+    const navigate = useNavigate();
+    const [top, setTop] = useState(0);
+    const a = ['5.5%', '18%', '29.5%'];
+
+    const handleMain = (num) => {
+        setTop(num);
+
+        const pathMap = {
+            0: '/parent/main',
+            1: '/parent/job',
+            2: '/parent/fundsaving',
+        };
+
+        const newPath = pathMap[num] || '/parent/main';
+        navigate(newPath);
+    };
+
+    function Component({ num, title }) {
+        return (
+            <div
+                className={s(styles.btn, top === num && styles.select)}
+                onClick={() => handleMain(num)}
+            >
+                {title}
+            </div>
+        );
+    }
+
     return (
-        <>
-            <div className={styles.divContainer}>
-                <div className={styles.layoutNav}>
-                    <p className={styles.navLogo}>KIDK KIDK</p>
-                    <ul className={styles.nav}>
-                        <li>
-                            <Link to={`main`}>메인</Link>
-                        </li>
-                        <li>
-                            <Link to={`job`}>직업</Link>
-                        </li>
-                        <li>
-                            <Link to={`fundsaving`}>투자/적금</Link>
-                        </li>
-                        <li className={styles.navLogout}>로그아웃</li>
-                    </ul>
+        <div className={styles.container}>
+            <div className={styles.nav}>
+                <div className={styles.logo}>KIDKIDK</div>
+                <div className={styles.menu}>
+                    <Component num={0} title={'메인'} />
+                    <Component num={1} title={'직업'} />
+                    <Component num={2} title={'투자/적금'} />
                 </div>
-                <div className={styles.layoutSection}>
-                    <Outlet />
-                </div>
-                <div className={styles.layoutProfile}>
-                    <ProfileNav />
-                    <div className={styles.profileChildrenTabs}>
-                        <Tabs variant="soft-rounded" colorScheme={'tabHover'}>
-                            <TabList gap={'30px'} flexDirection={'column'}>
-                                <Tab>
-                                    <Link to={`/parent`}>
-                                        <ul>
-                                            <li>
-                                                <Image
-                                                    src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                                    alt="Green double couch with wooden legs"
-                                                    borderRadius="full"
-                                                    boxSize="50px"
-                                                />
-                                            </li>
-                                            <li>신짱아</li>
-                                            <li>펫시터</li>
-                                        </ul>
-                                    </Link>
-                                </Tab>
-                                <Tab>
-                                    <Link to={`/parent/main`}>
-                                        <ul>
-                                            <li>
-                                                <Image
-                                                    src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                                    alt="Green double couch with wooden legs"
-                                                    borderRadius="full"
-                                                    boxSize="50px"
-                                                />
-                                            </li>
-                                            <li>신짱구</li>
-                                            <li>환경미화원</li>
-                                        </ul>
-                                    </Link>
-                                </Tab>
-                                <Tab color="tabDefault">Tab 3</Tab>
-                            </TabList>
-                        </Tabs>
+                <div className={styles.light} style={{ top: a[top] }}>
+                    <div className={styles.rectangleRow}></div>
+                    <div className={styles.rectangleCol}>
+                        <div className={styles.rectangleMin1}></div>
+                        <div className={styles.rectangleMin2}></div>
                     </div>
                 </div>
             </div>
-        </>
+            <div className={styles.contents}>
+                <Outlet />
+            </div>
+            <div className={styles.profile}>
+                <ProfileNav />
+            </div>
+        </div>
     );
 }
+
+export default ParentNav;

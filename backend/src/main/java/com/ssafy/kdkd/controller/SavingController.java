@@ -2,6 +2,7 @@ package com.ssafy.kdkd.controller;
 
 import static com.ssafy.kdkd.domain.dto.saving.SavingDto.mappingSavingDto;
 import static com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto.mappingSavingHistoryDto;
+import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
 
 import com.ssafy.kdkd.domain.dto.saving.SavingDto;
 import com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto;
@@ -16,19 +17,20 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/saving")
@@ -38,6 +40,7 @@ public class SavingController {
     private final SavingHistoryService savingHistoryService;
 
     @GetMapping("/info/{childId}")
+    @Operation(summary = "적금 조회")
     public ResponseEntity<?> info(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
@@ -65,6 +68,7 @@ public class SavingController {
     }
 
     @PostMapping("/create")
+    @Operation(summary = "적금 생성")
     public ResponseEntity<?> create(@RequestBody SavingDto savingDto, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.CREATED;
@@ -77,12 +81,11 @@ public class SavingController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 saving 테이블 확인
-                Optional<Saving> result = savingService.findById(childId);
-                if (result.isEmpty()) {
-                    resultMap.put("Saving", savingService.insertSaving(savingDto));
-                } else {
+                SavingDto reslut =  savingService.createSaving(savingDto);
+                if (reslut == null) {
                     status = HttpStatus.CONFLICT;
+                } else {
+                    resultMap.put("Saving", reslut);
                 }
             }
         } catch (Exception e) {
@@ -92,6 +95,7 @@ public class SavingController {
     }
 
     @GetMapping("/history/{childId}")
+    @Operation(summary = "적금 내역 조회")
     public ResponseEntity<?> history(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
@@ -104,13 +108,12 @@ public class SavingController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 // childId가 가진 saving 테이블 확인
-                Optional<Saving> result = savingService.findById(childId);
-                if (result.isEmpty()) {
+                List<SavingHistoryDto> result =
+                    mappingSavingHistoryDto(savingHistoryService.findSavingHistoriesByChildId(childId));
+                if (result == null) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
-                    List<SavingHistoryDto> list =
-                        mappingSavingHistoryDto(savingHistoryService.findSavingHistoriesByChild_Id(childId));
-                    resultMap.put("SavingHistories", list);
+                    resultMap.put("SavingHistories", result);
                 }
             }
         } catch (Exception e) {
@@ -119,8 +122,4 @@ public class SavingController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    private ResponseEntity<String> exceptionHandling(Exception e) {
-        e.printStackTrace();
-        return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

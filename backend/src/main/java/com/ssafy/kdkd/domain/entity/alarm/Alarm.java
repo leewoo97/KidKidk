@@ -32,4 +32,5 @@ public class Alarm {
 
     @Column(name = "receiver_id")
     private Long receiverId;
+
 }

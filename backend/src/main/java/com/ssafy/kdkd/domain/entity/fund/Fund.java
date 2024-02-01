@@ -50,11 +50,11 @@ public class Fund {
     /**
      * 투자 생성
      */
-    public static Fund createFund(FundReservationDto fundReservationDto) {
+    public static Fund createFund(FundReservation fundReservation) {
         Fund fund = new Fund();
-        fund.name = fundReservationDto.getName();
-        fund.content = fundReservationDto.getContent();
-        fund.yield = fundReservationDto.getYield();
+        fund.name = fundReservation.getName();
+        fund.content = fundReservation.getContent();
+        fund.yield = fundReservation.getYield();
         return fund;
     }
 

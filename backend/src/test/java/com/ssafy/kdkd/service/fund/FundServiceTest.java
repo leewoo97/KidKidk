@@ -1,6 +1,7 @@
 // package com.ssafy.kdkd.service.fund;
 //
 // import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
+// import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 // import com.ssafy.kdkd.domain.entity.fund.Fund;
 // import com.ssafy.kdkd.domain.entity.user.Child;
 // import com.ssafy.kdkd.service.user.ChildService;
@@ -32,29 +33,47 @@
 //     @Test
 //     @Transactional
 //     @Rollback(value = false)
-//     public void 투자_생성() throws Exception {
+//     public void 투자금_이체() throws Exception {
 //         //given
-//         Child child = childService.findChild(1L).get();
+//         boolean test = true;
+//         int fundMoney = 9000;
+//         Long childId = 1L;
+//         TransferDto transferDto = new TransferDto(fundMoney, childId);
 //
 //         //when
-//         FundReservationDto fundReservationDto = new FundReservationDto(1L, "test fund", "test content", 0, true, 1L);
-//         Fund fund = createFund(fundReservationDto);
-//         fund.setChild(child);
-//         fundService.save(fund);
-//         em.flush();
+//         boolean result = fundService.transfer(transferDto);
 //
 //         //then
-//         Fund findFund = fundService.findById(1L).get();
+//         assertEquals("이체가 성공하여 true여야 합니다.", test, result);
 //
-//         System.out.println("===== 투자 정보 출력 =====");
-//         System.out.println("fund_id: " + findFund.getId() +
-//                         " name: " + findFund.getName() +
-//                         " content: " + findFund.getContent() +
-//                         " yield: " +findFund.getYield());
-//         System.out.println("===== 투자 정보 출력 =====");
-//
-//         assertEquals("투자에 자식 아이디가 동일해야 합니다.", "test fund", findFund.getName());
 //     }
+//
+//     // @Test
+//     // @Transactional
+//     // @Rollback(value = false)
+//     // public void 투자_생성() throws Exception {
+//     //     //given
+//     //     Child child = childService.findChild(1L).get();
+//     //
+//     //     //when
+//     //     FundReservationDto fundReservationDto = new FundReservationDto(1L, "test fund", "test content", 0, true, 1L);
+//     //     Fund fund = createFund(fundReservationDto);
+//     //     fund.setChild(child);
+//     //     fundService.save(fund);
+//     //     em.flush();
+//     //
+//     //     //then
+//     //     Fund findFund = fundService.findById(1L).get();
+//     //
+//     //     System.out.println("===== 투자 정보 출력 =====");
+//     //     System.out.println("fund_id: " + findFund.getId() +
+//     //                     " name: " + findFund.getName() +
+//     //                     " content: " + findFund.getContent() +
+//     //                     " yield: " +findFund.getYield());
+//     //     System.out.println("===== 투자 정보 출력 =====");
+//     //
+//     //     assertEquals("투자에 자식 아이디가 동일해야 합니다.", "test fund", findFund.getName());
+//     // }
 //
 //     @Test
 //     public void 투자_조회() throws Exception {
@@ -86,7 +105,7 @@
 //
 //         //when
 //
-//         existingFund.updateFund(new FundReservationDto(1L, "새로운 투자", existingFund.getContent(), existingFund.getYield(), true, 1L));
+//         existingFund.updateFund(new FundReservationDto("새로운 투자", existingFund.getContent(), existingFund.getYield(), true, 1L));
 //         em.flush();
 //         em.clear();
 //

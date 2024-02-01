@@ -1,7 +1,6 @@
 package com.ssafy.kdkd.service.saving;
 
 import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
-import static com.ssafy.kdkd.domain.entity.saving.Saving.createSaving;
 import static com.ssafy.kdkd.domain.entity.saving.SavingHistory.createSavingHistory;
 
 import com.ssafy.kdkd.domain.dto.Deposit.DepositDto;
@@ -44,19 +43,43 @@ public class SavingService {
         return savingRepository.findById(childId);
     }
 
+    @Transactional
     public void delete(Saving saving) {
         savingRepository.delete(saving);
     }
 
+    /**
+     * 적금 생성
+     * 
+     * @param savingDto 적금생성을 위한 입력값
+     * @return SavingDto 생성된 적금정보
+     */
     @Transactional
-    public SavingDto insertSaving(SavingDto savingDto) {
-        SavingDto setSavingDto = new SavingDto(LocalDateTime.now(), 4, savingDto.getPayment(), 5, savingDto.getChildId());
-        Saving saving = createSaving(setSavingDto);
-        saving.setChild(childService.findChild(savingDto.getChildId()).get());
+    public SavingDto createSaving(SavingDto savingDto) {
+        Long childId = savingDto.getChildId();
+        Child child = childService.findChild(childId).get();
+        Optional<Saving> existingSaving = savingRepository.findById(childId);
+
+        if (!existingSaving.isEmpty()) {
+            return null;
+        }
+
+        int count = 4;
+        int rate = 5;
+        SavingDto setSavingDto = new SavingDto(LocalDateTime.now(), count, savingDto.getPayment(), rate, childId);
+        Saving saving = Saving.createSaving(setSavingDto);
+        saving.setChild(child);
         savingRepository.save(saving);
         return setSavingDto;
     }
 
+    /**
+     * 적금 스케줄러
+     * 상세:
+     * 1. 적금 납입
+     * 2. 적금 만기 해지, 중도 해지 업데이트
+     * 3. deposit에 내역 업데이트
+     */
     @Transactional
     public void updateSaving() {
         // saving 전체 조회

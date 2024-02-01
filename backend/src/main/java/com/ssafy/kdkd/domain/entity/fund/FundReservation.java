@@ -68,7 +68,6 @@ public class FundReservation {
     public void updateFundReservation(FundReservationDto fundReservationDto) {
         this.name = fundReservationDto.getName();
         this.content = fundReservationDto.getContent();
-        this.yield = fundReservationDto.getYield();
         this.state = fundReservationDto.isState();
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface SavingHistoryRepository extends JpaRepository<SavingHistory, Long> {
 
     @Query("SELECT sh FROM SavingHistory sh WHERE sh.child.id = :childId")
-    List<SavingHistory> findSavingHistoriesByChild_Id(@Param("childId") Long childId);
+    List<SavingHistory> findSavingHistoriesByChildId(@Param("childId") Long childId);
 
     @Modifying
     @Query("DELETE FROM SavingHistory sh WHERE sh.child.id = :childId")

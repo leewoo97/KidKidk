@@ -20,14 +20,16 @@ public class ProfileService {
 	@Autowired
 	UserRepository userRepository;
 
-	public void profileCreate(ProfileDto profileDto){
+	public int profileCreate(ProfileDto profileDto){
 		Optional<User> userOptional = userRepository.findById(profileDto.getUserId());
 		if (userOptional.isPresent()) { // Optional에서 User 객체를 꺼내기 전에 존재 여부를 확인하는 것이 좋습니다.
 			User user = userOptional.get(); // Optional에서 User 객체를 꺼냅니다.
 			Profile profile = new Profile(profileDto, user);
 			profileRepository.save(profile);
+			return 1; //프로필이 생성되면 1을 반환
 		} else {
-			// User를 찾을 수 없는 경우에 대한 처리
+			// 프로필이 생성되지않으면 0을 반환
+			return 0;
 		}
 	}
 
@@ -50,9 +52,33 @@ public class ProfileService {
 	public void profileUpdate(ProfileUpdateDto profileUpdateDto){
 		System.out.println("Service 들어옴");
 		Long profileId = profileUpdateDto.getProfileId();
-		String nickname = profileUpdateDto.getNickname();
-		int pin = profileUpdateDto.getPin();
-		String profileImage = profileUpdateDto.getProfileImage();
+		String nickname = null;
+		int pin = 0;
+		String profileImage = null;
+
+		Optional<Profile> updateProfile = profileRepository.findById(profileId);
+		if (updateProfile.isPresent()) {
+			Profile profile = updateProfile.get();
+			nickname = profile.getNickname();
+			pin = profile.getPin();
+			profileImage = profile.getProfileImage();
+		}else{
+
+		}
+
+		String updateNickname = profileUpdateDto.getNickname();
+		int updatePin = profileUpdateDto.getPin();
+		String updateProfileImage = profileUpdateDto.getProfileImage();
+
+		if(updateNickname != null){
+			nickname = updateNickname;
+		}
+		if(updatePin == 0){
+			pin = updatePin;
+		}
+		if(updateProfileImage != null){
+			profileImage = updateProfileImage;
+		}
 
 		profileRepository.profileUpdate(profileId,nickname,pin,profileImage);
 

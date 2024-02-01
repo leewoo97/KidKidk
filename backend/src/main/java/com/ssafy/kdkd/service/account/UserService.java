@@ -11,13 +11,13 @@ public class UserService {
 	@Autowired
 	UserRepository userRepository;
 
-	public String signUp(UserDto userDto) {
+	public int signUp(UserDto userDto) {
 		if(userRepository.existsByUser(userDto.getAccessToken(),userDto.getEmail())){
-			return "이미 가입한 계정이 존재합니다.";
+			return 0; //이미 존재하는 회원입니다
 		}else{
 			User temp = new User(userDto);
 			userRepository.save(temp);
-			return "회원가입이 완료되었습니다.";
+			return 1; //회원가입이 완료되었습니다.
 		}
 	}
 

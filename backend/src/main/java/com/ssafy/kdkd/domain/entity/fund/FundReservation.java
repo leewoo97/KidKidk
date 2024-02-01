@@ -70,4 +70,5 @@ public class FundReservation {
         this.content = fundReservationDto.getContent();
         this.state = fundReservationDto.isState();
     }
+    
 }

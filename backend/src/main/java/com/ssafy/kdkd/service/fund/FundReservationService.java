@@ -10,7 +10,6 @@ import com.ssafy.kdkd.service.user.ChildService;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +78,13 @@ public class FundReservationService {
             return null;
         }
 
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         fundReservationDto.setYield((int) Math.floor(Math.random() * 10));
         fundReservationDto.setState(true);
         FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
@@ -102,7 +107,13 @@ public class FundReservationService {
             return null;
         }
 
-        Child child = childService.findChild(fundReservationDto.getChildId()).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         FundReservation reservation = existingFundReservation.get();
         reservation.updateFundReservation(fundReservationDto);
         reservation.setChild(child);
@@ -118,7 +129,13 @@ public class FundReservationService {
      */
     @Transactional
     public FundReservationDto deleteFundReservation(Long childId) {
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         Optional<Fund> fund = fundService.findById(childId);
 
         if (fund.isEmpty()) {

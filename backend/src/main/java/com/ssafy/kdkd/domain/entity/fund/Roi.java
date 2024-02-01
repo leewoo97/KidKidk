@@ -58,4 +58,5 @@ public class Roi {
         this.success = roiDto.getSuccess();
         this.count = roiDto.getCount();
     }
+
 }

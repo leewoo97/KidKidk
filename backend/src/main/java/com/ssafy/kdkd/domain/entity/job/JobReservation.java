@@ -68,4 +68,5 @@ public class JobReservation {
             jobReservationDto.getTaskAmount());
         this.state = jobReservationDto.isState();
     }
+
 }

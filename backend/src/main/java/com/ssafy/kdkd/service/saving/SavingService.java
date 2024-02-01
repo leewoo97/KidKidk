@@ -24,10 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class SavingService {
 
     private final SavingRepository savingRepository;
@@ -57,10 +59,16 @@ public class SavingService {
     @Transactional
     public SavingDto createSaving(SavingDto savingDto) {
         Long childId = savingDto.getChildId();
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         Optional<Saving> existingSaving = savingRepository.findById(childId);
 
-        if (!existingSaving.isEmpty()) {
+        if (existingSaving.isPresent()) {
             return null;
         }
 
@@ -94,7 +102,14 @@ public class SavingService {
             if (daysBetween % 7 <= 0) {
                 //  남은 납입 횟수, 남은 납입 기회 확인
                 Long childId = saving.getId();
-                Child child = childService.findChild(childId).get();
+                Optional<Child> findChild = childService.findChild(childId);
+
+                if (findChild.isEmpty()) {
+                    log.info("적금 스케줄러 실패");
+                    return;
+                }
+
+                Child child = findChild.get();
                 int requiredCount = 4;
                 int payment = saving.getPayment();
                 int coin = child.getCoin();

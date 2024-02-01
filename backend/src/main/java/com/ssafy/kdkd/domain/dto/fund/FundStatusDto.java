@@ -11,11 +11,8 @@ import lombok.NoArgsConstructor;
 public class FundStatusDto {
 
     private int amount;
-
     private boolean submit;
-
     private boolean answer;
-
     private Long childId;
 
 }

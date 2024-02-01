@@ -19,10 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class FundService {
 
     private final FundRepository fundRepository;
@@ -57,7 +59,13 @@ public class FundService {
     public boolean transfer(TransferDto transferDto) {
         int fundMoney = transferDto.getFundMoney();
         Long childId = transferDto.getChildId();
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return false;
+        }
+
+        Child child = findChild.get();
         int updateFundMoney = child.getFundMoney() - fundMoney;
         int updateCoin = child.getCoin() + fundMoney;
         if (child.getFundMoney() - fundMoney < 0) {
@@ -86,7 +94,15 @@ public class FundService {
      */
     @Transactional
     public void insertFund(FundReservation fundReservation) {
-        Child child = childService.findChild(fundReservation.getId()).get();
+        Long childId = fundReservation.getId();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            log.info("투자 생성 실패");
+            return;
+        }
+
+        Child child = findChild.get();
         Fund fund = Fund.createFund(fundReservation);
         fund.setChild(child);
         save(fund);

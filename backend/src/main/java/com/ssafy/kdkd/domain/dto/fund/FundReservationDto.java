@@ -15,13 +15,9 @@ import lombok.NoArgsConstructor;
 public class FundReservationDto {
 
     private String name;
-
     private String content;
-
     private int yield;
-
     private boolean state;
-
     private Long childId;
 
     public static FundReservationDto mappingFundReservationDto(FundReservation fundReservation) {

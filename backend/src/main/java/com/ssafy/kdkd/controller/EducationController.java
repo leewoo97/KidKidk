@@ -5,7 +5,7 @@ import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
 import com.ssafy.kdkd.domain.entity.education.Education;
 import com.ssafy.kdkd.service.education.EducationService;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
@@ -32,7 +32,7 @@ public class EducationController {
             log.info("education list");
             List<Education> result = educationService.findAll();
             HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+            header.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
             return ResponseEntity.ok().headers(header).body(result);
         } catch (Exception e) {
             return exceptionHandling(e);

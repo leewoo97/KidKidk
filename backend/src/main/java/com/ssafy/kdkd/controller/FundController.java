@@ -185,7 +185,7 @@ public class FundController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.CREATED;
         try {
-            log.info("fund controller: create-fund() Enter");
+            log.info("fund controller: createFund() Enter");
             Long childId = fundReservationDto.getChildId();
             // 현재 childId에 대한 권한 확인
             boolean isValid = false;
@@ -214,7 +214,7 @@ public class FundController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.CREATED;
         try {
-            log.info("fund controller: create-reservation() Enter");
+            log.info("fund controller: createReservation() Enter");
             Long childId = fundReservationDto.getChildId();
             // 현재 childId에 대한 권한 확인
             boolean isValid = false;
@@ -226,9 +226,9 @@ public class FundController {
                 FundReservationDto result = fundReservationService.createFundReservation(fundReservationDto, type);
 
                 if (result == null) {
-                    resultMap.put("FundReservation", result);
-                } else {
                     status = HttpStatus.CONFLICT;
+                } else {
+                    resultMap.put("FundReservation", result);
                 }
             }
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
 import com.ssafy.kdkd.domain.dto.saving.SavingDto;
 import com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto;
 import com.ssafy.kdkd.domain.entity.saving.Saving;
+import com.ssafy.kdkd.domain.entity.saving.SavingHistory;
 import com.ssafy.kdkd.service.saving.SavingHistoryService;
 import com.ssafy.kdkd.service.saving.SavingService;
 
@@ -108,11 +109,14 @@ public class SavingController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 // childId가 가진 saving 테이블 확인
-                List<SavingHistoryDto> result =
-                    mappingSavingHistoryDto(savingHistoryService.findSavingHistoriesByChildId(childId));
-                if (result == null) {
+                List<SavingHistory> savingHistoryList =
+                    savingHistoryService.findSavingHistoriesByChildId(childId);
+
+                if (savingHistoryList == null) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
+                    List<SavingHistoryDto> result =
+                        mappingSavingHistoryDto(savingHistoryList);
                     resultMap.put("SavingHistories", result);
                 }
             }

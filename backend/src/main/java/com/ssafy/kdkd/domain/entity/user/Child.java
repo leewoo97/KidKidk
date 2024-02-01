@@ -50,4 +50,5 @@ public class Child {
     public void transferChild(int fundMoney) {
         this.fundMoney = fundMoney;
     }
+
 }

@@ -66,4 +66,5 @@ public class Fund {
         this.content = fundReservationDto.getContent();
         this.yield = fundReservationDto.getYield();
     }
+
 }

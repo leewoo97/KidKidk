@@ -17,15 +17,10 @@ import lombok.NoArgsConstructor;
 public class DepositDto {
 
     private LocalDateTime dataLog;
-
     private String detail;
-
     private boolean type;
-
     private int amount;
-
     private int money;
-
     private Long childId;
 
     public DepositDto(LocalDateTime dataLog, String detail, boolean type, int amount, int money, Long childId) {

@@ -1,5 +1,8 @@
 package com.ssafy.kdkd.controller;
 
+import com.ssafy.kdkd.domain.dto.Alarm.AlarmDto;
+import com.ssafy.kdkd.service.alarm.AlarmService;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ssafy.kdkd.domain.dto.Alarm.AlarmDto;
-import com.ssafy.kdkd.service.alarm.AlarmService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;

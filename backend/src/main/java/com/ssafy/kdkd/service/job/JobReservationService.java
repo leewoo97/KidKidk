@@ -62,7 +62,13 @@ public class JobReservationService {
             return null;
         }
 
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         jobReservationDto.setState(true);
         JobReservation reservation = JobReservation.createJobReservation(jobReservationDto);
         reservation.setChild(child);
@@ -85,7 +91,13 @@ public class JobReservationService {
             return null;
         }
 
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         JobReservation jobReservation = existingJobReservation.get();
         jobReservation.updateJobReservation(jobReservationDto);
         jobReservation.setChild(child);
@@ -101,7 +113,13 @@ public class JobReservationService {
      */
     @Transactional
     public JobReservationDto deleteJobReservation(Long childId) {
-        Child child = childService.findChild(childId).get();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return null;
+        }
+
+        Child child = findChild.get();
         Optional<Job> job = jobService.findById(childId);
 
         if (job.isEmpty()) {

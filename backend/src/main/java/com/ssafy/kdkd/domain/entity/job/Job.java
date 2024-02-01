@@ -68,4 +68,5 @@ public class Job {
     public void updateJob(int doneCount) {
         this.doneCount = doneCount;
     }
+
 }

@@ -65,4 +65,5 @@ public class FundHistory {
         fundHistory.pnl = fundHistoryDto.getPnl();
         return fundHistory;
     }
+
 }

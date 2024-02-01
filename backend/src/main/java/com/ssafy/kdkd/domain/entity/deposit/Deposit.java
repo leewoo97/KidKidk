@@ -69,4 +69,5 @@ public class Deposit {
         deposit.money = depositDto.getMoney();
         return deposit;
     }
+
 }

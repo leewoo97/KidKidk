@@ -44,4 +44,5 @@ public class Education {
         education.content = content;
         return education;
     }
+
 }

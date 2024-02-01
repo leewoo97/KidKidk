@@ -13,13 +13,9 @@ import lombok.NoArgsConstructor;
 public class FundHistoryDto {
 
     private LocalDateTime dataLog;
-
     private int seedMoney;
-
     private int yield;
-
     private int pnl;
-
     private Long childId;
 
 }

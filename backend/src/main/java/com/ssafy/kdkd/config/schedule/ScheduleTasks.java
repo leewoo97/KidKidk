@@ -3,7 +3,6 @@ package com.ssafy.kdkd.config.schedule;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundUpdateService;
 import com.ssafy.kdkd.service.job.JobService;
 import com.ssafy.kdkd.service.saving.SavingService;

@@ -22,10 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class JobService {
 
     private final JobRepository jobRepository;
@@ -58,7 +60,14 @@ public class JobService {
      */
     @Transactional
     public void insertJob(JobReservation jobReservation) {
-        Child child = childService.findChild(jobReservation.getId()).get();
+        Optional<Child> findChild = childService.findChild(jobReservation.getId());
+
+        if (findChild.isEmpty()) {
+            log.info("직업 생성 실패");
+            return;
+        }
+
+        Child child = findChild.get();
         Job job = createJob(jobReservation);
         job.setChild(child);
         save(job);
@@ -79,7 +88,14 @@ public class JobService {
         for (Job job : jobList) {
             // 급여 지급
             Long childId = job.getId();
-            Child child = childService.findChild(childId).get();
+            Optional<Child> findChild = childService.findChild(childId);
+
+            if (findChild.isEmpty()) {
+                log.info("직업 스케줄러 실패");
+                return;
+            }
+
+            Child child = findChild.get();
             JobInfo jobInfo = job.getJobInfo();
             int doneCount = job.getDoneCount();
             int taskAmount = jobInfo.getTaskAmount();
@@ -111,7 +127,14 @@ public class JobService {
 
         for (JobReservation jobReservation : jobReservationList) {
             Long childId = jobReservation.getId();
-            Child child = childService.findChild(childId).get();
+            Optional<Child> findChild = childService.findChild(childId);
+
+            if (findChild.isEmpty()) {
+                log.info("직업 스케줄러 실패");
+                return;
+            }
+
+            Child child = findChild.get();
             boolean state = jobReservation.isState();
 
             if (state) {

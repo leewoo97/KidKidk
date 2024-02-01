@@ -3,6 +3,7 @@ package com.ssafy.kdkd.service.fund;
 import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundStatus;
+import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.fund.FundStatusRepository;
 import com.ssafy.kdkd.service.user.ChildService;
 
@@ -56,7 +57,14 @@ public class FundStatusService {
         }
 
         Fund fund = findFund.get();
-        int fundMoney = childService.findChild(childId).get().getFundMoney();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            return false;
+        }
+
+        Child child = findChild.get();
+        int fundMoney = child.getFundMoney();
         int amount = fundStatusDto.getAmount();
 
         if (findFundStatus.isEmpty()) {

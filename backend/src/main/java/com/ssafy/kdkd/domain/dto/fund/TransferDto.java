@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class TransferDto {
 
     private int fundMoney;
-
     private Long childId;
 
 }

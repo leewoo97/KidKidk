@@ -17,13 +17,9 @@ import lombok.NoArgsConstructor;
 public class SavingDto {
 
     private LocalDateTime startDate;
-
     private int count;
-
     private int payment;
-
     private int rate;
-
     private Long childId;
 
     public static SavingDto mappingSavingDto(Saving saving) {

@@ -48,4 +48,5 @@ public class Quiz {
         quiz.answer = answer;
         return quiz;
     }
+
 }

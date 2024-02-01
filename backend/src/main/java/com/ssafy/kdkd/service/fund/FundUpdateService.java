@@ -2,13 +2,6 @@ package com.ssafy.kdkd.service.fund;
 
 import static com.ssafy.kdkd.domain.entity.fund.FundHistory.createFundHistory;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssafy.kdkd.domain.dto.fund.FundHistoryDto;
 import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
@@ -19,11 +12,20 @@ import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.service.user.ChildService;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class FundUpdateService {
 
     private final FundService fundService;
@@ -47,7 +49,15 @@ public class FundUpdateService {
         for (FundStatus fundStatus : list) {
             // 투자 결과 업데이트
             Fund fund = fundStatus.getFund();
-            Child child = childService.findChild(fund.getId()).get();
+            Optional<Child> findChild = childService.findChild(fund.getId());
+
+            if (findChild.isEmpty()) {
+                log.info("투자 스케줄러 실패");
+                return;
+            }
+
+            Child child = findChild.get();
+
             Long childId = child.getId();
             int amount = fundStatus.getAmount();
             boolean answer = fundStatus.isAnswer();

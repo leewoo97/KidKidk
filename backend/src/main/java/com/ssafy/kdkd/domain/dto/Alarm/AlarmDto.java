@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 public class AlarmDto {
 
     private int type;
-
     private String content;
-
     private Long senderId;
-
     private Long receiverId;
 
 }

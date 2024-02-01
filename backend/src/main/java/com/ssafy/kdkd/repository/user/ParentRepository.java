@@ -1,4 +1,4 @@
-package com.ssafy.kdkd.repository.child;
+package com.ssafy.kdkd.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

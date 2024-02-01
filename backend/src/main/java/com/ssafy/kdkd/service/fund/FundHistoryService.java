@@ -1,13 +1,13 @@
 package com.ssafy.kdkd.service.fund;
 
+import com.ssafy.kdkd.domain.entity.fund.FundHistory;
+import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.ssafy.kdkd.domain.entity.fund.FundHistory;
-import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

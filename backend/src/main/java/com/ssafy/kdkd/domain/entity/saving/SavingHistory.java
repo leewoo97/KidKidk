@@ -65,4 +65,5 @@ public class SavingHistory {
         savingHistory.amount = savingHistoryDto.getAmount();
         return savingHistory;
     }
+
 }

@@ -16,15 +16,10 @@ import lombok.NoArgsConstructor;
 public class JobDto {
 
     private String name;
-
     private int wage;
-
     private String task;
-
     private int taskAmount;
-
     private int doneCount;
-
     private Long childId;
 
     public static JobDto mappingJobDto(Job job) {

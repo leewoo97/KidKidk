@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class RoiService {
 
     private final RoiRepository roiRepository;
@@ -46,7 +48,14 @@ public class RoiService {
      */
     @Transactional
     public void updateRoi(Roi roi, RoiDto roiDto) {
-        Child child = childService.findChild(roiDto.getChildId()).get();
+        Optional<Child> findChild = childService.findChild(roiDto.getChildId());
+
+        if (findChild.isEmpty()) {
+            log.info("ROI 수정 실패");
+            return;
+        }
+
+        Child child = findChild.get();
         roi.updateRoi(roiDto);
         roi.setChild(child);
         roiRepository.save(roi);

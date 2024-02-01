@@ -15,9 +15,7 @@ import lombok.NoArgsConstructor;
 public class RoiDto {
 
     private int success;
-
     private int count;
-
     private Long childId;
 
     public static RoiDto mappingRoiDto(Roi roi) {

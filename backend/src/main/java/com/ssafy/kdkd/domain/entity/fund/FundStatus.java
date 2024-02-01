@@ -1,8 +1,8 @@
 package com.ssafy.kdkd.domain.entity.fund;
 
-import static jakarta.persistence.FetchType.LAZY;
-
 import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

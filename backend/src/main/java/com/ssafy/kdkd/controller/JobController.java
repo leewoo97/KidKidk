@@ -1,9 +1,7 @@
 package com.ssafy.kdkd.controller;
 
-import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.dto.job.JobDto;
 import com.ssafy.kdkd.domain.dto.job.JobReservationDto;
-import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.job.Job;
 import com.ssafy.kdkd.domain.entity.job.JobReservation;
 import com.ssafy.kdkd.service.job.JobReservationService;

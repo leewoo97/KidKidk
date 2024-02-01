@@ -68,7 +68,7 @@ public class FundService {
         child.updateChild(updateCoin);
 
         // deposit
-        String detail = "투자 이체";
+        String detail = "투자 입금";
         boolean type = true;
         int money = fundMoney;
 

@@ -36,7 +36,7 @@ public class JobService {
     public void save(Job job) {
         jobRepository.save(job);
     }
-fg
+
     public Optional<Job> findById(Long childId) {
         return jobRepository.findById(childId);
     }

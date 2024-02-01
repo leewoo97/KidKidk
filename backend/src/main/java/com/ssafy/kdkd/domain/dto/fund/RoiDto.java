@@ -4,10 +4,12 @@ import com.ssafy.kdkd.domain.entity.fund.Roi;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoiDto {
@@ -19,11 +21,11 @@ public class RoiDto {
     private Long childId;
 
     public static RoiDto mappingRoiDto(Roi roi) {
-        RoiDto roiDto = new RoiDto();
-        roiDto.success = roi.getSuccess();
-        roiDto.count = roi.getCount();
-        roiDto.childId = roi.getId();
-        return roiDto;
+        return RoiDto.builder()
+            .success(roi.getSuccess())
+            .count(roi.getCount())
+            .childId(roi.getId())
+            .build();
     }
 
 }

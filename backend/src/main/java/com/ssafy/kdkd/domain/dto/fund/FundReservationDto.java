@@ -4,10 +4,12 @@ import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FundReservationDto {
@@ -23,12 +25,13 @@ public class FundReservationDto {
     private Long childId;
 
     public static FundReservationDto mappingFundReservationDto(FundReservation fundReservation) {
-        FundReservationDto fundReservationDto = new FundReservationDto();
-        fundReservationDto.name = fundReservation.getName();
-        fundReservationDto.content = fundReservation.getContent();
-        fundReservationDto.yield = fundReservation.getYield();
-        fundReservationDto.state = fundReservation.isState();
-        fundReservationDto.childId = fundReservationDto.getChildId();
-        return fundReservationDto;
+        return FundReservationDto.builder()
+            .name(fundReservation.getName())
+            .content(fundReservation.getContent())
+            .yield(fundReservation.getYield())
+            .state(fundReservation.isState())
+            .childId(fundReservation.getId())
+            .build();
     }
+
 }

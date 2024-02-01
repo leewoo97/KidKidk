@@ -1,0 +1,124 @@
+.ParentFundSavingContainer {
+    position: relative;
+    width: 70vw;
+    height: 90vh;
+    border-radius: 15px;
+}
+
+.ParentFundSavingContainerStart {
+    position: absolute;
+    left: 7.5vw;
+    width: 60vw;
+    height: 90vh;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+}
+
+.ParentFundSavingContainer button {
+    background-color: var(--component-title);
+    color: white;
+    font-size: 10px;
+    border-radius: 15px;
+    padding: 5px 20px 5px 20px;
+    border: none;
+    outline: none;
+}
+
+.childFundStatus > p:first-child,
+.childReservationFundStatus > p:first-child,
+.todayFundNews > p:first-child,
+.childSavingStatus > p:first-child {
+    color: var(--component-title);
+    font-size: 20px;
+    font-weight: 900;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.childFundStatus > :nth-child(2),
+.childReservationFundStatus > :nth-child(2),
+.todayFundNews > :nth-child(2),
+.childSavingStatus > :nth-child(2) {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.childFundStatusFrame > p,
+.childReservationFundStatusFrame > p {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.fundAccountGraph,
+.fundBenefitGraph,
+.childFundStatusFrame,
+.childReservationFundStatusFrame,
+.todayFundNewsFrame,
+.childSavingStatusFrame {
+    background-color: var(--component-background);
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+}
+
+.todayFundNews {
+    grid-column: span 2;
+}
+
+.todayFundNewsFrame {
+    text-align: center;
+}
+
+.todayFundNewsFrame > p {
+    display: inline;
+}
+
+.todayFundNewsFrame > button {
+    margin-left: 50px;
+}
+
+.childSavingStatus {
+    grid-column: span 2;
+}
+
+.childSavingStatusFrame {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+}
+
+.childSavingStatusFrame > div > p:first-child {
+    font-weight: bold;
+}
+
+.childSavingStatusFrame_paymentTimes {
+    margin: auto;
+}
+
+.childSavingStatusFrame_paymentTimes > table {
+    align-items: center;
+    text-align: center;
+    list-style: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+}
+
+.childSavingStatusFrame_paymentTimes > table th {
+    font-weight: normal;
+    width: 70px;
+}
+
+.childSavingStatusFrame_paymentTimes > table td {
+    width: 70px;
+}

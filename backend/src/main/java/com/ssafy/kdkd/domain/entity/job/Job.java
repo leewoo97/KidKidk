@@ -36,4 +36,37 @@ public class Job {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "job_id")
     private Child child;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setChild(Child child) {
+        this.child = child;
+    }
+
+    /**
+     * 직업 생성
+     */
+    public static Job createJob(JobReservation jobReservation) {
+        Job job = new Job();
+        job.jobInfo = jobReservation.getJobInfo();
+        job.doneCount = 0;
+        return job;
+    }
+
+    /**
+     * 직업 업데이트
+     */
+    public void updateJob(JobReservation jobReservation) {
+        JobInfo updateJobInfo = jobReservation.getJobInfo();
+        this.jobInfo = new JobInfo(updateJobInfo.getName(),
+            updateJobInfo.getWage(),
+            updateJobInfo.getTask(),
+            updateJobInfo.getTaskAmount());
+    }
+
+    public void updateJob(int doneCount) {
+        this.doneCount = doneCount;
+    }
+
 }

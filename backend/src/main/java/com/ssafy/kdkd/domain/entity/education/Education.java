@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 public class Education {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "education_id")
     private Long id;
 
@@ -33,4 +34,15 @@ public class Education {
     @Lob
     @Column(name = "content")
     private String content;
+
+    /**
+     * 교육 생성
+     */
+    public static Education createEducation(Category category, String content) {
+        Education education = new Education();
+        education.category = category;
+        education.content = content;
+        return education;
+    }
+
 }

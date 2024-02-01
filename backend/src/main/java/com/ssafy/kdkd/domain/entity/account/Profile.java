@@ -1,8 +1,11 @@
 package com.ssafy.kdkd.domain.entity.account;
 
+import com.ssafy.kdkd.domain.dto.account.ProfileDto;
+import com.ssafy.kdkd.domain.dto.account.UserDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.domain.entity.user.Parent;
 
+import static com.ssafy.kdkd.domain.entity.account.User.createUser;
 import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
@@ -15,14 +18,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "profile")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Profile {
 
     @Id
@@ -47,9 +50,16 @@ public class Profile {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "profile", fetch = LAZY)
-    private Child child;
+    public Profile(ProfileDto profileDto, User user) {
+        this.nickname = profileDto.getNickname();
+        this.pin = profileDto.getPin();
+        this.profileImage = profileDto.getProfileImage();
+        this.type = profileDto.isType();
+        this.user = user;
+    }
 
-    @OneToOne(mappedBy = "profile", fetch = LAZY)
-    private Parent parent;
+
+    /**
+     * 프로필 생성
+     */
 }

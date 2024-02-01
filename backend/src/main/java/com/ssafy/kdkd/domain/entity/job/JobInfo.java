@@ -4,8 +4,15 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JobInfo {
 
     @Column(name = "name")
@@ -35,4 +42,5 @@ public class JobInfo {
     public int hashCode() {
         return Objects.hash(name, wage, task, taskAmount);
     }
+
 }

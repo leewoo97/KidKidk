@@ -23,25 +23,25 @@ public class ProfileController {
 	@Autowired
 	private ProfileService profileService;
 
-	@PostMapping("/signup")
-	@Operation(summary = "회원가입")
-	public ResponseEntity<?> signUp(UserDto userDto){
-		if(userService.signUp(userDto)==1) {
-			return new ResponseEntity<Void>(HttpStatus.CREATED);
-		}else{
-			return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
-		}
-	}
-
-	@PostMapping("/login")
-	@Operation(summary = "계정 로그인")
-	public ResponseEntity<?> userLogin(UserLoginDto userLoginDto){
-		if(userService.userLogin(userLoginDto).getUserId()!=null) {
-			return new ResponseEntity<UserLoginDto>(HttpStatus.OK);
-		}else{
-			return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
-		}
-	}
+	// @PostMapping("/signup")
+	// @Operation(summary = "회원가입")
+	// public ResponseEntity<?> signUp(UserDto userDto){
+	// 	if(userService.signUp(userDto)==1) {
+	// 		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	// 	}else{
+	// 		return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+	// 	}
+	// }
+	//
+	// @PostMapping("/login")
+	// @Operation(summary = "계정 로그인")
+	// public ResponseEntity<?> userLogin(UserLoginDto userLoginDto){
+	// 	if(userService.userLogin(userLoginDto).getUserId()!=null) {
+	// 		return new ResponseEntity<UserLoginDto>(HttpStatus.OK);
+	// 	}else{
+	// 		return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+	// 	}
+	// }
 
 	@GetMapping("/profile/selectAll")
 	@Operation(summary = "프로필 모두 가져오기")

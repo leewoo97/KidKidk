@@ -83,14 +83,23 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // TODO: 리프레시 토큰 DB 저장
             String accessToken = tokenProvider.createAccessToken(authentication);
             String refreshToken = "test_refresh_token";
+            if(userService.isUserExists(principal.getUserInfo().getEmail())){
+                UserDto userDto = new UserDto();
+                userDto.setEmail(principal.getUserInfo().getEmail());
+                userDto.setAccessToken(accessToken);
+                userService.updateUser(userDto);
+            }
+            else{
+                UserDto userDto = new UserDto();
+                userDto.setEmail(principal.getUserInfo().getEmail());
+                userDto.setAccessToken(accessToken);
+                userService.saveUser(userDto);
+            }
 
-            UserDto userDto = new UserDto();
-            userDto.setEmail(principal.getUserInfo().getEmail());
-            userDto.setAccessToken(accessToken);
             log.info("email={}, accessToken={}", principal.getUserInfo().getEmail(),
                 accessToken
             );
-            userService.saveUser(userDto);
+
 
             return UriComponentsBuilder.fromUriString(targetUrl)
                     .queryParam("access_token", accessToken)

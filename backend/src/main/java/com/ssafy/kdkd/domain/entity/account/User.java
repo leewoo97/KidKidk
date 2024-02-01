@@ -32,6 +32,10 @@ public class User {
     @Column(name = "email", length = 2000)
     private String email;
 
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     /**
      *  생성자
      */

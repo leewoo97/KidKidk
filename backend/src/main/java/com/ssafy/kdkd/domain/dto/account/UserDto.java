@@ -13,7 +13,6 @@ public class UserDto {
 
     public UserDto() {
     }
-
     public UserDto(String accessToken, String email) {
         this.accessToken = accessToken;
         this.email = email;

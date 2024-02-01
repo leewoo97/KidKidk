@@ -2,6 +2,8 @@ package com.ssafy.kdkd.service.account;
 
 import static com.ssafy.kdkd.domain.entity.account.User.createUser;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.ssafy.kdkd.domain.dto.account.UserDto;
@@ -16,10 +18,22 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User saveUser(UserDto userDto) {
+    public void saveUser(UserDto userDto) {
         User userEntity = createUser(userDto);
-        System.out.println("userEntity : "+userEntity.toString());
-        return userRepository.save(userEntity);
+        userRepository.save(userEntity);
+    }
+
+    public void updateUser(UserDto userDto){
+        Optional<User> findUserEntity = userRepository.findByEmail(userDto.getEmail());
+
+        User userEntity = findUserEntity.get();
+
+        userEntity.setAccessToken(userDto.getAccessToken());
+        userRepository.save(userEntity);
+    }
+
+    public boolean isUserExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 }

@@ -2,12 +2,11 @@ import styles from './WelcomePageFirst.module.css';
 
 import kakaoBtn from '@images/kakao_login_medium_wide.png';
 import naverBtn from '@images/naver_login.png';
+import { backendURL } from '@config/config';
 
 export default function WelcomePageFirst() {
     const redirect_uri = 'http://localhost:5173/profile'; //Redirect URI
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${
-        import.meta.env.VITE_REACT_APP_KAKAO_REST_API_KEY
-    }&redirect_uri=${redirect_uri}&response_type=code`;
+    const kakaoURL = `${backendURL}/oauth2/authorization/kakao?redirect_uri=${redirect_uri}&mode=login`;
 
     const kakaoLoginClick = () => {
         window.location.href = kakaoURL;
@@ -31,17 +30,12 @@ export default function WelcomePageFirst() {
                         <b>키득!</b>
                     </p>
                     <p>
-                        아이의 경제개념을 <b>키</b>워 웃음꽃을 <b>얻어</b>{' '}
-                        보세요!
+                        아이의 경제개념을 <b>키</b>워 웃음꽃을 <b>얻어</b> 보세요!
                     </p>
                 </div>
                 <div className={styles.WelcomePageButtonContainer}>
                     <button className={styles.kakaoButton}>
-                        <img
-                            src={kakaoBtn}
-                            alt="카카오 로그인 버튼"
-                            onClick={kakaoLoginClick}
-                        ></img>
+                        <img src={kakaoBtn} alt="카카오 로그인 버튼" onClick={kakaoLoginClick}></img>
                     </button>
                     <button className={styles.naverButton}>
                         <img src={naverBtn} alt="네이버 로고" height="45px" />

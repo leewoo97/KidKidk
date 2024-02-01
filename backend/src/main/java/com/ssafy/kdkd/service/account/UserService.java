@@ -1,29 +1,39 @@
 package com.ssafy.kdkd.service.account;
 
-import com.ssafy.kdkd.domain.dto.account.UserLoginDto;
+import static com.ssafy.kdkd.domain.entity.account.User.createUser;
+
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.ssafy.kdkd.domain.dto.account.UserDto;
 import com.ssafy.kdkd.domain.entity.account.User;
 import com.ssafy.kdkd.repository.account.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserService {
-	@Autowired
-	UserRepository userRepository;
 
-	public int signUp(UserDto userDto) {
-		if(userRepository.existsByUser(userDto.getAccessToken(),userDto.getEmail())){
-			return 0; //이미 존재하는 회원입니다
-		}else{
-			User temp = new User(userDto);
-			userRepository.save(temp);
-			return 1; //회원가입이 완료되었습니다.
-		}
-	}
+    private final UserRepository userRepository;
 
-	public UserLoginDto userLogin(UserLoginDto userLoginDto){
-		Long user_id = userRepository.findByAccessToken(userLoginDto.getAccessToken());
-		UserLoginDto temp = new UserLoginDto(user_id);
-		return temp;
-	}
+    public void saveUser(UserDto userDto) {
+        User userEntity = createUser(userDto);
+        userRepository.save(userEntity);
+    }
+
+    public void updateUser(UserDto userDto){
+        Optional<User> findUserEntity = userRepository.findByEmail(userDto.getEmail());
+
+        User userEntity = findUserEntity.get();
+
+        userEntity.setAccessToken(userDto.getAccessToken());
+        userRepository.save(userEntity);
+    }
+
+    public boolean isUserExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
 }

@@ -42,12 +42,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
+
+                .formLogin(formLogin -> formLogin.loginPage("/api/login"))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(antMatcher("/**")).permitAll()
-                        .requestMatchers(antMatcher("/api/hello/**")).permitAll()
-                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                        .requestMatchers(antMatcher("/api/login/**")).permitAll()
+                        .requestMatchers(antMatcher("/hi/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

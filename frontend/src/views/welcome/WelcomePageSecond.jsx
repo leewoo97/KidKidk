@@ -9,10 +9,6 @@ export default function WelcomePageFirst() {
     return (
         <>
             <div className={styles.welcomePageSecondContainer}>
-                <dialog open>
-                    <p>여러분 안녕하세요!</p>
-                </dialog>
-
                 <div className={styles.welcomeJob}>
                     <p>아이에게 직업을 만들어주세요</p>
                     <div className={styles.welcomeImgContainer}>

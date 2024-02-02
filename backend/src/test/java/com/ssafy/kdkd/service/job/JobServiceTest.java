@@ -1,14 +1,18 @@
 package com.ssafy.kdkd.service.job;
 
+import com.ssafy.kdkd.domain.dto.job.JobReservationDto;
 import com.ssafy.kdkd.domain.entity.job.Job;
 import com.ssafy.kdkd.domain.entity.job.JobInfo;
+import com.ssafy.kdkd.domain.entity.job.JobReservation;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.job.JobRepository;
 import com.ssafy.kdkd.repository.job.JobReservationRepository;
+import com.ssafy.kdkd.repository.user.ChildRepository;
 import com.ssafy.kdkd.service.user.ChildService;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
@@ -29,8 +33,10 @@ public class JobServiceTest {
 
     @Autowired JobService jobService;
     @Autowired JobRepository jobRepository;
+    @Autowired JobReservationService jobReservationService;
     @Autowired JobReservationRepository jobReservationRepository;
     @Autowired ChildService childService;
+    @Autowired ChildRepository childRepository;
     @Autowired EntityManager em;
 
     @Test
@@ -59,11 +65,14 @@ public class JobServiceTest {
 
         //when
         Job findJob = jobRepository.findById(childId).get();
-        
+        JobInfo jobInfo = findJob.getJobInfo();
         //then
         System.out.println("===== 직업 정보 출력 =====");
         System.out.println("job_id: " + findJob.getId() +
-            " jobInfo: " + findJob.getJobInfo().toString() +
+            " name: " + jobInfo.getName() +
+            " wage: " + jobInfo.getWage() +
+            " task: " + jobInfo.getTask() +
+            " taskAmount: " + jobInfo.getTaskAmount() +
             " done_count: " + findJob.getDoneCount());
         System.out.println("===== 직업 정보 출력 =====");
 
@@ -154,10 +163,104 @@ public class JobServiceTest {
     @Transactional
     public void 직업_스케줄러() throws Exception {
         //given
+        int size = 5;
+        Long[] childId = new Long[size];
+        childId[0] = 2L;
+        childId[1] = 3L;
+        childId[2] = 5L;
+        childId[3] = 6L;
+        childId[4] = 7L;
+        JobReservationDto[] jobReservationDto = new JobReservationDto[size];
+        jobReservationDto[0] = new JobReservationDto("강아지 미용사", 1000, "강아지 미용", 5, true, childId[0]);
+        jobReservationDto[1] = new JobReservationDto("강아지 미용사", 2000, "강아지 미용", 5, true, childId[1]);
+        jobReservationDto[2] = new JobReservationDto("강아지 미용사", 10000, "강아지 미용", 2, true, childId[2]);
+        jobReservationDto[3] = new JobReservationDto("강아지 미용사", 1000, "강아지 미용", 2, true, childId[3]);
+        jobReservationDto[4] = new JobReservationDto("강아지 미용사", 10000, "강아지 미용", 6, true, childId[4]);
+
+        for (int i = 0; i < size; i++) {
+            createJobReservationForTest(jobReservationDto[i], false);
+        }
+        em.flush();
+        em.clear();
+
+        for (int i = 0; i < size; i++) {
+            Job job = Job.createJob(jobReservationRepository.findById(childId[i]).get());
+            job.setChild(childRepository.findById(childId[i]).get());
+            jobRepository.save(job);
+        }
+        em.flush();
+        em.clear();
+
+        jobReservationDto[0].setState(false);
+        jobReservationDto[2] = new JobReservationDto("강아지 미용사", 100, "강아지 미용", 5, true, childId[2]);
+        jobReservationDto[3] = new JobReservationDto("강아지 미용사", 10000, "강아지 미용", 6, false, childId[3]);
+        for (int i = 0; i < size; i++) {
+            if (i == 1 || i == 4) {
+                jobReservationRepository.deleteById(jobReservationDto[i].getChildId());
+            } else {
+                jobReservationService.modifyJobReservation(jobReservationDto[i]);
+            }
+        }
+        em.flush();
+        em.clear();
+
+        System.out.println("===== 직업 정보 출력 =====");
+        List<Job> jobList = jobRepository.findAll();
+        for (Job job : jobList) {
+            JobInfo jobInfo = job.getJobInfo();
+            System.out.println("job_id: " + job.getId() +
+                " name: " + jobInfo.getName() +
+                " wage: " + jobInfo.getWage() +
+                " task: " + jobInfo.getTask() +
+                " taskAmount: " + jobInfo.getTaskAmount() +
+                " done_count: " + job.getDoneCount());
+        }
+        System.out.println("===== 직업 정보 출력 =====");
+
+        System.out.println("===== 직업예약 정보 출력 =====");
+        List<JobReservation> findJobReservationList = jobReservationRepository.findAll();
+        for (JobReservation jobReservation : findJobReservationList) {
+            JobInfo jobInfo = jobReservation.getJobInfo();
+            System.out.println("job_id: " + jobReservation.getId() +
+                " name: " + jobInfo.getName() +
+                " wage: " + jobInfo.getWage() +
+                " task: " + jobInfo.getTask() +
+                " taskAmount: " + jobInfo.getTaskAmount() +
+                " state: " + jobReservation.isState());
+        }
+        System.out.println("===== 직업예약 정보 출력 =====");
 
         //when
+        System.out.println("==== updateJob ====");
+        jobService.updateJob();
+        System.out.println("==== updateJob ====");
 
         //then
+        List<JobReservation> jobReservationList = jobReservationRepository.findAll();
+        int testSize = 10;
+        boolean[] check = new boolean[testSize];
+        check[0] = jobReservationList.isEmpty();
+        check[1] = jobRepository.existsById(childId[1]);
+        check[2] = jobRepository.existsById(childId[2]);
+        check[3] = jobRepository.existsById(childId[4]);
+        check[4] = jobRepository.findById(childId[0]).isEmpty();
+        check[5] = jobRepository.findById(childId[3]).isEmpty();
+        check[6] = jobRepository.findById(childId[1]).get().getDoneCount() == 0;
+        check[7] = jobRepository.findById(childId[1]).get().getJobInfo().getWage() == 2000;
+        check[8] = jobRepository.findById(childId[2]).get().getJobInfo().getWage() == 100;
+        check[9] = jobRepository.findById(childId[3]).isEmpty();
+
+        for (int i = 0; i < testSize; i++) {
+            System.out.println(check[i]);
+            if (!check[i]) {
+                fail("직업 스케줄러 실패");
+            }
+        }
+    }
+
+    @Transactional
+    public void createJobReservationForTest(JobReservationDto jobReservationDto, boolean type) {
+        jobReservationService.createJobReservation(jobReservationDto, type);
     }
 
 }

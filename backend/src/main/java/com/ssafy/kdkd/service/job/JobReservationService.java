@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class JobReservationService {
 
     private final JobReservationRepository jobReservationRepository;
@@ -33,21 +35,17 @@ public class JobReservationService {
      * @return JobReservationDto 생성된 직업예약
      */
     @Transactional
-    public JobReservationDto createJobReservationDto(JobReservationDto jobReservationDto, boolean type) {
+    public JobReservationDto createJobReservation(JobReservationDto jobReservationDto, boolean type) {
         Long childId = jobReservationDto.getChildId();
-        Optional<JobReservation> findJobReservation = jobReservationRepository.findById(childId);
-
-        if (findJobReservation.isPresent()) {
-            return null;
-        }
-
-        if (type && jobRepository.existsById(childId)) {
-            return null;
-        }
-
         Optional<Child> findChild = childService.findChild(childId);
 
         if (findChild.isEmpty()) {
+            log.info("직업 생성 등록 실패");
+            return null;
+        }
+
+        if (type && jobRepository.existsById(childId) && jobReservationRepository.existsById(childId)) {
+            log.info("직업 생성 등록 실패");
             return null;
         }
 
@@ -62,53 +60,46 @@ public class JobReservationService {
     /**
      * 직업예약 수정
      *
-     * @param childId 자식 아이디
-     * @param jobReservationDto 새로운 직업예약
-     * @return JobReservationDto 생성된 직업예약
+     * @param jobReservationDto
+     * @return JobReservationDto 수정된 직업예약
      */
     @Transactional
-    public JobReservationDto modifyJobReservation(Long childId, JobReservationDto jobReservationDto) {
+    public JobReservationDto modifyJobReservation(JobReservationDto jobReservationDto) {
+        Long childId = jobReservationDto.getChildId();
         Optional<JobReservation> existingJobReservation = jobReservationRepository.findById(childId);
 
         if (existingJobReservation.isEmpty()) {
+            log.info("직업예약 수정 실패");
             return null;
         }
 
-        Optional<Child> findChild = childService.findChild(childId);
-
-        if (findChild.isEmpty()) {
-            return null;
-        }
-
-        Child child = findChild.get();
         JobReservation jobReservation = existingJobReservation.get();
         jobReservation.updateJobReservation(jobReservationDto);
-        jobReservation.setChild(child);
         jobReservationRepository.save(jobReservation);
         return jobReservationDto;
     }
 
     /**
-     * 직업 삭제 예약
+     * 직업 삭제(예약)
      *
      * @param childId 자식 아이디
      * @return JobReservationDto 직업예약(삭제 예약된 상태 = state가 false)
      */
     @Transactional
-    public JobReservationDto deleteJobReservation(Long childId) {
+    public JobReservationDto deleteJob(Long childId) {
         Optional<Child> findChild = childService.findChild(childId);
 
         if (findChild.isEmpty()) {
             return null;
         }
 
-        Child child = findChild.get();
         Optional<Job> job = jobRepository.findById(childId);
 
         if (job.isEmpty()) {
             return null;
         }
 
+        Child child = findChild.get();
         Job existingJob = job.get();
         JobInfo jobInfo = existingJob.getJobInfo();
         JobReservationDto jobReservationDto =
@@ -134,14 +125,15 @@ public class JobReservationService {
      */
     @Transactional
     public boolean delete(Long childId) {
-        Optional<JobReservation> findJobReservation = jobReservationRepository.findById(childId);
 
-        if (findJobReservation.isEmpty()) {
+        if (jobReservationRepository.findById(childId).isEmpty()) {
             return true;
         }
 
-        jobReservationRepository.delete(findJobReservation.get());
+        jobReservationRepository.deleteById(childId);
         return false;
     }
+
+
 
 }

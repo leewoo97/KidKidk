@@ -42,9 +42,11 @@ public class JobService {
      */
     @Transactional
     public void insertJob(JobReservation jobReservation) {
-        Optional<Child> findChild = childService.findChild(jobReservation.getId());
+        Long childId = jobReservation.getId();
+        Optional<Child> findChild = childService.findChild(childId);
+        boolean isExist = jobRepository.existsById(childId);
 
-        if (findChild.isEmpty()) {
+        if (findChild.isEmpty() || isExist) {
             log.info("직업 생성 실패");
             return;
         }

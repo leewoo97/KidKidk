@@ -29,4 +29,7 @@ public class Parent {
     @JoinColumn(name = "parent_id")
     private Profile profile;
 
+    public Parent(Profile profile) {
+        this.profile = profile;
+    }
 }

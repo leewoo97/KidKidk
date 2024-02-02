@@ -1,7 +1,5 @@
 package com.ssafy.kdkd.service.fund;
 
-import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
-
 import com.ssafy.kdkd.domain.dto.deposit.DepositDto;
 import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.deposit.Deposit;
@@ -11,6 +9,8 @@ import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.deposit.DepositRepository;
 import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.service.user.ChildService;
+
+import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -31,32 +31,29 @@ public class FundService {
     private final ChildService childService;
     private final DepositRepository depositRepository;
 
-    public void save(Fund fund) {
+    /**
+     * 투자예약 -> 투자 생성
+     *
+     * @param fundReservation 투자예약
+     */
+    @Transactional
+    public void insertFund(FundReservation fundReservation) {
+        Long childId = fundReservation.getId();
+
+        Child child = childService.findChild(childId).get();
+        Fund fund = Fund.createFund(fundReservation);
+        fund.setChild(child);
         fundRepository.save(fund);
-    }
-
-    public Optional<Fund> findById(Long childId) {
-        return fundRepository.findById(childId);
-    }
-
-    @Transactional
-    public void delete(Fund fund) {
-        fundRepository.delete(fund);
-    }
-
-    @Transactional
-    public void deleteById(Long childId) {
-        fundRepository.deleteById(childId);
     }
 
     /**
      * 투자계좌 -> 예금계좌 이체
      *
      * @param transferDto 이체 금액, 자식 아이디
-     * @return boolean(이체가능 금액확인)
+     * @return boolean 이체 성공 여부
      */
     @Transactional
-    public boolean transfer(TransferDto transferDto) {
+    public boolean transferToCoin(TransferDto transferDto) {
         int fundMoney = transferDto.getFundMoney();
         Long childId = transferDto.getChildId();
         Optional<Child> findChild = childService.findChild(childId);
@@ -68,44 +65,21 @@ public class FundService {
         Child child = findChild.get();
         int updateFundMoney = child.getFundMoney() - fundMoney;
         int updateCoin = child.getCoin() + fundMoney;
-        if (child.getFundMoney() - fundMoney < 0) {
+        if (updateFundMoney < 0) {
             return false;
         }
 
-        child.transferChild(updateFundMoney);
+        child.updateFundMoney(updateFundMoney);
         child.updateChild(updateCoin);
 
-        // deposit
         String detail = "투자 입금";
         boolean type = true;
-        int money = fundMoney;
 
-        DepositDto depositDto = new DepositDto(LocalDateTime.now(), detail, type, money, updateCoin, childId);
+        DepositDto depositDto = new DepositDto(LocalDateTime.now(), detail, type, fundMoney, updateCoin, childId);
         Deposit deposit = createDeposit(depositDto);
         deposit.setChild(child);
         depositRepository.save(deposit);
         return true;
-    }
-
-    /**
-     * 투자예약 -> 투자 생성
-     *
-     * @param fundReservation 투자예약
-     */
-    @Transactional
-    public void insertFund(FundReservation fundReservation) {
-        Long childId = fundReservation.getId();
-        Optional<Child> findChild = childService.findChild(childId);
-
-        if (findChild.isEmpty()) {
-            log.info("투자 생성 실패");
-            return;
-        }
-
-        Child child = findChild.get();
-        Fund fund = Fund.createFund(fundReservation);
-        fund.setChild(child);
-        save(fund);
     }
 
 }

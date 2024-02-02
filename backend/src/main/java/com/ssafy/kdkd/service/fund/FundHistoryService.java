@@ -20,13 +20,9 @@ public class FundHistoryService {
     private final FundHistoryRepository fundHistoryRepository;
     private final EntityManager em;
 
-    public void save(FundHistory fundHistory) {
-        fundHistoryRepository.save(fundHistory);
-    }
-
     /**
      * 자식의 투자내역 목록 조회
-     * 
+     *
      * @param childId 자식 아이디
      * @return 자식의 투자 내역(리스트)
      */
@@ -36,7 +32,7 @@ public class FundHistoryService {
 
     /**
      * 자식의 투자내역 목록 전체 삭제
-     * 
+     *
      * @param childId 자식 아이디
      */
     @Modifying

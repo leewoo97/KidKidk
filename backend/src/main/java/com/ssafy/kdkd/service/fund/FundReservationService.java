@@ -4,10 +4,10 @@ import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.user.Child;
+import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.repository.fund.FundReservationRepository;
 import com.ssafy.kdkd.service.user.ChildService;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -21,25 +21,9 @@ import lombok.RequiredArgsConstructor;
 public class FundReservationService {
 
     private final FundService fundService;
+    private final FundRepository fundRepository;
     private final FundReservationRepository fundReservationRepository;
     private final ChildService childService;
-
-    public void save(FundReservation fundReservation) {
-        fundReservationRepository.save(fundReservation);
-    }
-
-    public Optional<FundReservation> findById(Long childId) {
-        return fundReservationRepository.findById(childId);
-    }
-
-    public List<FundReservation> findAll() {
-        return fundReservationRepository.findAll();
-    }
-
-    @Transactional
-    public void deleteAll() {
-        fundReservationRepository.deleteAll();
-    }
 
     /**
      * 투자예약 삭제
@@ -74,7 +58,7 @@ public class FundReservationService {
             return null;
         }
 
-        if (type && fundService.findById(childId).isPresent()) {
+        if (type && fundReservationRepository.findById(childId).isPresent()) {
             return null;
         }
 
@@ -89,7 +73,7 @@ public class FundReservationService {
         fundReservationDto.setState(true);
         FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
         fundReservation.setChild(child);
-        save(fundReservation);
+        fundReservationRepository.save(fundReservation);
         return fundReservationDto;
     }
 
@@ -117,13 +101,13 @@ public class FundReservationService {
         FundReservation reservation = existingFundReservation.get();
         reservation.updateFundReservation(fundReservationDto);
         reservation.setChild(child);
-        save(reservation);
+        fundReservationRepository.save(reservation);
         return fundReservationDto;
     }
 
     /**
      * 투자 삭제 예약
-     * 
+     *
      * @param childId 자식 아이디
      * @return FundReservationDto 투자예약(삭제 예약 상태 = state가 false)
      */
@@ -136,7 +120,7 @@ public class FundReservationService {
         }
 
         Child child = findChild.get();
-        Optional<Fund> fund = fundService.findById(childId);
+        Optional<Fund> fund = fundRepository.findById(childId);
 
         if (fund.isEmpty()) {
             return null;
@@ -147,7 +131,7 @@ public class FundReservationService {
             new FundReservationDto(existingFund.getName(), existingFund.getContent(), existingFund.getYield(), false, childId);
         FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
         fundReservation.setChild(child);
-        save(fundReservation);
+        fundReservationRepository.save(fundReservation);
         return fundReservationDto;
     }
 

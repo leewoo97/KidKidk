@@ -23,13 +23,9 @@ public class RoiService {
     private final RoiRepository roiRepository;
     private final ChildService childService;
 
-    public Optional<Roi> findById(Long childId) {
-        return roiRepository.findById(childId);
-    }
-
     /**
      * roi 생성
-     * 
+     *
      * @param roiDto 생성할 roi 정보
      */
     @Transactional
@@ -42,7 +38,7 @@ public class RoiService {
 
     /**
      * roi 수정
-     * 
+     *
      * @param roi 기존 roi
      * @param roiDto 업데이트할 roi 정보
      */

@@ -1,7 +1,5 @@
 package com.ssafy.kdkd.service.fund;
 
-import static com.ssafy.kdkd.domain.entity.fund.FundHistory.createFundHistory;
-
 import com.ssafy.kdkd.domain.dto.fund.FundHistoryDto;
 import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
@@ -10,7 +8,14 @@ import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.fund.FundStatus;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.domain.entity.user.Child;
+import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
+import com.ssafy.kdkd.repository.fund.FundRepository;
+import com.ssafy.kdkd.repository.fund.FundReservationRepository;
+import com.ssafy.kdkd.repository.fund.FundStatusRepository;
+import com.ssafy.kdkd.repository.fund.RoiRepository;
 import com.ssafy.kdkd.service.user.ChildService;
+
+import static com.ssafy.kdkd.domain.entity.fund.FundHistory.createFundHistory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,10 +34,13 @@ import lombok.extern.slf4j.Slf4j;
 public class FundUpdateService {
 
     private final FundService fundService;
+    private final FundRepository fundRepository;
     private final FundStatusService fundStatusService;
-    private final FundReservationService fundReservationService;
-    private final FundHistoryService fundHistoryService;
+    private final FundStatusRepository fundStatusRepository;
+    private final FundReservationRepository fundReservationRepository;
+    private final FundHistoryRepository fundHistoryRepository;
     private final RoiService roiService;
+    private final RoiRepository roiRepository;
     private final ChildService childService;
 
     /**
@@ -44,7 +52,7 @@ public class FundUpdateService {
     @Transactional
     public void updateFund() {
         // fund_status 조회
-        List<FundStatus> list = fundStatusService.findAll();
+        List<FundStatus> list = fundStatusRepository.findAll();
 
         for (FundStatus fundStatus : list) {
             // 투자 결과 업데이트
@@ -70,7 +78,7 @@ public class FundUpdateService {
             int fundMoney = child.getFundMoney() - amount;
             int pnl = (int)Math.floor(amount * rate);
             int updateFundMoney = fundMoney + pnl;
-            Optional<Roi> roi = roiService.findById(childId);
+            Optional<Roi> roi = roiRepository.findById(childId);
 
             // 투자계좌 결과 반영
             child.updateFundMoney(updateFundMoney);
@@ -83,7 +91,7 @@ public class FundUpdateService {
                     pnl,
                     childId
                 ));
-            fundHistoryService.save(fundHistory);
+            fundHistoryRepository.save(fundHistory);
             // roi 업데이트
             if (roi.isEmpty()) {
                 roiService.createRoi(new RoiDto(add, 1, childId));
@@ -96,18 +104,18 @@ public class FundUpdateService {
         fundStatusService.deleteAll();
 
         // fund에 fund_reservation 반영
-        List<FundReservation> reservationList = fundReservationService.findAll();
+        List<FundReservation> reservationList = fundReservationRepository.findAll();
         for (FundReservation fundReservation : reservationList) {
             boolean isUpdate = fundReservation.isState();
 
             if (isUpdate) {
                 fundService.insertFund(fundReservation);
             } else {
-                fundService.deleteById(fundReservation.getId());
+                fundRepository.deleteById(fundReservation.getId());
             }
         }
         // fund_reservation 전체 삭제
-        fundReservationService.deleteAll();
+        fundReservationRepository.deleteAll();
     }
 
 }

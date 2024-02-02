@@ -1,0 +1,48 @@
+.WelcomePageFirstContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 50px;
+    font-weight: 900;
+    margin-top: 50px;
+}
+
+.headLogo,
+.headContents > p {
+    color: var(--component-background);
+}
+
+.headContents > p {
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.headContents {
+    margin-top: 80px;
+}
+
+b {
+    color: var(--nav-text-logo);
+}
+
+.WelcomePageButtonContainer {
+    margin-top: 100px;
+}
+
+.kakaoButton {
+    display: flex;
+    border: none;
+    background-color: var(--nav-background);
+}
+
+.naverButton {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--nav-background);
+    align-items: center;
+    border: none;
+    border-radius: 5px;
+}

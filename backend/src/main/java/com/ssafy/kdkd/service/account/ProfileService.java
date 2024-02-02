@@ -3,8 +3,12 @@ package com.ssafy.kdkd.service.account;
 import com.ssafy.kdkd.domain.dto.account.*;
 import com.ssafy.kdkd.domain.entity.account.Profile;
 import com.ssafy.kdkd.domain.entity.account.User;
+import com.ssafy.kdkd.domain.entity.user.Child;
+import com.ssafy.kdkd.domain.entity.user.Parent;
 import com.ssafy.kdkd.repository.account.ProfileRepository;
 import com.ssafy.kdkd.repository.account.UserRepository;
+import com.ssafy.kdkd.repository.user.ChildRepository;
+import com.ssafy.kdkd.repository.user.ParentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,12 @@ public class ProfileService {
 	ProfileRepository profileRepository;
 
 	@Autowired
+	ParentRepository parentRepository;
+
+	@Autowired
+	ChildRepository childRepository;
+
+	@Autowired
 	UserRepository userRepository;
 
 	public int profileCreate(ProfileDto profileDto){
@@ -26,6 +36,11 @@ public class ProfileService {
 			User user = userOptional.get(); // Optional에서 User 객체를 꺼냅니다.
 			Profile profile = new Profile(profileDto, user);
 			profileRepository.save(profile);
+			if(profileDto.isType()){
+				parentRepository.save(new Parent(profile));
+			}else{
+				childRepository.save(new Child(profile));
+			}
 			return 1; //프로필이 생성되면 1을 반환
 		} else {
 			// 프로필이 생성되지않으면 0을 반환
@@ -50,7 +65,6 @@ public class ProfileService {
 
 	@Transactional
 	public void profileUpdate(ProfileUpdateDto profileUpdateDto){
-		System.out.println("Service 들어옴");
 		Long profileId = profileUpdateDto.getProfileId();
 		String nickname = null;
 		int pin = 0;
@@ -82,14 +96,29 @@ public class ProfileService {
 
 		profileRepository.profileUpdate(profileId,nickname,pin,profileImage);
 
-		System.out.println("Service 나감");
 	}
 
 	@Transactional
 	public void profileDelete(ProfileDeleteDto profileDeleteDto){
 		Long profileId = profileDeleteDto.getProfileId();
-		profileRepository.profileDelete(profileId);
+		if(parentRepository.findById(profileId).isPresent()) {
+			parentRepository.deleteById(profileId);
+		}else{
+			childRepository.deleteById(profileId);
+		}
+//		profileRepository.profileDelete(profileId); //이전에 사용하던 delete메소드(외래키 문제로 폐지되었다,)
+		profileRepository.deleteById(profileId);
 	}
 
-
+	public List<GetChildListDto> getChildList(GetChildListDto getChildListDto){
+		Long parentId = getChildListDto.getParentId();
+		Optional<Profile> profile = profileRepository.findById(parentId);
+		if(profile.isPresent()){
+			Long userId = profile.get().getUser().getId();
+			boolean type = false;
+			List<GetChildListDto> childProfile = profileRepository.getChildList(userId,type);
+			return childProfile;
+		}
+		return null;
+	}
 }

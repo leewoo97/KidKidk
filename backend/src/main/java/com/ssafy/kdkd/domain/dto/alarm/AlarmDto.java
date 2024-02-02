@@ -1,4 +1,4 @@
-package com.ssafy.kdkd.domain.dto.Alarm;
+package com.ssafy.kdkd.domain.dto.alarm;
 
 import lombok.AccessLevel;
 import lombok.Data;

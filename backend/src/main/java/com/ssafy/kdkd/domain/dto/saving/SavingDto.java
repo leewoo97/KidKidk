@@ -32,4 +32,9 @@ public class SavingDto {
             .build();
     }
 
+    public void updateSavingDto(int count, int rate) {
+        this.count = count;
+        this.rate = rate;
+    }
+
 }

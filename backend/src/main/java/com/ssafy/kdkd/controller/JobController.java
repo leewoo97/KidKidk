@@ -4,6 +4,8 @@ import com.ssafy.kdkd.domain.dto.job.JobDto;
 import com.ssafy.kdkd.domain.dto.job.JobReservationDto;
 import com.ssafy.kdkd.domain.entity.job.Job;
 import com.ssafy.kdkd.domain.entity.job.JobReservation;
+import com.ssafy.kdkd.repository.job.JobRepository;
+import com.ssafy.kdkd.repository.job.JobReservationRepository;
 import com.ssafy.kdkd.service.job.JobReservationService;
 import com.ssafy.kdkd.service.job.JobService;
 
@@ -34,7 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 public class JobController {
 
     private final JobService jobService;
+    private final JobRepository jobRepository;
     private final JobReservationService jobReservationService;
+    private final JobReservationRepository jobReservationRepository;
 
     @GetMapping("/retrieve/{childId}")
     @Operation(summary = "직업 조회")
@@ -49,7 +53,7 @@ public class JobController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                Optional<Job> result = jobService.findById(childId);
+                Optional<Job> result = jobRepository.findById(childId);
                 if (result.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
@@ -75,7 +79,7 @@ public class JobController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                Optional<JobReservation> result = jobReservationService.findById(childId);
+                Optional<JobReservation> result = jobReservationRepository.findById(childId);
                 if (result.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
@@ -104,7 +108,7 @@ public class JobController {
             } else {
                 boolean type = true;
                 JobReservationDto result =
-                    jobReservationService.createJobReservationDto(jobReservationDto, type);
+                    jobReservationService.createJobReservation(jobReservationDto, type);
 
                 if (result == null) {
                     status = HttpStatus.CONFLICT;
@@ -134,7 +138,7 @@ public class JobController {
             } else {
                 boolean type = false;
                 JobReservationDto result =
-                    jobReservationService.createJobReservationDto(jobReservationDto, type);
+                    jobReservationService.createJobReservation(jobReservationDto, type);
 
                 if (result == null) {
                     status = HttpStatus.CONFLICT;
@@ -163,7 +167,7 @@ public class JobController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 JobReservationDto result =
-                    jobReservationService.modifyJobReservation(childId, jobReservationDto);
+                    jobReservationService.modifyJobReservation(jobReservationDto);
 
                 if (result == null) {
                     status = HttpStatus.NO_CONTENT;
@@ -190,7 +194,7 @@ public class JobController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                JobReservationDto result = jobReservationService.deleteJobReservation(childId);
+                JobReservationDto result = jobReservationService.deleteJob(childId);
 
                 if (result == null) {
                     status = HttpStatus.NO_CONTENT;

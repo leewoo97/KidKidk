@@ -1,8 +1,5 @@
 package com.ssafy.kdkd.service.job;
 
-import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
-import static com.ssafy.kdkd.domain.entity.job.Job.createJob;
-
 import com.ssafy.kdkd.domain.dto.deposit.DepositDto;
 import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 import com.ssafy.kdkd.domain.entity.job.Job;
@@ -13,6 +10,9 @@ import com.ssafy.kdkd.repository.deposit.DepositRepository;
 import com.ssafy.kdkd.repository.job.JobRepository;
 import com.ssafy.kdkd.repository.job.JobReservationRepository;
 import com.ssafy.kdkd.service.user.ChildService;
+
+import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
+import static com.ssafy.kdkd.domain.entity.job.Job.createJob;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,24 +35,6 @@ public class JobService {
     private final ChildService childService;
     private final DepositRepository depositRepository;
 
-    public void save(Job job) {
-        jobRepository.save(job);
-    }
-
-    public Optional<Job> findById(Long childId) {
-        return jobRepository.findById(childId);
-    }
-
-    @Transactional
-    public void delete(Job job) {
-        jobRepository.delete(job);
-    }
-
-    @Transactional
-    public void deleteById(Long childId) {
-        jobRepository.deleteById(childId);
-    }
-
     /**
      * 직업예약 -> 직업 생성
      * 
@@ -70,7 +52,46 @@ public class JobService {
         Child child = findChild.get();
         Job job = createJob(jobReservation);
         job.setChild(child);
-        save(job);
+        jobRepository.save(job);
+    }
+
+    /**
+     * 직업예약 -> 직업 업데이트(수정, 삭제)
+     *
+     * @param jobReservation 직업예약 정보
+     * @return JobDto 생성된 직업
+     */
+    @Transactional
+    public boolean updateJob(JobReservation jobReservation) {
+        Long childId = jobReservation.getId();
+        Optional<Child> findChild = childService.findChild(childId);
+
+        if (findChild.isEmpty()) {
+            log.info("직업 업데이트 실패");
+            return false;
+        }
+
+        Child child = findChild.get();
+        Optional<Job> findJob = jobRepository.findById(childId);
+
+        if (findJob.isEmpty()) {
+            log.info("직업 업데이트 실패");
+            return false;
+        }
+
+        boolean isUpdate = jobReservation.isState();
+
+        if (isUpdate) {
+            Job job = findJob.get();
+            job.updateJob(jobReservation);
+            job.setChild(child);
+            jobRepository.save(job);
+        } else {
+            jobRepository.deleteById(childId);
+        }
+        jobReservationRepository.deleteById(childId);
+
+        return true;
     }
 
     /**
@@ -82,34 +103,22 @@ public class JobService {
      */
     @Transactional
     public void updateJob() {
-        // 직업 목록 조회
         List<Job> jobList = jobRepository.findAll();
 
         for (Job job : jobList) {
-            // 급여 지급
             Long childId = job.getId();
-            Optional<Child> findChild = childService.findChild(childId);
-
-            if (findChild.isEmpty()) {
-                log.info("직업 스케줄러 실패");
-                return;
-            }
-
-            Child child = findChild.get();
+            Child child = childService.findChild(childId).get();
             JobInfo jobInfo = job.getJobInfo();
             int doneCount = job.getDoneCount();
             int taskAmount = jobInfo.getTaskAmount();
+            boolean isDone = doneCount >= taskAmount;
             int wage = jobInfo.getWage();
             int updateCoin = child.getCoin() + wage;
-            boolean isDone = doneCount >= taskAmount;
-
-            // doneCount 체크
+            
             if (isDone) {
-                // child 업데이트(급여 지급)
                 child.updateChild(updateCoin);
-
-                // deposit 업데이트(급여 지급)
-                String detail = "급여";
+                
+                String detail = "급여 입금";
                 boolean type = true;
                 DepositDto depositDto = new DepositDto(LocalDateTime.now(), detail, type, wage, updateCoin, childId);
                 Deposit deposit = createDeposit(depositDto);
@@ -117,46 +126,14 @@ public class JobService {
                 depositRepository.save(deposit);
             }
 
-            // doneCount 초기화(0)
-            job.updateJob(0);
-            jobRepository.save(job);
-        }
-
-        // job에 job_reservation 반영
-        List<JobReservation> jobReservationList = jobReservationRepository.findAll();
-
-        for (JobReservation jobReservation : jobReservationList) {
-            Long childId = jobReservation.getId();
-            Optional<Child> findChild = childService.findChild(childId);
-
-            if (findChild.isEmpty()) {
-                log.info("직업 스케줄러 실패");
-                return;
-            }
-
-            Child child = findChild.get();
-            boolean state = jobReservation.isState();
-
-            if (state) {
-                Optional<Job> existingJob = findById(childId);
-
-                if (existingJob.isPresent()) {
-                    Job job = existingJob.get();
-                    job.updateJob(jobReservation);
-                    job.setChild(child);
-                    jobRepository.save(job);
-                } else {
-                    Job job = createJob(jobReservation);
-                    job.setChild(child);
-                    jobRepository.save(job);
-                }
+            Optional<JobReservation> jobReservation = jobReservationRepository.findById(childId);
+            if (jobReservation.isPresent()) {
+                updateJob(jobReservation.get());
             } else {
-                deleteById(childId);
+                job.updateJob(0);
+                jobRepository.save(job);
             }
         }
-
-        // job_reservation 전체 삭제
-        jobReservationRepository.deleteAll();
     }
 
 }

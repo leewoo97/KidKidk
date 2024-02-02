@@ -5,6 +5,7 @@ import com.ssafy.kdkd.domain.entity.job.Job;
 import com.ssafy.kdkd.domain.entity.job.JobInfo;
 import com.ssafy.kdkd.domain.entity.job.JobReservation;
 import com.ssafy.kdkd.domain.entity.user.Child;
+import com.ssafy.kdkd.repository.job.JobRepository;
 import com.ssafy.kdkd.repository.job.JobReservationRepository;
 import com.ssafy.kdkd.service.user.ChildService;
 
@@ -21,26 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class JobReservationService {
 
     private final JobReservationRepository jobReservationRepository;
-    private final JobService jobService;
+    private final JobRepository jobRepository;
     private final ChildService childService;
-
-    public void save(JobReservation jobReservation) {
-        jobReservationRepository.save(jobReservation);
-    }
-
-    public Optional<JobReservation> findById(Long childId) {
-        return jobReservationRepository.findById(childId);
-    }
-
-    @Transactional
-    public void delete(JobReservation jobReservation) {
-        jobReservationRepository.delete(jobReservation);
-    }
-
-    @Transactional
-    public void deleteAll() {
-        jobReservationRepository.deleteAll();
-    }
 
     /**
      * 직업예약 생성
@@ -58,7 +41,7 @@ public class JobReservationService {
             return null;
         }
 
-        if (type && jobService.findById(childId).isPresent()) {
+        if (type && jobRepository.existsById(childId)) {
             return null;
         }
 
@@ -72,7 +55,7 @@ public class JobReservationService {
         jobReservationDto.setState(true);
         JobReservation reservation = JobReservation.createJobReservation(jobReservationDto);
         reservation.setChild(child);
-        save(reservation);
+        jobReservationRepository.save(reservation);
         return jobReservationDto;
     }
 
@@ -101,7 +84,7 @@ public class JobReservationService {
         JobReservation jobReservation = existingJobReservation.get();
         jobReservation.updateJobReservation(jobReservationDto);
         jobReservation.setChild(child);
-        save(jobReservation);
+        jobReservationRepository.save(jobReservation);
         return jobReservationDto;
     }
 
@@ -120,7 +103,7 @@ public class JobReservationService {
         }
 
         Child child = findChild.get();
-        Optional<Job> job = jobService.findById(childId);
+        Optional<Job> job = jobRepository.findById(childId);
 
         if (job.isEmpty()) {
             return null;
@@ -139,7 +122,7 @@ public class JobReservationService {
             );
         JobReservation jobReservation = JobReservation.createJobReservation(jobReservationDto);
         jobReservation.setChild(child);
-        save(jobReservation);
+        jobReservationRepository.save(jobReservation);
         return jobReservationDto;
     }
 

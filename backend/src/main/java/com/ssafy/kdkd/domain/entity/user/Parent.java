@@ -28,4 +28,8 @@ public class Parent {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Profile profile;
+
+    public Parent(Profile profile) {
+        this.profile = profile;
+    }
 }

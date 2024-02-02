@@ -9,7 +9,7 @@ export default defineConfig({
         alias: {
             '@images': '/src/assets/images',
             '@components': '/src/components',
-            '@config': '/src/configs',
+            '@configs': '/src/configs',
             // 다른 별칭들 추가 가능
         },
     },

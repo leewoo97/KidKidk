@@ -36,7 +36,7 @@ export default function UserProfile({ nickname, profile_image }) {
             </div>
             {modalLoginOpen ? (
                 <ProfileModal
-                    modalIsOpen={openModalLogin}
+                    modalIsOpen={!!openModalLogin}
                     closeModal={closeModalLogin}
                     title="로그인 모달"
                     content="이것은 로그인 모달입니다."
@@ -67,7 +67,7 @@ export default function UserProfile({ nickname, profile_image }) {
             ) : null}
             {modalUpdateOpen ? (
                 <ProfileModal
-                    modalIsOpen={openModalUpdate}
+                    modalIsOpen={!!openModalUpdate}
                     closeModal={closeModalUpdate}
                     title="수정 모달"
                     content="이것은 수정 모달입니다."

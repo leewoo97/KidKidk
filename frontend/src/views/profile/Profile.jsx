@@ -4,7 +4,7 @@ import { RiLockPasswordFill } from 'react-icons/ri';
 import { RiParentLine } from 'react-icons/ri';
 import { FaRegImage } from 'react-icons/fa6';
 
-import UserProfile from '../../components/userProfile';
+import UserProfile from '../../components/UserProfile';
 import ProfileModal from '../../components/ProfileModal';
 
 import styles from './Profile.module.css';
@@ -49,7 +49,7 @@ export default function Profile() {
                 <p className={styles.profileptag}>프로필을 선택해주세요</p>
                 {modalCreateOpen ? (
                     <ProfileModal
-                        modalIsOpen={openModalCreate}
+                        modalIsOpen={!!openModalCreate}
                         closeModal={closeModalCreate}
                         title="프로필 생성 모달"
                         content="이것은 프로필 생성 모달입니다."

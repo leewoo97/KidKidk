@@ -60,7 +60,7 @@ public class ProfileController {
 
 	@PostMapping("/profile/create")
 	@Operation(summary = "프로필 생성")
-	public ResponseEntity<?> profileCreate(ProfileDto profileDto){
+	public ResponseEntity<?> profileCreate(@RequestBody ProfileDto profileDto){
 		int create = profileService.profileCreate(profileDto);
 		if(create==1) {
 			return new ResponseEntity<>(HttpStatus.OK);

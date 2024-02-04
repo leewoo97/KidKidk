@@ -1,8 +1,12 @@
 package com.ssafy.kdkd.domain.dto.account;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProfileDto {
 
 	private String nickname;
@@ -15,14 +19,4 @@ public class ProfileDto {
 
 	private Long userId;
 
-	public ProfileDto() {
-	}
-
-	public ProfileDto(String nickname, int pin, String profileImage, boolean type, Long userId) {
-		this.nickname = nickname;
-		this.pin = pin;
-		this.profileImage = profileImage;
-		this.type = type;
-		this.userId = userId;
-	}
 }

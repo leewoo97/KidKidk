@@ -20,4 +20,5 @@ public class QuizService {
     public List<Quiz> findAll() {
         return quizRepository.findAll();
     }
+
 }

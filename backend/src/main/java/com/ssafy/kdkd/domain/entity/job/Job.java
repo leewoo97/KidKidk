@@ -63,6 +63,7 @@ public class Job {
             updateJobInfo.getWage(),
             updateJobInfo.getTask(),
             updateJobInfo.getTaskAmount());
+        this.doneCount = 0;
     }
 
     public void updateJob(int doneCount) {

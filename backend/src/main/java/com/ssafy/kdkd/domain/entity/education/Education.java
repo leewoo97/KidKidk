@@ -32,7 +32,7 @@ public class Education {
     private Category category;
 
     @Lob
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
     /**

@@ -1,6 +1,6 @@
 package com.ssafy.kdkd.controller;
 
-import com.ssafy.kdkd.domain.dto.Alarm.AlarmDto;
+import com.ssafy.kdkd.domain.dto.alarm.AlarmDto;
 import com.ssafy.kdkd.service.alarm.AlarmService;
 
 import java.util.HashMap;

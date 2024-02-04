@@ -2,13 +2,13 @@ package com.ssafy.kdkd.service.fund;
 
 import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
 
-import com.ssafy.kdkd.domain.dto.Deposit.DepositDto;
+import com.ssafy.kdkd.domain.dto.deposit.DepositDto;
 import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.user.Child;
-import com.ssafy.kdkd.repository.Deposit.DepositRepository;
+import com.ssafy.kdkd.repository.deposit.DepositRepository;
 import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.service.user.ChildService;
 

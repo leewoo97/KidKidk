@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 //feat/BE-profile로 브랜치명을 변경하였습니다.
@@ -82,6 +84,14 @@ public class ProfileController {
 		profileService.profileDelete(profileDeleteDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@GetMapping("/profile/childlist")
+	@Operation(summary = "내 자식 목록 가져오기")
+	public ResponseEntity<?> getChildList(GetChildListDto getChildListDto){
+		List<GetChildListDto> childProfile = profileService.getChildList(getChildListDto);
+		return new ResponseEntity<List<?>>(childProfile,HttpStatus.OK);
+	}
+
 
 //	@GetMapping("/profile/getchild/{nickname}")
 //	@Operation(summary = "내 자식 접근")

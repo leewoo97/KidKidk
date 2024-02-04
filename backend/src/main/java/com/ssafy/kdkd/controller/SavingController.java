@@ -1,15 +1,16 @@
 package com.ssafy.kdkd.controller;
 
-import static com.ssafy.kdkd.domain.dto.saving.SavingDto.mappingSavingDto;
-import static com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto.mappingSavingHistoryDto;
-import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
-
 import com.ssafy.kdkd.domain.dto.saving.SavingDto;
 import com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto;
 import com.ssafy.kdkd.domain.entity.saving.Saving;
 import com.ssafy.kdkd.domain.entity.saving.SavingHistory;
+import com.ssafy.kdkd.repository.saving.SavingRepository;
 import com.ssafy.kdkd.service.saving.SavingHistoryService;
 import com.ssafy.kdkd.service.saving.SavingService;
+
+import static com.ssafy.kdkd.domain.dto.saving.SavingDto.mappingSavingDto;
+import static com.ssafy.kdkd.domain.dto.saving.SavingHistoryDto.mappingSavingHistoryDto;
+import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SavingController {
 
     private final SavingService savingService;
+    private final SavingRepository savingRepository;
     private final SavingHistoryService savingHistoryService;
 
     @GetMapping("/info/{childId}")
@@ -54,7 +56,7 @@ public class SavingController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 // childId가 가진 saving 테이블 확인
-                Optional<Saving> result = savingService.findById(childId);
+                Optional<Saving> result = savingRepository.findById(childId);
                 if (result.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
                 } else {

@@ -3,7 +3,7 @@ package com.ssafy.kdkd.service.alarm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.kdkd.domain.dto.Alarm.AlarmDto;
+import com.ssafy.kdkd.domain.dto.alarm.AlarmDto;
 import com.ssafy.kdkd.domain.entity.job.Job;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.job.JobRepository;

@@ -37,13 +37,19 @@ public class FundService {
      * @param fundReservation 투자예약
      */
     @Transactional
-    public void insertFund(FundReservation fundReservation) {
+    public void updateFund(FundReservation fundReservation) {
         Long childId = fundReservation.getId();
 
         Child child = childService.findChild(childId).get();
-        Fund fund = Fund.createFund(fundReservation);
-        fund.setChild(child);
-        fundRepository.save(fund);
+        Optional<Fund> findFund = fundRepository.findById(childId);
+        if (findFund.isEmpty()) {
+            Fund fund = Fund.createFund(fundReservation);
+            fund.setChild(child);
+            fundRepository.save(fund);
+        } else {
+            Fund fund = findFund.get();
+            fund.updateFund(fundReservation);
+        }
     }
 
     /**

@@ -1,12 +1,11 @@
 package com.ssafy.kdkd.service.fund;
 
-import java.util.Optional;
-
 import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.fund.RoiRepository;
-import com.ssafy.kdkd.service.user.ChildService;
+
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,40 +20,27 @@ import lombok.extern.slf4j.Slf4j;
 public class RoiService {
 
     private final RoiRepository roiRepository;
-    private final ChildService childService;
 
     /**
-     * roi 생성
-     *
-     * @param roiDto 생성할 roi 정보
+     * roi 업데이트
+     * 
+     * @param roi 찾은 roi
+     * @param success 성공 여부(성공 = 1, 실패 = 0)
+     * @param child 자식 entity
      */
     @Transactional
-    public void createRoi(RoiDto roiDto) {
-        Child child = childService.findChild(roiDto.getChildId()).get();
-        Roi roi = Roi.createRoi(roiDto);
-        roi.setChild(child);
-        roiRepository.save(roi);
-    }
+    public void updateRoi(Optional<Roi> roi, int success, Child child) {
+        Long childId = child.getId();
 
-    /**
-     * roi 수정
-     *
-     * @param roi 기존 roi
-     * @param roiDto 업데이트할 roi 정보
-     */
-    @Transactional
-    public void updateRoi(Roi roi, RoiDto roiDto) {
-        Optional<Child> findChild = childService.findChild(roiDto.getChildId());
-
-        if (findChild.isEmpty()) {
-            log.info("ROI 수정 실패");
-            return;
+        if (roi.isEmpty()) {
+            Roi createRoi = Roi.createRoi(new RoiDto(success, 1, childId));
+            createRoi.setChild(child);
+            roiRepository.save(createRoi);
+        } else {
+            Roi findRoi = roi.get();
+            findRoi.updateRoi(new RoiDto(findRoi.getSuccess() + success, findRoi.getCount() + 1, childId));
+            roiRepository.save(findRoi);
         }
-
-        Child child = findChild.get();
-        roi.updateRoi(roiDto);
-        roi.setChild(child);
-        roiRepository.save(roi);
     }
 
 }

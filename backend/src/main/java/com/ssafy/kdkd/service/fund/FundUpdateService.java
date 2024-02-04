@@ -1,7 +1,6 @@
 package com.ssafy.kdkd.service.fund;
 
 import com.ssafy.kdkd.domain.dto.fund.FundHistoryDto;
-import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundHistory;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
@@ -35,7 +34,6 @@ public class FundUpdateService {
 
     private final FundService fundService;
     private final FundRepository fundRepository;
-    private final FundStatusService fundStatusService;
     private final FundStatusRepository fundStatusRepository;
     private final FundReservationRepository fundReservationRepository;
     private final FundHistoryRepository fundHistoryRepository;
@@ -51,11 +49,9 @@ public class FundUpdateService {
      */
     @Transactional
     public void updateFund() {
-        // fund_status 조회
         List<FundStatus> list = fundStatusRepository.findAll();
 
         for (FundStatus fundStatus : list) {
-            // 투자 결과 업데이트
             Fund fund = fundStatus.getFund();
             Optional<Child> findChild = childService.findChild(fund.getId());
 
@@ -65,7 +61,6 @@ public class FundUpdateService {
             }
 
             Child child = findChild.get();
-
             Long childId = child.getId();
             int amount = fundStatus.getAmount();
             boolean answer = fundStatus.isAnswer();
@@ -91,17 +86,13 @@ public class FundUpdateService {
                     pnl,
                     childId
                 ));
+            fundHistory.setChild(child);
             fundHistoryRepository.save(fundHistory);
             // roi 업데이트
-            if (roi.isEmpty()) {
-                roiService.createRoi(new RoiDto(add, 1, childId));
-            } else {
-                Roi existingRoi = roi.get();
-                roiService.updateRoi(existingRoi, new RoiDto(existingRoi.getSuccess() + add, existingRoi.getCount() + 1, childId));
-            }
+            roiService.updateRoi(roi, add, child);
         }
         // fund_status 전체 삭제
-        fundStatusService.deleteAll();
+        fundStatusRepository.deleteAll();
 
         // fund에 fund_reservation 반영
         List<FundReservation> reservationList = fundReservationRepository.findAll();
@@ -109,7 +100,7 @@ public class FundUpdateService {
             boolean isUpdate = fundReservation.isState();
 
             if (isUpdate) {
-                fundService.insertFund(fundReservation);
+                fundService.updateFund(fundReservation);
             } else {
                 fundRepository.deleteById(fundReservation.getId());
             }

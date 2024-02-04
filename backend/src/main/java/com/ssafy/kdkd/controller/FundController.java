@@ -8,6 +8,9 @@ import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
+import com.ssafy.kdkd.repository.fund.FundRepository;
+import com.ssafy.kdkd.repository.fund.FundReservationRepository;
+import com.ssafy.kdkd.repository.fund.RoiRepository;
 import com.ssafy.kdkd.service.fund.FundReservationService;
 import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundStatusService;
@@ -40,9 +43,12 @@ import lombok.extern.slf4j.Slf4j;
 public class FundController {
 
     private final FundService fundService;
+    private final FundRepository fundRepository;
     private final FundReservationService fundReservationService;
+    private final FundReservationRepository fundReservationRepository;
     private final FundStatusService fundStatusService;
     private final RoiService roiService;
+    private final RoiRepository roiRepository;
 
     @PostMapping("/transfer")
     @Operation(summary = "코인계좌로 이체")
@@ -57,7 +63,7 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                boolean isOk = fundService.transfer(transferDto);
+                boolean isOk = fundService.transferToCoin(transferDto);
 
                 if (!isOk) {
                     status = HttpStatus.NOT_ACCEPTABLE;
@@ -136,8 +142,7 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 fund 테이블 확인
-                Optional<Fund> resultFund = fundService.findById(childId);
+                Optional<Fund> resultFund = fundRepository.findById(childId);
                 if (resultFund.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
@@ -163,8 +168,7 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 fund_reservation 테이블 확인
-                Optional<FundReservation> resultFundReservation = fundReservationService.findById(childId);
+                Optional<FundReservation> resultFundReservation = fundReservationRepository.findById(childId);
                 if (resultFundReservation.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
@@ -193,7 +197,7 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                boolean type = false;
+                boolean type = true;
                 FundReservationDto result = fundReservationService.createFundReservation(fundReservationDto, type);
 
                 if (result == null) {
@@ -252,7 +256,7 @@ public class FundController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 FundReservationDto result =
-                    fundReservationService.modifyFundReservation(childId, fundReservationDto);
+                    fundReservationService.modifyFundReservation(fundReservationDto);
 
                 if (result == null) {
                     status = HttpStatus.NO_CONTENT;
@@ -279,11 +283,7 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                boolean isEmpty = fundReservationService.delete(childId);
-
-                if (isEmpty) {
-                    status = HttpStatus.NO_CONTENT;
-                }
+                fundReservationRepository.deleteById(childId);
             }
         } catch (Exception e) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -329,8 +329,7 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 roi 테이블 확인
-                Optional<Roi> result = roiService.findById(childId);
+                Optional<Roi> result = roiRepository.findById(childId);
 
                 if (result.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;

@@ -10,11 +10,9 @@ import com.ssafy.kdkd.service.user.ChildService;
 
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,11 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FundStatusService {
 
-    private final FundService fundService;
     private final FundRepository fundRepository;
     private final ChildService childService;
     private final FundStatusRepository fundStatusRepository;
-    private final EntityManager em;
 
     /**
      * 투자 상태 업데이트
@@ -39,13 +35,11 @@ public class FundStatusService {
     public boolean setFundStatus(FundStatusDto fundStatusDto, boolean isChild) {
         Long childId = fundStatusDto.getChildId();
         Optional<Fund> findFund = fundRepository.findById(childId);
-        Optional<FundStatus> findFundStatus = fundStatusRepository.findById(childId);
 
         if (findFund.isEmpty()) {
             return true;
         }
 
-        Fund fund = findFund.get();
         Optional<Child> findChild = childService.findChild(childId);
 
         if (findChild.isEmpty()) {
@@ -53,26 +47,13 @@ public class FundStatusService {
         }
 
         Child child = findChild.get();
+        Fund fund = findFund.get();
         int fundMoney = child.getFundMoney();
-        int amount = fundStatusDto.getAmount();
 
-        if (findFundStatus.isEmpty()) {
-            insertStatus(fundStatusDto, fund);
-        } else {
-            FundStatus fundStatus = findFundStatus.get();
-            if (isChild) {
-                if (fundMoney < amount) {
-                    return true;
-                } else {
-                    fundStatus.updateChild(fundStatusDto.isSubmit(), amount);
-                }
-            } else {
-                fundStatus.updateParent(fundStatusDto.isAnswer());
-            }
-            updateStatus(fundStatus);
-        }
+        Optional<FundStatus> findFundStatus = fundStatusRepository.findById(childId);
 
-        return false;
+        return findFundStatus.map(fundStatus -> updateStatus(fundStatusDto, fundStatus, fundMoney, isChild))
+            .orElseGet(() -> createStatus(fundStatusDto, fund, fundMoney, isChild));
     }
 
     /**
@@ -81,10 +62,18 @@ public class FundStatusService {
      * @param fund 투자 정보
      */
     @Transactional
-    public void insertStatus(FundStatusDto fundStatusDto, Fund fund) {
+    public boolean createStatus(FundStatusDto fundStatusDto, Fund fund, int fundMoney, boolean isChild) {
+        int amount = fundStatusDto.getAmount();
+
+        if (isChild && fundMoney < amount) {
+            return true;
+        }
+
         FundStatus fundStatus = FundStatus.createFundStatus(fundStatusDto);
         fundStatus.setFund(fund);
         fundStatusRepository.save(fundStatus);
+
+        return false;
     }
 
     /**
@@ -92,17 +81,21 @@ public class FundStatusService {
      * @param fundStatus 투자상태
      */
     @Transactional
-    public void updateStatus(FundStatus fundStatus) {
-        fundStatusRepository.save(fundStatus);
-    }
+    public boolean updateStatus(FundStatusDto fundStatusDto, FundStatus fundStatus, int fundMoney, boolean isChild) {
+        int amount = fundStatusDto.getAmount();
 
-    /**
-     * 투자상태 전체 삭제
-     */
-    @Modifying
-    @Transactional
-    public void deleteAll() {
-        em.createQuery("DELETE FROM FundStatus").executeUpdate();
+        if (isChild) {
+            if (fundMoney < amount) {
+                return true;
+            } else {
+                fundStatus.updateChild(fundStatusDto.isSubmit(), amount);
+            }
+        } else {
+            fundStatus.updateParent(fundStatusDto.isAnswer());
+        }
+        fundStatusRepository.save(fundStatus);
+
+        return false;
     }
 
 }

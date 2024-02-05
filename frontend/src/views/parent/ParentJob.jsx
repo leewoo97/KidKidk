@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 
+import { getRetrieve } from '@api/fund.js';
+
 import styles from './ParentJob.module.css';
 import kidImg from '@images/kidImg.jpg';
 

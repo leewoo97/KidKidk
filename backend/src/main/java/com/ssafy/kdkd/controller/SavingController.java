@@ -55,7 +55,6 @@ public class SavingController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 saving 테이블 확인
                 Optional<Saving> result = savingRepository.findById(childId);
                 if (result.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
@@ -110,7 +109,6 @@ public class SavingController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                // childId가 가진 saving 테이블 확인
                 List<SavingHistory> savingHistoryList =
                     savingHistoryService.findSavingHistoriesByChildId(childId);
 

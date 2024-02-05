@@ -23,7 +23,7 @@ const ChildMainStateMentTable = ({ data }) => {
         <tbody>
           {data && data.map((row) => {
             const { datePart, timePart } = formatDate(row.dataLog);
-
+            const sign = row.type === true ? '+' : '-';
             return (
             <tr key={row.dataLog}>
               <td>
@@ -31,7 +31,7 @@ const ChildMainStateMentTable = ({ data }) => {
                 <div>{timePart}</div>
               </td>
               <td>{row.detail}</td>
-              <td>{row.amount}</td>
+              {sign=='+' ? <td style={{color:"#5E82CD"}}>{sign}{row.amount}</td> : <td style={{color:"#E26459"}}>{sign}{row.amount}</td> } 
               <td>{row.money} 도토리</td>
             </tr>
             );

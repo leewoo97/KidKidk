@@ -13,6 +13,7 @@
     padding: 5px 20px 5px 20px;
     border: none;
     outline: none;
+    cursor: pointer;
 }
 
 .childFundStatus > p:first-child,
@@ -52,6 +53,18 @@
     border-radius: 15px;
 }
 
+.childNoFundStatusFrame,
+.childNoReservationFundStatusFrame {
+    display: flex;
+    background-color: var(--component-background);
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+}
+
 .todayFundNews {
     grid-column: span 2;
 }
@@ -66,4 +79,46 @@
 
 .todayFundNewsFrame > button {
     margin-left: 50px;
+}
+
+/* 투자 등록 모달 */
+.fundModal {
+    text-align: center;
+    padding: 30px;
+}
+
+.fundModal > p {
+    font-size: 50px;
+}
+
+.fundModal button {
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    width: 50%;
+    margin-top: 20px;
+    padding: 5px 20px 5px 20px;
+    border: none;
+    outline: none;
+}
+
+.fundForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fundForm > .fundInputContainer > input {
+    margin-top: 10px;
+    background-color: var(--component-background);
+    text-align: center;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+    width: 400px;
+    height: 30px;
+}
+
+.fundForm input::placeholder {
+    text-align: center;
 }

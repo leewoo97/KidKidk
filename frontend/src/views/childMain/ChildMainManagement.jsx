@@ -87,7 +87,8 @@ export default function ManagementContent() {
   }, []);
 
   useEffect(() => {
-    let sum = child.coin + child.fundMoney + savingMoney;
+    let isZero = child.coin + child.fundMoney + savingMoney;
+    let sum = isZero == 0 ? 1 : isZero;
     let coinRate = (child.coin / sum) * 100;
     let fundMoneyRate = (child.fundMoney / sum) * 100;
     let savingMoneyRate = (savingMoney / sum) * 100;

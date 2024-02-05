@@ -33,6 +33,7 @@ b {
 }
 
 .kakaoButton {
+    display: flex;
     border: none;
     background-color: var(--nav-background);
 }
@@ -40,13 +41,8 @@ b {
 .naverButton {
     display: flex;
     flex-direction: row;
+    background-color: var(--nav-background);
     align-items: center;
-    width: 300px;
     border: none;
-    background-color: #03c75a;
     border-radius: 5px;
-}
-
-.naverButton span {
-    margin-left: 75px;
 }

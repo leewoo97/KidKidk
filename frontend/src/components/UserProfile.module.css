@@ -32,4 +32,116 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+    border: 1px solid;
+    margin-top: 10px;
+}
+
+.userProfileNameContainer button {
+    border: none; /* 버튼 스타일 초기화 */
+    background-color: transparent;
+}
+
+/* 프로필 로그인 모달 */
+.profileLoginModal {
+    text-align: center;
+    padding: 30px;
+}
+
+.profileLoginModal > p {
+    font-size: 50px;
+}
+
+.profileLoginModal button {
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    width: 50%;
+    margin-top: 20px;
+    padding: 5px 20px 5px 20px;
+    border: none;
+    outline: none;
+}
+
+.profileLoginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profileLoginForm > .profileInputContainer > input {
+    margin-top: 10px;
+    background-color: var(--component-background);
+    text-align: center;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+    width: 400px;
+    height: 30px;
+}
+
+.profileLoginForm input::placeholder {
+    text-align: center;
+}
+.profileInputContainer {
+    position: relative;
+}
+
+.iconContainer {
+    position: absolute;
+    top: 75%;
+    left: 10px; /* 필요에 따라 조절 */
+    transform: translateY(-50%);
+}
+
+/* 프로필 수정 모달 */
+
+.profileUpdateModal {
+    padding: 30px;
+}
+
+.profileUpdateModal > p {
+    text-align: center;
+}
+
+.profileUpdateForm {
+    padding-left: 70px;
+}
+
+.profileUpdateForm ul li {
+    list-style: none;
+}
+
+.profileUpdateForm ul li input {
+    margin-top: 10px;
+
+    background-color: var(--component-background);
+    text-align: center;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+    width: 300px;
+    height: 30px;
+}
+
+.profileUpdateModal > p {
+    font-size: 50px;
+}
+
+.profileUpdateModal button {
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    border-radius: 15px;
+    margin-top: 20px;
+    padding: 5px 20px 5px 20px;
+    border: none;
+    outline: none;
+}
+
+.profileUpdateFormInputContainer {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.profileUpdateFormInputContainer span {
+    margin-right: 10px;
 }

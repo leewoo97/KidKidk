@@ -4,10 +4,10 @@ import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.user.Child;
+import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.repository.fund.FundReservationRepository;
 import com.ssafy.kdkd.service.user.ChildService;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -20,44 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FundReservationService {
 
-    private final FundService fundService;
+    private final FundRepository fundRepository;
     private final FundReservationRepository fundReservationRepository;
     private final ChildService childService;
-
-    public void save(FundReservation fundReservation) {
-        fundReservationRepository.save(fundReservation);
-    }
-
-    public Optional<FundReservation> findById(Long childId) {
-        return fundReservationRepository.findById(childId);
-    }
-
-    public List<FundReservation> findAll() {
-        return fundReservationRepository.findAll();
-    }
-
-    @Transactional
-    public void deleteAll() {
-        fundReservationRepository.deleteAll();
-    }
-
-    /**
-     * 투자예약 삭제
-     *
-     * @param childId 자식 아이디
-     * @return boolean 비어있는지 확인(true = 투자예약 X)
-     */
-    @Transactional
-    public boolean delete(Long childId) {
-        Optional<FundReservation> findFundReservation = fundReservationRepository.findById(childId);
-
-        if (findFundReservation.isEmpty()) {
-            return true;
-        }
-
-        fundReservationRepository.delete(findFundReservation.get());
-        return false;
-    }
 
     /**
      * 투자예약 생성
@@ -68,13 +33,12 @@ public class FundReservationService {
     @Transactional
     public FundReservationDto createFundReservation(FundReservationDto fundReservationDto, boolean type) {
         Long childId = fundReservationDto.getChildId();
-        Optional<FundReservation> findFundReservation = fundReservationRepository.findById(childId);
 
-        if (findFundReservation.isPresent()) {
+        if (fundReservationRepository.existsById(childId)) {
             return null;
         }
 
-        if (type && fundService.findById(childId).isPresent()) {
+        if (type && fundRepository.existsById(childId)) {
             return null;
         }
 
@@ -89,41 +53,37 @@ public class FundReservationService {
         fundReservationDto.setState(true);
         FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
         fundReservation.setChild(child);
-        save(fundReservation);
+        fundReservationRepository.save(fundReservation);
         return fundReservationDto;
     }
 
     /**
      * 투자예약 수정
      *
-     * @param childId 자식 아이디
      * @param fundReservationDto 새로운 투자예약
      */
     @Transactional
-    public FundReservationDto modifyFundReservation(Long childId, FundReservationDto fundReservationDto) {
+    public FundReservationDto modifyFundReservation(FundReservationDto fundReservationDto) {
+        Long childId = fundReservationDto.getChildId();
         Optional<FundReservation> existingFundReservation = fundReservationRepository.findById(childId);
 
         if (existingFundReservation.isEmpty()) {
             return null;
         }
 
-        Optional<Child> findChild = childService.findChild(childId);
-
-        if (findChild.isEmpty()) {
+        if (childService.findChild(childId).isEmpty()) {
             return null;
         }
 
-        Child child = findChild.get();
         FundReservation reservation = existingFundReservation.get();
         reservation.updateFundReservation(fundReservationDto);
-        reservation.setChild(child);
-        save(reservation);
+        fundReservationRepository.save(reservation);
         return fundReservationDto;
     }
 
     /**
      * 투자 삭제 예약
-     * 
+     *
      * @param childId 자식 아이디
      * @return FundReservationDto 투자예약(삭제 예약 상태 = state가 false)
      */
@@ -135,19 +95,28 @@ public class FundReservationService {
             return null;
         }
 
-        Child child = findChild.get();
-        Optional<Fund> fund = fundService.findById(childId);
+        Optional<Fund> fund = fundRepository.findById(childId);
 
         if (fund.isEmpty()) {
             return null;
         }
 
+        Child child = findChild.get();
         Fund existingFund = fund.get();
         FundReservationDto fundReservationDto =
             new FundReservationDto(existingFund.getName(), existingFund.getContent(), existingFund.getYield(), false, childId);
-        FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
-        fundReservation.setChild(child);
-        save(fundReservation);
+
+        Optional<FundReservation> findFundReservation = fundReservationRepository.findById(childId);
+
+        if (findFundReservation.isEmpty()) {
+            FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
+            fundReservation.setChild(child);
+            fundReservationRepository.save(fundReservation);
+        } else {
+            FundReservation fundReservation = findFundReservation.get();
+            fundReservation.updateFundReservation(fundReservationDto);
+        }
+
         return fundReservationDto;
     }
 

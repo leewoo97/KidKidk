@@ -1,9 +1,9 @@
 package com.ssafy.kdkd.controller;
 
-import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
-
 import com.ssafy.kdkd.domain.entity.education.Education;
 import com.ssafy.kdkd.service.education.EducationService;
+
+import static com.ssafy.kdkd.exception.ExceptionHandler.exceptionHandling;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

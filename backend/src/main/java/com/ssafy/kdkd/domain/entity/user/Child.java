@@ -36,6 +36,11 @@ public class Child {
     @JoinColumn(name = "child_id")
     private Profile profile;
 
+
+    public Child(Profile profile) {
+        this.profile = profile;
+    }
+
     /**
      * 자식 업데이트
      */

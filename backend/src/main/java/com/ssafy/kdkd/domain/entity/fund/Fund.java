@@ -61,10 +61,10 @@ public class Fund {
     /**
      * 투자 수정
      */
-    public void updateFund(FundReservationDto fundReservationDto) {
-        this.name = fundReservationDto.getName();
-        this.content = fundReservationDto.getContent();
-        this.yield = fundReservationDto.getYield();
+    public void updateFund(FundReservation fundReservation) {
+        this.name = fundReservation.getName();
+        this.content = fundReservation.getContent();
+        this.yield = fundReservation.getYield();
     }
 
 }

@@ -49,7 +49,7 @@ public class FundStatus {
     /**
      * 투자상태 생성
      */
-    public static FundStatus createFundStatus(FundStatusDto fundStatusDto) {
+    public static FundStatus  createFundStatus(FundStatusDto fundStatusDto) {
         FundStatus fundStatus = new FundStatus();
         fundStatus.amount = fundStatusDto.getAmount();
         fundStatus.submit = fundStatusDto.isSubmit();

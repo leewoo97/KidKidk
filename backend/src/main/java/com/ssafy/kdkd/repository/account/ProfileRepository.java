@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.repository.account;
 
+import com.ssafy.kdkd.domain.dto.account.GetChildListDto;
 import com.ssafy.kdkd.domain.dto.account.ProfileLoginDto;
 import com.ssafy.kdkd.domain.dto.account.ProfileSelectAllDto;
 import com.ssafy.kdkd.domain.dto.account.ProfileUpdateDto;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
@@ -24,7 +26,10 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	@Query("UPDATE Profile p SET p.nickname = :nickname, p.pin = :pin, p.profileImage = :profileImage WHERE p.id = :profile_id")
 	void profileUpdate(@Param("profile_id") Long profile_id, @Param("nickname") String nickname, @Param("pin") int pin, @Param("profileImage") String profileImage);
 
-	@Modifying
-	@Query("DELETE FROM Profile p WHERE p.id = :profile_id")
-	void profileDelete(@Param("profile_id") Long profileId);
+	@Query("SELECT new com.ssafy.kdkd.domain.dto.account.GetChildListDto(:user_id,p.id,p.nickname,p.profileImage) FROM Profile p WHERE p.user.id = :user_id AND p.type = :type")
+	List<GetChildListDto> getChildList(@Param("user_id") Long userId, @Param("type") boolean type);
+
+//	@Modifying
+//	@Query("DELETE FROM Profile p WHERE p.id = :profile_id")
+//	void profileDelete(@Param("profile_id") Long profileId);
 }

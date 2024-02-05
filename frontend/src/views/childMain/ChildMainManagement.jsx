@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { getJob } from "@api/job.js";
 import { getFund } from "@api/fund.js";
 import { getSavingHistory } from "@api/saving.js";
+import { getChild } from "@api/child.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -17,6 +18,8 @@ export default function ManagementContent() {
   const [job, setJob] = useState([]);
   const [fund, setFund] = useState([]);
   const [savingMoney, setSavingMoney] = useState(0);
+  const [child, setChild] = useState([]);
+  const [ratioPercentage, setRatioPercentage] = useState([]);
 
   useEffect(() => {
     getJob(
@@ -67,11 +70,35 @@ export default function ManagementContent() {
     };
   }, []);
 
+  useEffect(() => {
+    getChild(
+      childId,
+      (success) => {
+        setChild(success.data.Child);
+        console.log(success.data.Child);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
+
+  useEffect(() => {
+    let sum = child.coin + child.fundMoney + savingMoney;
+    let coinRate = (child.coin / sum) * 100;
+    let fundMoneyRate = (child.fundMoney / sum) * 100;
+    let savingMoneyRate = (savingMoney / sum) * 100;
+    setRatioPercentage([coinRate, fundMoneyRate, savingMoneyRate]);
+  }, [child, savingMoney]);
+
   const Data = {
     labels: ["주머니", "투자", "적금"],
     datasets: [
       {
-        data: [50, 30, 20],
+        data: ratioPercentage,
         backgroundColor: ["#5FB776", "#F1554C", "#FFD000"],
         borderColor: ["#5FB776", "#F1554C", "#FFD000"],
       },
@@ -106,7 +133,7 @@ export default function ManagementContent() {
             </div>
             <div className={styles.infoContainer1}>
               <div> 도토리 </div>
-              <div> 4500개 </div>
+              <div> {child.coin}개 </div>
             </div>
           </div>
           <div className={styles.refundContainer}>
@@ -130,14 +157,14 @@ export default function ManagementContent() {
                   className={styles.colorbox}
                   style={{ backgroundColor: "#5FB776" }}
                 ></div>
-                <div>주머니 : 4500 도토리</div>
+                <div>주머니 : {child.coin} 도토리</div>
               </div>
               <div className={styles.boxdetail}>
                 <div
                   className={styles.colorbox}
                   style={{ backgroundColor: "#F1554C" }}
                 ></div>
-                <div>투자 : 2700 도토리</div>
+                <div>투자 : {child.fundMoney} 도토리</div>
               </div>
               <div className={styles.boxdetail}>
                 <div

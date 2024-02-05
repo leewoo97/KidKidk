@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import {profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from "/src/apis/api/profile.js";
+import React, {useState, useEffect} from "react";
 import { CgProfile } from 'react-icons/cg';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { RiParentLine } from 'react-icons/ri';
@@ -14,12 +15,99 @@ import kidImg from '@images/kidImg.jpg';
 import profilePlus from '@images/profilePlus.png';
 
 export default function Profile() {
+    //Dto 정리
+    const [user, setUser] = useState({
+        profileId: 0,
+        nickname: "string",
+        profileImage: "string",
+        type: true,
+        userId: 1
+      });
+
+    //profileCreate API데이터 받아오기
+    const [createData, setCreateData] = useState([{}]);
+
+  
+    useEffect(() => {
+      console.log('Profile Create Enter');
+      profileCreate(JSON.stringify(user),
+        (createData) => {
+          setCreateData(createData.data);
+          console.log(createData.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+      return () => {
+        <div>
+        console.log('Profile Create return');
+        </div>  
+      };
+    }, []);
+
+
+    //profileSelectAll API데이터 받아오기
+    const [SelectAllData, setSelectAllData] = useState([{}]);
+  
+    useEffect(() => {
+      console.log('Profile SelectAll Enter');
+      profileSelectAll(user,
+        (SelectAllData) => {
+          setSelectAllData(SelectAllData.data);
+          console.log(SelectAllData.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+      return () => {
+        <div>
+        console.log('Profile SelectAll return');
+        </div>  
+      };
+    }, []);
+
+    //profileDelete API데이터 받아오기
+    const [deleteData, setDeleteData] = useState([{}]);
+
+    const [profile, serProfile] = useState({
+        profileId: 1,
+        nickname: "string", 
+        profileImage: "string",
+        type: true,
+        userId: 1
+      });
+  
+    useEffect(() => {
+      console.log('Profile Delete Enter');
+      profileDelete(profile,
+        (deleteData) => {
+          setDeleteData(deleteData.data);
+          console.log(deleteData.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+      return () => {
+        <div>
+        console.log('Profile Delete return');
+        </div>  
+      };
+    }, []);
+
+
+
+
     // 가상의 프로필 데이터 배열
-    const profiles = [
-        { nickname: '봉미선', profile_image: parentImg },
-        { nickname: '김철수', profile_image: kidImg },
-        // 추가적인 프로필 데이터...
-    ];
+    // const profiles = [
+    //     { nickname: '봉미선', profile_image: parentImg },
+    //     { nickname: '김철수', profile_image: kidImg },
+    //     // 추가적인 프로필 데이터...
+    // ];
+
+    
     const [modalCreateOpen, setModalCreateOpen] = useState(false);
 
     const openModalCreate = () => setModalCreateOpen(true);
@@ -27,13 +115,14 @@ export default function Profile() {
 
     return (
         <>
+            {SelectAllData.map}
             <div className={styles.profileContainer}>
                 <div className={styles.profileBox}>
-                    {profiles.map((profile) => (
+                    {SelectAllData.map((profile) => (
                         <UserProfile
-                            key={profile.nickname}
+                            key={profile.profileId}
                             nickname={profile.nickname}
-                            profile_image={profile.profile_image}
+                            profile_image={profile.profileImage}
                         />
                     ))}
                     <div>

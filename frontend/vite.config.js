@@ -11,6 +11,8 @@ export default defineConfig({
             '@components': '/src/components',
             '@configs': '/src/configs',
             // 다른 별칭들 추가 가능
+            '@api' : '/src/APIS/apis/api',
+            '@util' : '/src/APIS/apis/util'
         },
     },
 

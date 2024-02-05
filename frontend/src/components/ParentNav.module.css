@@ -28,17 +28,14 @@
     border-radius: 15px;
 }
 .profile {
-    background-color: #f8f3e7;
     position: absolute;
     left: 83vw;
     width: 10vw;
-    height: 30vh;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
-    padding: 15px;
+    justify-content: center;
 
     color: #4d4637;
     font-size: 15px;
@@ -111,4 +108,37 @@
     width: 100%; /* 이미지가 컨테이너에 꽉 차게 설정 */
     height: auto; /* 가로 세로 비율 유지 */
     display: block; /* 인라인 요소 간격 제거 */
+}
+
+/* 아이 탭 창 */
+.parentChildTab {
+    height: 55vh;
+    padding-top: 30px;
+}
+
+.parentChildTabContainer {
+    background-color: #90c354;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    width: 12vw;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.parentChildTabContainer:hover {
+    background-color: #35b356;
+    cursor: pointer;
+}
+
+/* 알람 */
+.alarm {
+    width: 45px;
+    height: 45px;
+    margin-left: 8vw;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
 }

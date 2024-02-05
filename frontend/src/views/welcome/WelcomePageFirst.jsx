@@ -3,12 +3,12 @@ import styles from './WelcomePageFirst.module.css';
 import kakaoBtn from '@images/kakao_login.png';
 import naverBtn from '@images/naver_login.png';
 
-import { backendURL } from '@configs/config';
+const { VITE_SERVICE_BASE_URL } = import.meta.env;
 
 export default function WelcomePageFirst() {
-    const redirect_uri = 'http://localhost:5173/profile'; //Redirect URI
-    const kakaoURL = `${backendURL}/oauth2/authorization/kakao?redirect_uri=${redirect_uri}&mode=login`;
-    const naverURL = `${backendURL}/oauth2/authorization/naver?redirect_uri=${redirect_uri}&mode=login`;
+    const redirect_uri = 'http://localhost:5173/tokensave'; //Redirect URI
+    const kakaoURL = `${VITE_SERVICE_BASE_URL}/oauth2/authorization/kakao?redirect_uri=${redirect_uri}&mode=login`;
+    const naverURL = `${VITE_SERVICE_BASE_URL}/oauth2/authorization/naver?redirect_uri=${redirect_uri}&mode=login`;
 
     const kakaoLoginClick = () => {
         window.location.href = kakaoURL;

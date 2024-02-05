@@ -153,7 +153,7 @@ export default function ManagementContent() {
       <div className={styles.card2}>
         <div className={styles.title}> 이번주 할 일</div>
         <div className={styles.card2_1}>
-          <div> {job.name} </div>
+          <div> {job.task} </div>
           <div></div>
           <div> {job.doneCount}/{job.taskAmount} </div>
           <div> 완료 </div>

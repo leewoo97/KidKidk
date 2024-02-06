@@ -2,6 +2,7 @@ package com.ssafy.kdkd.controller;
 
 import com.ssafy.kdkd.domain.dto.account.*;
 import com.ssafy.kdkd.domain.entity.account.Profile;
+import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.service.account.ProfileService;
 import com.ssafy.kdkd.service.account.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,13 +90,12 @@ public class ProfileController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-//	@GetMapping("/profile/getchild/{nickname}")
-//	@Operation(summary = "내 자식 접근")
-//	public String getChild(@PathVariable String nickname){
-//		profileService.
-//
-//
-//		return "나의 자식 : " + nickname + "에게 접근하였습니다.";
-//	}
+	@GetMapping("/profile/getchild/{childId}")
+	@Operation(summary = "내 자식 접근")
+	public ResponseEntity<?> getChild(@PathVariable Long childId){
+		ChildDto returnDto = profileService.getChild(childId);
+		System.out.println(returnDto);
+		return new ResponseEntity<>(returnDto,HttpStatus.OK);
+	}
 
 }

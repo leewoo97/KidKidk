@@ -20,6 +20,7 @@ import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundStatusService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -362,11 +363,12 @@ public class FundController {
             if (isValid) {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
-                Optional<FundHistory> fundHistory = fundHistoryRepository.findById(childId);
-                if (fundHistory.isEmpty()) {
+                List<FundHistory> fundHistories = fundHistoryRepository.findFundHistoriesByChildId(childId);
+
+                if (fundHistories.isEmpty()) {
                     status = HttpStatus.NO_CONTENT;
                 } else {
-                    resultMap.put("FundHistory", mappingFundHistoryDto(fundHistory.get()));
+                    resultMap.put("FundHistory", mappingFundHistoryDto(fundHistories));
                 }
             }
         } catch (Exception e) {

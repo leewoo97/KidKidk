@@ -1,122 +1,139 @@
 .manageContainer {
-  margin-top: 2vh;
-  display: flex;
-  flex-direction: column;
-  gap: 3vh;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
 }
 .card1 {
-  display: flex;
-  justify-content: space-around;
-  height: 30vh;
+    display: flex;
+    justify-content: space-around;
+    height: 30vh;
 }
 .card1_1 {
-  width: 20vw;
-  padding: 15px;
-  border: solid 3px #c1b8ad;
-  border-radius: 15px;
-  background-color: #f7f5f1;
+    width: 20vw;
+    padding: 15px;
+    border: solid 3px #c1b8ad;
+    border-radius: 15px;
+    background-color: #f7f5f1;
 
-  display: flex;
-  flex-direction: column;
-  gap: 1vh;
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    text-align: center;
 }
 .card1_2 {
-  width: 30vw;
-  padding: 15px;
-  border: solid 3px #c1b8ad;
-  border-radius: 15px;
-  background-color: #f7f5f1;
+    width: 30vw;
+    padding: 15px;
+    border: solid 3px #c1b8ad;
+    border-radius: 15px;
+    background-color: #f7f5f1;
 
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
 }
 .title {
-  font-size: 20px;
-  font-weight: 900;
-  color: #4d4637;
+    font-size: 20px;
+    font-weight: 900;
+    color: #4d4637;
 }
 .iconContainer1 {
-  display: flex;
-  justify-content: space-around;
-  height: 20vh;
-  margin: 0 40px;
+    display: flex;
+    justify-content: space-around;
+    height: 20vh;
+    margin: 0 40px;
 
-  font-size: 25px;
-  font-weight: 900;
-  color: #4d4637;
+    font-size: 25px;
+    font-weight: 900;
+    color: #4d4637;
 }
 .iconContainer2 {
-  display: flex;
-  justify-content: space-around;
-  height: 20vh;
+    display: flex;
+    justify-content: space-around;
+    height: 20vh;
 
-  font-size: 15px;
-  font-weight: 900;
-  color: #4d4637;
+    font-size: 15px;
+    font-weight: 900;
+    color: #4d4637;
 }
 .colorbox {
-  width: 15px;
-  height: 15px;
-  text-align: center;
+    width: 15px;
+    height: 15px;
+    text-align: center;
 }
 .infoContainer1 {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
 }
 .infoContainer2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
 }
 .boxdetail {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
 }
 .refundBtn {
-  width: 20vw;
-  background-color: #4d4637;
-  color: #ffffff;
-  border-radius: 15px;
-  text-align: center;
-  padding: 8px 0;
-  cursor: pointer;
+    width: 20vw;
+    background-color: #4d4637;
+    color: #ffffff;
+    border-radius: 15px;
+    text-align: center;
+    padding: 8px 0;
+    cursor: pointer;
 }
 .refundContainer {
-  margin: 0 auto;
+    margin: 0 auto;
 }
 
 .card2 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .card2_1 {
-  height: 13vh;
-  border: solid 3px #c1b8ad;
-  background-color: #f7f5f1;
-  border-radius: 15px;
-  font-size: 20px;
+    height: 13vh;
+    border: solid 3px #c1b8ad;
+    background-color: #f7f5f1;
+    border-radius: 15px;
+    font-size: 20px;
 
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 .card2_2 {
-  height: 10vh;
-  border: solid 3px #c1b8ad;
-  background-color: #f7f5f1;
-  border-radius: 15px;
-  font-size: 20px;
+    height: 10vh;
+    border: solid 3px #c1b8ad;
+    background-color: #f7f5f1;
+    border-radius: 15px;
+    font-size: 20px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* progress tag */
+
+.progress {
+    appearance: none;
+}
+.progress::-webkit-progress-bar {
+    background: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: inset 3px 3px 10px #ccc;
+}
+.progress::-webkit-progress-value {
+    border-radius: 10px;
+    background: #1d976c;
+    background: -webkit-linear-gradient(to right, #93f9b9, #1d976c);
+    background: linear-gradient(to right, #93f9b9, #1d976c);
 }

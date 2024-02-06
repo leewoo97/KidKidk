@@ -26,7 +26,6 @@ public class UsersController {
     @GetMapping("/userinfo")
     @Operation(summary = "User 정보 조회")
     public ResponseEntity<?> userInfo(HttpServletRequest request, Authentication authentication) {
-        String token = request.getHeader("Authorization");
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status;
         try {
@@ -34,7 +33,6 @@ public class UsersController {
                 status = HttpStatus.UNAUTHORIZED;
             } else {
                 resultMap.put("val", authentication);
-                String a = authentication.getName();
                 status = HttpStatus.OK;
             }
         } catch (Exception e) {

@@ -1,7 +1,5 @@
 package com.ssafy.kdkd.controller;
 
-import static com.ssafy.kdkd.domain.dto.fund.FundHistoryDto.mappingFundHistoryDto;
-
 import com.ssafy.kdkd.domain.dto.fund.FundDto;
 import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
@@ -10,14 +8,19 @@ import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundHistory;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
+import com.ssafy.kdkd.domain.entity.fund.FundStatus;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
 import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.repository.fund.FundReservationRepository;
+import com.ssafy.kdkd.repository.fund.FundStatusRepository;
 import com.ssafy.kdkd.repository.fund.RoiRepository;
 import com.ssafy.kdkd.service.fund.FundReservationService;
 import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundStatusService;
+
+import static com.ssafy.kdkd.domain.dto.fund.FundHistoryDto.mappingFundHistoryDto;
+import static com.ssafy.kdkd.domain.dto.fund.FundStatusDto.mappingFundStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +56,7 @@ public class FundController {
     private final FundReservationService fundReservationService;
     private final FundReservationRepository fundReservationRepository;
     private final FundStatusService fundStatusService;
+    private final FundStatusRepository fundStatusRepository;
     private final RoiRepository roiRepository;
     private final FundHistoryRepository fundHistoryRepository;
 
@@ -127,6 +131,32 @@ public class FundController {
 
                 if (isRejected) {
                     status = HttpStatus.NO_CONTENT;
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @GetMapping("/status/confirm/{childId}")
+    @Operation(summary = "투자 상태 조회")
+    public ResponseEntity<?> confirmStatus(@PathVariable("childId") Long childId, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            log.info("fund controller: confirmStatus() Enter");
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                Optional<FundStatus> fundStatus = fundStatusRepository.findById(childId);
+                if (fundStatus.isEmpty()) {
+                    status = HttpStatus.NO_CONTENT;
+                } else {
+                    resultMap.put("FundStatus", mappingFundStatus(fundStatus.get()));
                 }
             }
         } catch (Exception e) {

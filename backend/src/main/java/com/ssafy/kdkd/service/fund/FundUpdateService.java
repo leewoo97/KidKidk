@@ -63,6 +63,11 @@ public class FundUpdateService {
             Child child = findChild.get();
             Long childId = child.getId();
             int amount = fundStatus.getAmount();
+
+            if (amount == 0) {
+                return;
+            }
+
             boolean answer = fundStatus.isAnswer();
             boolean submit = fundStatus.isSubmit();
             boolean isSuccess = answer == submit;

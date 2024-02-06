@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getCookie, setCookie } from '../../apis/util/cookieUtil';
-import { userInfo } from '../../apis/api/user';
+import { getUserInfo } from '../../apis/api/user';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '../../store/userInfoAtom';
 
 export default function tokenSave() {
-    const redirect_uri = 'http://localhost:5173/profile'; //Redirect URI
+    const navigate = useNavigate();
+    const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
     async function authRedirect() {
         const access_token = new URL(window.location.href).searchParams.get('access_token');
@@ -12,21 +15,30 @@ export default function tokenSave() {
         await setCookie('access_token', access_token);
         await setCookie('refresh_token', refresh_token);
 
-        userInfo(
+        getUserInfo(
             ({ data }) => {
-                console.log('auth : ', data);
+                setUserInfo(data.userinfo); // 리코일에 불러온 userinfo 저장
             },
             (error) => {
                 console.log('error : ', error);
             }
         );
-
-        // window.location.href = redirect_uri;
     }
 
     useEffect(() => {
         authRedirect();
     }, []);
+
+    useEffect(() => {
+        console.log('Current user info:', userInfo);
+        /**
+         * 상태 저장 완료 이후 바로 리다이렉트
+         */
+        if (userInfo) {
+            navigate('/profile');
+        }
+    }, [userInfo]);
+
     return (
         <div>
             <p>토큰저장</p>

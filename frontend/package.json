@@ -24,6 +24,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.21.3",
     "recoil": "^0.7.7",
+    "recoil-persist": "^5.1.0",
+    "recoilize": "^3.2.0",
     "sort-by": "^1.2.0"
   },
   "devDependencies": {

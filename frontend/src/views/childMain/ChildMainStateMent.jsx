@@ -13,7 +13,7 @@ import {
 } from "chart.js";
 import React, { useState, useEffect } from "react";
 import { getHistory } from "@api/deposit.js";
-import { format, isSameDay } from "date-fns";
+import { format } from "date-fns";
 ChartJS.register(
   CategoryScale,
   LinearScale,

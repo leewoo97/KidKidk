@@ -49,7 +49,8 @@ public class FundReservationService {
         }
 
         Child child = findChild.get();
-        fundReservationDto.setYield((int) Math.floor(Math.random() * 10));
+        int rate = (int) Math.floor(Math.random() * 10);
+        fundReservationDto.setYield(rate == 0 ? 1 : rate);
         fundReservationDto.setState(true);
         FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
         fundReservation.setChild(child);

@@ -1,20 +1,23 @@
 package com.ssafy.kdkd.controller;
 
+import static com.ssafy.kdkd.domain.dto.fund.FundHistoryDto.mappingFundHistoryDto;
+
 import com.ssafy.kdkd.domain.dto.fund.FundDto;
 import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
 import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
+import com.ssafy.kdkd.domain.entity.fund.FundHistory;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
+import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
 import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.repository.fund.FundReservationRepository;
 import com.ssafy.kdkd.repository.fund.RoiRepository;
 import com.ssafy.kdkd.service.fund.FundReservationService;
 import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundStatusService;
-import com.ssafy.kdkd.service.fund.RoiService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/fund")
@@ -47,8 +52,8 @@ public class FundController {
     private final FundReservationService fundReservationService;
     private final FundReservationRepository fundReservationRepository;
     private final FundStatusService fundStatusService;
-    private final RoiService roiService;
     private final RoiRepository roiRepository;
+    private final FundHistoryRepository fundHistoryRepository;
 
     @PostMapping("/transfer")
     @Operation(summary = "코인계좌로 이체")
@@ -133,7 +138,7 @@ public class FundController {
     @Operation(summary = "투자 항목 조회")
     public ResponseEntity<?> confirmFund(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.FOUND;
+        HttpStatus status = HttpStatus.OK;
         try {
             log.info("fund controller: confirmFund() Enter");
             // 현재 childId에 대한 권한 확인
@@ -336,6 +341,32 @@ public class FundController {
                 } else {
                     RoiDto roiDto = RoiDto.mappingRoiDto(result.get());
                     resultMap.put("roi", roiDto);
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @GetMapping("/history/confirm/{childId}")
+    @Operation(summary = "투자 내역 조회")
+    public ResponseEntity<?> history(@PathVariable("childId") Long childId, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            log.info("fund controller: history() Enter");
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                Optional<FundHistory> fundHistory = fundHistoryRepository.findById(childId);
+                if (fundHistory.isEmpty()) {
+                    status = HttpStatus.NO_CONTENT;
+                } else {
+                    resultMap.put("FundHistory", mappingFundHistoryDto(fundHistory.get()));
                 }
             }
         } catch (Exception e) {

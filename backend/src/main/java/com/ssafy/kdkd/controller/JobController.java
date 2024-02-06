@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/job")
@@ -44,7 +46,7 @@ public class JobController {
     @Operation(summary = "직업 조회")
     public ResponseEntity<?> retrieveJob(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.FOUND;
+        HttpStatus status = HttpStatus.OK;
         try {
             log.info("fund controller: retrieveJob() Enter");
             // 현재 childId에 대한 권한 확인
@@ -70,7 +72,7 @@ public class JobController {
     @Operation(summary = "직업 예약 조회")
     public ResponseEntity<?> retrieveJobReservation(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.FOUND;
+        HttpStatus status = HttpStatus.OK;
         try {
             log.info("fund controller: retrieveJobReservation() Enter");
             // 현재 childId에 대한 권한 확인

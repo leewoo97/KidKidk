@@ -6,7 +6,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: 3vh;
+  gap: 2vh;
 }
 .title {
   padding-top: 4%;
@@ -94,4 +94,110 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.quizContainer2 {
+  width: 100%;
+  height: 63vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  /* border: 1px solid #a16951; */
+  /* background-color: #ffffff; */
+}
+.quizContent {
+  width: 100%;
+  height: 30vh;
+  border: 1px solid #a16951;
+  border-radius: 15px;
+  background-color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vh;
+}
+.quizQuestion {
+  font-size: 25px;
+  color: #4d4637;
+}
+.quizOX {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10vh;
+  width: 100%;
+  height: 8vh;
+}
+.quizC {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #a16951;
+  border-radius: 10px;
+  font-size: 40px;
+  font-weight: 900;
+  text-align: end;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.quizOX div:hover {
+  background-color: #c1b8ad;
+}
+.quizAnsSubmit1 {
+  border: 2px solid #4d4637;
+  border-radius: 15px;
+  width: 10vw;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: auto;
+}
+.quizAnsSubmit2 {
+  border: 2px solid #4d4637;
+  border-radius: 15px;
+  background-color: #4d4637;
+  color: #f8f3e7;
+  width: 10vw;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: auto;
+}
+.modalComponent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4vh;
+  height: 100%;
+  text-align: center;
+}
+.modalResult {
+  display: flex;
+  flex-direction: column;
+  gap: 4vh;
+}
+.modalTitle {
+  color: #4d4637;
+  font-size: 25px;
+  font-weight: 900;
+}
+.modalContents {
+  color: #4d4637;
+  font-size: 20px;
+}
+.modalClose {
+  width: 10vw;
+  height: 4vh;
+  border-radius: 15px;
+  background-color: #4d4637;
+  color: #f8f3e7;
+  cursor: pointer;
 }

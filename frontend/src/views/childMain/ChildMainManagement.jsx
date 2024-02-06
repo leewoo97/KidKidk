@@ -194,7 +194,7 @@ export default function ManagementContent() {
       <div className={styles.card2}>
         <div className={styles.title}> 이번주 투자 항목 </div>
         <div className={styles.card2_2}>
-          {fund ? <> {fund.content} </> : "이번주 투자 항목이 없습니다."}
+          {fund ? <> {fund.content} </> : "투자 항목이 없습니다."}
         </div>
       </div>
     </div>

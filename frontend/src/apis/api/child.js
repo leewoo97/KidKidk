@@ -2,10 +2,10 @@ import { serverAxios } from '@util/commons';
 
 const server = serverAxios();
 
-const url = '/child';
+const url = '/users';
 
 async function getChild(childId, success, fail) {
-    await server.get(`${url}/info/${childId}`).then(success).catch(fail);
+    await server.get(`${url}/profile/getchild/${childId}`).then(success).catch(fail);
 }
 
 export { getChild };

@@ -67,7 +67,7 @@ export default function ChildFundManagement() {
     getChild(
       childId,
       (success) => {
-        setChild(success.data.Child);
+        setChild(success.data);
       },
       (fail) => {
         console.log(fail);

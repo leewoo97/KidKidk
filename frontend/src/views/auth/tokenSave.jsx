@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { setCookie } from '../../util/cookieUtil';
 import { useEffect } from 'react';
+import { userInfo } from '../../api/user';
 
 export default function tokenSave() {
     const redirect_uri = 'http://localhost:5173/profile'; //Redirect URI
@@ -10,11 +11,19 @@ export default function tokenSave() {
         const refresh_token = new URL(window.location.href).searchParams.get('refresh_token');
         setCookie('access_token', access_token);
         setCookie('refresh_token', refresh_token);
-        window.location.href = redirect_uri;
+        // window.location.href = redirect_uri;
     }
 
     useEffect(() => {
         authRedirect();
+        userInfo(
+            ({ data }) => {
+                console.log('auth : ', data);
+            },
+            (error) => {
+                console.log('error : ', error);
+            }
+        );
     }, []);
     return (
         <div>

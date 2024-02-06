@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 
-import { getRetrieve } from '@api/fund.js';
+import { useRecoilState } from 'recoil';
+import { getRetrieve } from '@api/job.js';
+import { getJobData } from '@store/jobAtom.js';
 
 import styles from './ParentJob.module.css';
 import kidImg from '@images/kidImg.jpg';
@@ -12,6 +14,28 @@ export default function ParentJob() {
     const [jobCreateModalOpen, setJobCreateModalOpen] = useState(false);
     const [reservationJobCreateModalOpen, setReservationJobCreateModalOpen] = useState(false);
     const [jobUpdateModalOpen, setJobUpdateModalOpen] = useState(false);
+
+    const [jobdata, setJobData] = useRecoilState(getJobData);
+
+    // 직업 조회 API
+    const getJobDataAxios = useEffect(() => {
+        console.log('Enter getJobDataAxios useEffect');
+        getRetrieve(
+            // 부모가 탭에서 선택한 아이 아이디
+            2,
+            (success) => {
+                setJobData(success.data);
+                console.log(success.data);
+            },
+            (fail) => {
+                console.log(fail);
+                console.dir(fail.response.data.Job);
+            }
+        );
+        return () => {
+            console.log('Return getJobDataAxios useEffect');
+        };
+    }, []);
 
     return (
         <div className={styles.parentJobContainer}>

@@ -13,26 +13,17 @@ export default defineConfig({
             // 다른 별칭들 추가 가능
             '@api': '/src/apis/api',
             '@util': '/src/apis/util',
+            '@store': '/src/store',
         },
     },
 
-    server: {
-        proxy: {
-            '/api': {
-                // front 서버를 spring 서버로 바꿔주기
-                // http://localhost/api/board
-                target: 'http://localhost',
-                // /api를 빈칸으로 대체
-                rewrite: (path) => path.replace(/^\/api/, ''),
-                // 직접 공공데이터를 가져오는 경우 origin 변경
-                changeOrigin: true,
-            },
-            '/data': {
-                target: 'http://openapi.molit.go.kr:8081',
-                // pathRewrite: { "^/data": "" },
-                rewrite: (path) => path.replace(/^\/data/, ''),
-                changeOrigin: true,
-            },
-        },
-    },
+    // server: {
+    //     proxy: {
+    //         '/api': {
+    //             target: 'http://localhost:8080',
+    //             changeOrigin: true,
+    //             rewrite: (path) => path.replace(/^\/api/, ''),
+    //         },
+    //     },
+    // },
 });

@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 import { getCookie } from './cookieUtil.js';
+import axios from "axios";
+import { httpStatusCode } from "@util/status.js";
 
 const { VITE_SERVICE_BASE_URL } = import.meta.env;
 

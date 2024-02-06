@@ -1,7 +1,11 @@
 import styles from "./ChildRefund.module.css";
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import { getQuiz } from "@api/quiz.js";
+
 export default function ChildRefund() {
+
+  const childId = 2;
   const [refundCoin, setRefundCoin] = useState("");
   const [isRefundBtnActive, setIsRefundBtnActive] = useState(false);
   const [isRefundBtnSubmit, setIsRefundBtnSubmit] = useState(false);
@@ -9,6 +13,22 @@ export default function ChildRefund() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [finalRefundAmount, setFinalRefundAmount] = useState(0);
+  const [quizData, setQuizData] = useState([]);
+
+  useEffect(() => {
+    getQuiz(
+      childId,
+      (success) => {
+        setQuizData(success.data);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -49,7 +69,7 @@ export default function ChildRefund() {
       // 정답을 몇 문제 맞췄는지 체크
       const correctAnswersCount = selectedAnswers.reduce(
         (count, userAnswer, index) => {
-          const actualAnswer = quizData[index].ans;
+          const actualAnswer = quizData[index].answer ? 'O' : 'X';
           return userAnswer === actualAnswer ? count + 1 : count;
         },
         0
@@ -62,7 +82,7 @@ export default function ChildRefund() {
 
       // 3. 몇 문제를 맞추었고, 최종 환전 금액은 얼마인지
       const finalAmount =
-        parseInt(refundCoin) + parseInt(refundCoin) * per[correctAnswers];
+        parseInt(refundCoin) + parseInt(refundCoin) * per[correctAnswersCount];
       console.log("최종 환전 금액 계산 : ", finalAmount);
       setFinalRefundAmount(finalAmount);
 
@@ -75,18 +95,18 @@ export default function ChildRefund() {
     setIsModalOpen(false);
   };
 
-  const quizData = [
-    {
-      id: 0,
-      question: "엄마의 생년월일은 1970년 2월 8일이다.",
-      ans: "O",
-    },
-    {
-      id: 1,
-      question: "아빠는 일주일에 3번씩 수영을 한다.",
-      ans: "X",
-    },
-  ];
+  // const quizData = [
+  //   {
+  //     id: 0,
+  //     question: "엄마의 생년월일은 1970년 2월 8일이다.",
+  //     ans: "O",
+  //   },
+  //   {
+  //     id: 1,
+  //     question: "아빠는 일주일에 3번씩 수영을 한다.",
+  //     ans: "X",
+  //   },
+  // ];
 
   return (
     <div className={styles.main}>

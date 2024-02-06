@@ -1,8 +1,10 @@
 import styles from "./ChildFundManagement.module.css";
 import acornImg from "@images/acorn.png";
 import { Bar } from "react-chartjs-2";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import { getFund, getFundHistory, getRoi, getStatus } from "@api/fund.js";
+import { getChild } from "@api/child.js";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +14,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { differenceInDays, format } from "date-fns";
 
 ChartJS.register(
   CategoryScale,
@@ -23,11 +26,113 @@ ChartJS.register(
 );
 
 export default function ChildFundManagement() {
+
+  const childId = 2;
   const [isFundStart, setIsFundStart] = useState(true); // 부모가 투자 시작안했으면 false
-  const [isFundItem, setIsFundItem] = useState(true); // 투자항목이 있으면 true
+  const [isFundItem, setIsFundItem] = useState(false); // 투자항목이 있으면 true
   const [currentIndex, setCurrentIndex] = useState(0); // 모달 페이지
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [buyCoin, setBuyCoin] = useState("");
+  const [fund, setFund] = useState([]);
+  const [fundStatus, setFundStatus] = useState(0);
+  const [child, setChild] = useState([]);
+  const [fundHistory, setFundHistory] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [rates, setRates] = useState([]);
+  const [roi, setRoi] = useState([]);
+  const [successRate, setSuccessRate] = useState(0);
+  const [avgFundMoney, setAvgFundMoney] = useState(0);
+  const [choice, setChoice] = useState('');
+  const [pnlRate, setPnlRate] = useState(0);
+
+  useEffect(() => {
+    getFund(
+      childId,
+      (success) => {
+        setFund(success.data.Fund);
+        if (success.data.Fund) {
+          setIsFundItem(true);
+        }
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
+
+  useEffect(() => {
+    getChild(
+      childId,
+      (success) => {
+        setChild(success.data.Child);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
+
+  useEffect(() => {
+    getFundHistory(
+      childId,
+      (success) => {
+        setFundHistory(success.data.FundHistory);
+        labels.length = 0;
+        rates.length = 0;
+        let dateTime = format(new Date(), 'yyyy.MM.dd');
+        success.data.FundHistory.map((row) => {
+          let dataLog = new Date(row.dataLog);
+          let fDataLog = format(dataLog, 'yyyy.MM.dd');
+          if (differenceInDays(new Date(dateTime), new Date(fDataLog)) <= 7) {
+            labels.push("");
+            rates.push((row.pnl < row.seedMoney ? -1 : 1) * row.yield);
+          }
+        })
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
+  
+  useEffect(() => {
+    getRoi(
+      childId,
+      (success) => {
+        setRoi(success.data.roi);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
+
+  useEffect(() => {
+    getStatus(
+      childId,
+      (success) => {
+        setFundStatus(success.data.FundStatus);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -80,10 +185,10 @@ export default function ChildFundManagement() {
   };
 
   const data = {
-    labels: ["월", "화", "수", "목", "금", "토", "일"],
+    labels,
     datasets: [
       {
-        data: [5, -5, -7, 3, -5, 6, 7],
+        data: rates,
         backgroundColor: function (context) {
           const value = context.dataset.data[context.dataIndex];
           return value >= 0 ? "#F1554C" : "#4285F4";
@@ -92,7 +197,42 @@ export default function ChildFundManagement() {
     ],
   };
 
-  const labels = ["월", "화", "수", "목", "금", "토", "일"];
+  useEffect(() => {
+    if (fundStatus && fundStatus.amount != 0) {
+      setChoice(fundStatus.submit ? '성공' : '실패');
+    } else {
+      setChoice('선택 안함');
+    }
+  }, [fundStatus]);
+
+  useEffect(() => {
+    let isZero = roi.count;
+    let count = isZero == 0 ? 1 : isZero;
+    let rate = (roi.success / count) * 100;
+    setSuccessRate(rate);
+  }, [roi]);
+
+  useEffect(() => {
+    let count = 0;
+    let sumSeedMoney = 0;
+    let sumPnl = 0;
+    fundHistory.map((row) => {
+      sumSeedMoney += row.seedMoney;
+      sumPnl += row.pnl;
+      count += 1;
+    })
+
+    count = count == 0 ? 1 : count;
+    sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;
+
+    let avg = sumSeedMoney / count;
+    let pRate = (sumPnl / sumSeedMoney) * 100;
+
+    setPnlRate(pRate);
+    setAvgFundMoney(avg);
+  }, [fundHistory]);
+
+
   return (
     <div>
       {!isFundStart ? (
@@ -112,13 +252,22 @@ export default function ChildFundManagement() {
                 ) : null}
               </div>
               <div className={styles.card1_text1}>
-                내일 엄마의 몸무게는 증가할 것이다.
+                {fund ? <> {fund.content} </> : 
+                <span style={{color:"#C1B8AD"}}>오늘은 투자 항목이 없어요 ㅠㅠ </span>
+                }
               </div>
             </div>
 
             <div className={styles.card2}>
               <div className={styles.title1}>오늘 나의 선택</div>
-              <div className={styles.card2_text1}>오늘은 쉴래</div>
+              <div className={styles.card2_text1}>
+                {choice === '선택 안함'? <span style={{color:"#C1B8AD"}}>오늘은 쉴래</span> : 
+                  <>{choice === '성공'? 
+                    <span style={{color:"#5E82CD"}}>{choice}</span> : 
+                    <span style={{color:"#E26459"}}>{choice}</span>}
+                  </>
+                }
+              </div>
             </div>
           </div>
           <Modal
@@ -158,7 +307,7 @@ export default function ChildFundManagement() {
                       <div className={styles.modalBody1Content}>
                         <div className={styles.modalMax}>최대 가능</div>
                         <div className={styles.modalCoinBox}>
-                          <div className={styles.modalCoin}>2700 도토리</div>
+                          <div className={styles.modalCoin}>{child.fundMoney} 도토리</div>
                           <div>
                             <img src={acornImg} style={{ width: "2vw" }} />
                           </div>
@@ -181,7 +330,7 @@ export default function ChildFundManagement() {
                     <div className={styles.modalBody3}>
                       <div>구매 후 투자계좌에 남은 도토리</div>
                       <div>
-                        <div>2700 도토리</div>
+                        <div>{child.fundMoney - buyCoin} 도토리</div>
                         <img src={acornImg} style={{ width: "2vw" }} />
                       </div>
                     </div>
@@ -206,7 +355,7 @@ export default function ChildFundManagement() {
                   <div>
                     <img src={acornImg} style={{ width: "2vw" }} />
                   </div>
-                  <div className={styles.card3Text1}>2700 도토리</div>
+                  <div className={styles.card3Text1}>{child.fundMoney} 도토리</div>
                 </div>
               </div>
               <div className={styles.card3}>
@@ -215,16 +364,16 @@ export default function ChildFundManagement() {
                   <div>
                     <img src={acornImg} style={{ width: "2vw" }} />
                   </div>
-                  <div className={styles.card3Text1}>3500 도토리</div>
+                  <div className={styles.card3Text1}>{avgFundMoney} 도토리</div>
                 </div>
               </div>
               <div className={styles.card3}>
                 <div className={styles.title2}>투자 성공률</div>
-                <div className={styles.card3Text2}>88%</div>
+                <div className={styles.card3Text2}>{successRate}%</div>
               </div>
               <div className={styles.card3}>
                 <div className={styles.title2}>이익률</div>
-                <div className={styles.card3Text2}>6%</div>
+                <div className={styles.card3Text2}>{pnlRate}%</div>
               </div>
             </div>
           </div>

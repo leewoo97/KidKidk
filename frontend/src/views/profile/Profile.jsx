@@ -15,7 +15,25 @@ import kidImg from '@images/kidImg.jpg';
 import profilePlus from '@images/profilePlus.png';
 
 export default function Profile() {
-    //Dto 정리
+    //Dto 정리 
+    const [createUser, setCreateUser] = useState({
+      nickname: "",
+      pin: 0,
+      profileImage: "",
+      type: true,
+      userId: 1
+    }); 
+
+    const onChangeCreateUser = (e) => {
+      setCreateUser({
+        ...createUser,
+        nickname: e.target.value,
+      });
+      console.log('타켓 벨류 : ' + e.target.value)
+      console.log('바뀐 닉네임 : ' + createUser.nickname)
+    };
+
+
     const [user, setUser] = useState({
         profileId: 0,
         nickname: "string",
@@ -24,13 +42,23 @@ export default function Profile() {
         userId: 1
       });
 
+
+    //버튼누르면 프로필 생성
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+
+    const handleClick = () => {
+      setIsButtonClicked(true);
+    };
+
     //profileCreate API데이터 받아오기
     const [createData, setCreateData] = useState([{}]);
 
   
     useEffect(() => {
+      if (isButtonClicked) {
       console.log('Profile Create Enter');
-      profileCreate(user,
+      console.log('createUser 닉네임은 :' + createUser.nickname);
+      profileCreate(createUser,
         (createData) => {
           setCreateData(createData.data);
           console.log(createData.data);
@@ -39,10 +67,11 @@ export default function Profile() {
           console.log(fail);
         }
       );
+      }
       return () => {
         console.log('Profile Create return'); 
       };
-    }, []);
+    }, [isButtonClicked]);
 
 
     //profileSelectAll API데이터 받아오기
@@ -133,57 +162,58 @@ export default function Profile() {
                     </div>
                 </div>
 
-                <p className={styles.profileptag}>프로필을 선택해주세요</p>
-                {modalCreateOpen ? (
-                    <ProfileModal
-                        modalIsOpen={!!openModalCreate}
-                        closeModal={closeModalCreate}
-                        title="프로필 생성 모달"
-                        content="이것은 프로필 생성 모달입니다."
-                    >
-                        <div className={styles.profileCreateModal}>
-                            <p>프로필 등록</p>
-                            <form className={styles.profileCreateForm}>
-                                <div className={styles.profileInputContainer}>
-                                    <input type="text" placeholder="아이디" />
+                  <p className={styles.profileptag}>프로필을 선택해주세요</p>
+                  {modalCreateOpen ? (
+                      <ProfileModal
+                          modalIsOpen={!!openModalCreate}
+                          closeModal={closeModalCreate}
+                          title="프로필 생성 모달"
+                          content="이것은 프로필 생성 모달입니다."
+                      >
+                          <div className={styles.profileCreateModal}>
+                              <p>프로필 등록</p>
+                              <form className={styles.profileCreateForm}>
+                                  <div className={styles.profileInputContainer}>
+                                      <input type="text" onChange={onChangeCreateUser} placeholder="아이디" />
 
-                                    <div className={styles.iconContainer}>
-                                        <CgProfile />
-                                    </div>
-                                </div>
+                                      <div className={styles.iconContainer}>
+                                          <CgProfile />
+                                      </div>
+                                  </div>
 
-                                <div className={styles.profileInputContainer}>
-                                    <input type="text" placeholder="비밀번호" />
+                                  <div className={styles.profileInputContainer}>
+                                      <input type="text" onChange={onChangeCreateUser} placeholder="비밀번호" />
 
-                                    <div className={styles.iconContainer}>
-                                        <RiLockPasswordFill />
-                                    </div>
-                                </div>
+                                      <div className={styles.iconContainer}>
+                                          <RiLockPasswordFill />
+                                      </div>
+                                  </div>
 
-                                <div className={styles.profileInputContainer}>
-                                    <input type="text" placeholder="회원유형" />
+                                  <div className={styles.profileInputContainer}>
+                                      <input type="text" placeholder="회원유형" />
 
-                                    <div className={styles.iconContainer}>
-                                        <RiParentLine />
-                                    </div>
-                                </div>
+                                      <div className={styles.iconContainer}>
+                                          <RiParentLine />
+                                      </div>
+                                  </div>
 
-                                <div className={styles.profileInputContainer}>
-                                    <label htmlFor={styles.fileButton}>
-                                        <div className={styles.profileDiv}>프로필 이미지</div>
-                                    </label>
-                                    <input type="file" id={styles.fileButton} />
-                                    <div className={styles.iconContainer}>
-                                        <FaRegImage />
-                                    </div>
-                                </div>
+                                  <div className={styles.profileInputContainer}>
+                                      <label htmlFor={styles.fileButton}>
+                                          <div className={styles.profileDiv}>프로필 이미지</div>
+                                      </label>
+                                      <input type="file" id={styles.fileButton} />
+                                      <div className={styles.iconContainer}>
+                                          <FaRegImage />
+                                      </div>
+                                  </div>
 
-                                <button>프로필 등록</button>
-                            </form>
-                        </div>
-                    </ProfileModal>
-                ) : null}
-            </div>
-        </>
-    );
+                                  <button onClick={handleClick}>프로필 등록</button>
+                                  
+                              </form>
+                          </div>
+                      </ProfileModal>
+                  ) : null}
+              </div>
+          </>
+      );
 }

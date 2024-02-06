@@ -11,7 +11,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
+import React, { useState, useEffect } from "react";
+import { getHistory } from "@api/deposit.js";
+import { format } from "date-fns";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,14 +25,50 @@ ChartJS.register(
 );
 
 export default function ChildMainStateMent() {
-  const labels = ["2017", "2018", "2019", "2020", "2021", "2022", "2023"];
+  const [labels, setLabels] = useState([]);
+  const [money, setMoney] = useState([]);
+  
+  const childId = 2;
+  const [statementdata, setStatementdata] = useState([]);
+
+  useEffect(() => {
+    getHistory(
+      childId,
+      (success) => {
+        setStatementdata(success.data.DepositList);
+        let size = success.data.DepositList.length;
+        let p = 0;
+        labels.length = 0;
+        money.length = 0;
+        for (let i = 0; i < size; i++) {
+          let date = new Date(success.data.DepositList[i].dataLog);
+          let t = format(date, 'yyyy.MM.dd');
+          let m = success.data.DepositList[i].money;
+          if (p > 0 && (labels[p - 1] === t)) {
+            money[p - 1] += m;
+          } else {
+            labels.push(t);
+            money.push(m);
+            p++;
+          }
+        }
+        console.log(success.data);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    return () => {
+      console.log('ChildManagement userEffect return');
+    };
+  }, []);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "React",
-        data: [32, 42, 51, 60, 51, 95, 97],
+        label: "도토리",
+        data: money,
         backgroundColor: "#5FB776",
         borderColor: "#5FB776",
       },
@@ -60,94 +98,6 @@ export default function ChildMainStateMent() {
   const Canvas = () => {
     return <Line options={options} data={data} />;
   };
-
-  const statementdata = [
-    {
-      id: 1,
-      date: "2024.01.16 오전 10:39",
-      type: "적금 만기",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 2,
-      date: "2024.01.16 오전 10:38",
-      type: "투자",
-      state: "매수",
-      coin: 20300,
-    },
-    {
-      id: 3,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 4,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 5,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 6,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 7,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 8,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 9,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-
-    {
-      id: 10,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 11,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-    {
-      id: 12,
-      date: "2024.01.16 오전 09:23",
-      type: "주급",
-      state: "입금",
-      coin: 20300,
-    },
-  ];
 
   return (
     <div className={styles.stateContainer}>

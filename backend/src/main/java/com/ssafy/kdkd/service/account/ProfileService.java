@@ -122,4 +122,8 @@ public class ProfileService {
 		}
 		return null;
 	}
+
+	public ChildDto getChild(Long childId){
+		return childRepository.childDto(childId);
+	}
 }

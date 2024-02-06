@@ -3,17 +3,102 @@ import acornImg from '@images/acorn.png';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { getJob } from '@api/job.js';
+import { getFund } from '@api/fund.js';
+import { getSavingHistory } from '@api/saving.js';
+import { getChild } from '@api/child.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ManagementContent() {
     const navigate = useNavigate();
 
+    const childId = 2;
+    const [job, setJob] = useState([]);
+    const [fund, setFund] = useState([]);
+    const [savingMoney, setSavingMoney] = useState(0);
+    const [child, setChild] = useState([]);
+    const [ratioPercentage, setRatioPercentage] = useState([]);
+
+    useEffect(() => {
+        getJob(
+            childId,
+            (success) => {
+                setJob(success.data.Job);
+                console.log(success.data.Job);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    useEffect(() => {
+        getFund(
+            childId,
+            (success) => {
+                setFund(success.data.Fund);
+                console.log(success.data.Fund);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    useEffect(() => {
+        getSavingHistory(
+            childId,
+            (success) => {
+                let saving = success.data.Saving;
+                setSavingMoney((4 - saving.count) * saving.payment);
+                console.log(success.data.Saving);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    useEffect(() => {
+        getChild(
+            childId,
+            (success) => {
+                setChild(success.data);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    useEffect(() => {
+        let isZero = child.coin + child.fundMoney + savingMoney;
+        let sum = isZero == 0 ? 1 : isZero;
+        let coinRate = (child.coin / sum) * 100;
+        let fundMoneyRate = (child.fundMoney / sum) * 100;
+        let savingMoneyRate = (savingMoney / sum) * 100;
+        setRatioPercentage([coinRate, fundMoneyRate, savingMoneyRate]);
+    }, [child, savingMoney]);
+
     const Data = {
         labels: ['주머니', '투자', '적금'],
         datasets: [
             {
-                data: [50, 30, 20],
+                data: ratioPercentage,
                 backgroundColor: ['#5FB776', '#F1554C', '#FFD000'],
                 borderColor: ['#5FB776', '#F1554C', '#FFD000'],
             },
@@ -48,7 +133,7 @@ export default function ManagementContent() {
                         </div>
                         <div className={styles.infoContainer1}>
                             <div> 도토리 </div>
-                            <div> 4500개 </div>
+                            <div> {child.coin}개 </div>
                         </div>
                     </div>
                     <div className={styles.refundContainer}>
@@ -66,15 +151,15 @@ export default function ManagementContent() {
                         <div className={styles.infoContainer2}>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#5FB776' }}></div>
-                                <div>주머니 : 4500 도토리</div>
+                                <div>주머니 : {child.coin} 도토리</div>
                             </div>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#F1554C' }}></div>
-                                <div>투자 : 2700 도토리</div>
+                                <div>투자 : {child.fundMoney} 도토리</div>
                             </div>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#FFD000' }}></div>
-                                <div>적금 : 1800 도토리</div>
+                                <div>적금 : {savingMoney} 도토리</div>
                             </div>
                         </div>
                     </div>
@@ -83,17 +168,26 @@ export default function ManagementContent() {
             <div className={styles.card2}>
                 <div className={styles.title}> 이번주 할 일</div>
                 <div className={styles.card2_1}>
-                    <div> 똘이 산책 시키기 </div>
-                    <div>
-                        <progress className={styles.progress} id="workProgress" max="100" value="40"></progress>
-                    </div>
-                    <div> 2/5 </div>
-                    <div> 완료 </div>
+                    {job ? (
+                        <>
+                            <div> {job.task} </div>
+                            <div>
+                                <progress className={styles.progress} id="workProgress" max="100" value="40"></progress>
+                            </div>
+                            <div>
+                                {' '}
+                                {job.doneCount}/{job.taskAmount}{' '}
+                            </div>
+                            <div> 완료 </div>
+                        </>
+                    ) : (
+                        '이번주 할 일이 없습니다.'
+                    )}
                 </div>
             </div>
             <div className={styles.card2}>
                 <div className={styles.title}> 이번주 투자 항목 </div>
-                <div className={styles.card2_2}>이번 주 엄마의 몸무게는 증가할 것이다</div>
+                <div className={styles.card2_2}>{fund ? <> {fund.content} </> : '투자 항목이 없습니다.'}</div>
             </div>
         </div>
     );

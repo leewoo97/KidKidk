@@ -13,7 +13,16 @@ import parentImg from '@images/parentImg.jpg';
 import kidImg from '@images/kidImg.jpg';
 import profilePlus from '@images/profilePlus.png';
 
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../store/userInfoAtom';
+
 export default function Profile() {
+    /**
+     * 리코일userinfo 상태 불러오기
+     */
+    const userInfo = useRecoilValue(userInfoState);
+    console.log(userInfo);
+
     // 가상의 프로필 데이터 배열
     const profiles = [
         { nickname: '봉미선', profile_image: parentImg },

@@ -30,7 +30,7 @@ export default function Profile() {
   
     useEffect(() => {
       console.log('Profile Create Enter');
-      profileCreate(JSON.stringify(user),
+      profileCreate(user,
         (createData) => {
           setCreateData(createData.data);
           console.log(createData.data);
@@ -40,9 +40,7 @@ export default function Profile() {
         }
       );
       return () => {
-        <div>
-        console.log('Profile Create return');
-        </div>  
+        console.log('Profile Create return'); 
       };
     }, []);
 

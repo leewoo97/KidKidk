@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +25,8 @@ public class UsersController {
 
     @GetMapping("/userinfo")
     @Operation(summary = "User 정보 조회")
-    public ResponseEntity<?> userInfo(Authentication authentication) {
+    public ResponseEntity<?> userInfo(HttpServletRequest request, Authentication authentication) {
+        String token = request.getHeader("Authorization");
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status;
         try {

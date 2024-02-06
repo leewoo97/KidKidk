@@ -15,7 +15,7 @@ export default function ParentJob() {
     const [reservationJobCreateModalOpen, setReservationJobCreateModalOpen] = useState(false);
     const [jobUpdateModalOpen, setJobUpdateModalOpen] = useState(false);
 
-    const [jobdata, setJobData] = useRecoilState(getJobData);
+    const [jobData, setJobData] = useRecoilState(getJobData);
 
     // 직업 조회 API
     const getJobDataAxios = useEffect(() => {
@@ -24,12 +24,11 @@ export default function ParentJob() {
             // 부모가 탭에서 선택한 아이 아이디
             2,
             (success) => {
-                setJobData(success.data);
-                console.log(success.data);
+                setJobData(success.data.Job);
+                console.log(success);
             },
             (fail) => {
                 console.log(fail);
-                console.dir(fail.response.data.Job);
             }
         );
         return () => {
@@ -59,10 +58,16 @@ export default function ParentJob() {
                             </div>
                             <div>
                                 <ul className={styles.childProfileContent}>
-                                    <li>펫시터</li>
-                                    <li>똘이 산책 시키기</li>
-                                    <li>주 5일</li>
-                                    <li>20000 도토리</li>
+                                    {jobData ? (
+                                        <>
+                                            <li>{jobData.name}</li>
+                                            <li>{jobData.task}</li>
+                                            <li>주 {jobData.taskAmount}일</li>
+                                            <li>{jobData.wage} 도토리</li>
+                                        </>
+                                    ) : (
+                                        <>직업이 없습니다.</>
+                                    )}
                                 </ul>
                             </div>
                             <div>

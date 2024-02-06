@@ -15,6 +15,8 @@ import ChildEdu from '../views/childEdu/ChildEdu.jsx';
 import Welcome from '../views/welcome/Welcome.jsx';
 import Profile from '../views/profile/Profile.jsx';
 
+import TokenSave from '../views/auth/tokenSave.jsx';
+
 /*
     로그인 여부에 따라 달라져야...
     로그인 되어있으면 해당 프로필의 메인페이지로
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
     {
         path: '/welcome',
         element: <Welcome />,
+    },
+    {
+        path: '/tokensave',
+        element: <TokenSave />,
     },
     {
         path: '/profile',

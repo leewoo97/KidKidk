@@ -31,6 +31,7 @@ public class ProfileService {
 	UserRepository userRepository;
 
 	public int profileCreate(ProfileDto profileDto){
+		System.out.println(profileDto.toString());
 		Optional<User> userOptional = userRepository.findById(profileDto.getUserId());
 		if (userOptional.isPresent()) { // Optional에서 User 객체를 꺼내기 전에 존재 여부를 확인하는 것이 좋습니다.
 			User user = userOptional.get(); // Optional에서 User 객체를 꺼냅니다.

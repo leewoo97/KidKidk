@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { setCookie } from '../../util/cookieUtil';
 import { useEffect } from 'react';
-import { userInfo } from '../../api/user';
+import { setCookie } from '../../apis/util/cookieUtil';
+import { userInfo } from '../../apis/api/user';
 
 export default function tokenSave() {
     const redirect_uri = 'http://localhost:5173/profile'; //Redirect URI

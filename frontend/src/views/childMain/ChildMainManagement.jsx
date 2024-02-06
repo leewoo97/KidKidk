@@ -74,8 +74,7 @@ export default function ManagementContent() {
     getChild(
       childId,
       (success) => {
-        setChild(success.data.Child);
-        console.log(success.data.Child);
+        setChild(success.data);
       },
       (fail) => {
         console.log(fail);

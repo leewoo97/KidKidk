@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 
 import { useRecoilState } from 'recoil';
-import { getRetrieve } from '@api/job.js';
+import { getJob } from '@api/job.js';
 import { getJobData } from '@store/jobAtom.js';
 
 import styles from './ParentJob.module.css';
@@ -20,7 +20,7 @@ export default function ParentJob() {
     // 직업 조회 API
     const getJobDataAxios = useEffect(() => {
         console.log('Enter getJobDataAxios useEffect');
-        getRetrieve(
+        getJob(
             // 부모가 탭에서 선택한 아이 아이디
             2,
             (success) => {

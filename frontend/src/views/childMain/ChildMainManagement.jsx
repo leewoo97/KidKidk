@@ -181,16 +181,20 @@ export default function ManagementContent() {
       <div className={styles.card2}>
         <div className={styles.title}> 이번주 할 일</div>
         <div className={styles.card2_1}>
+          {job ?
+          <>
           <div> {job.task} </div>
           <div></div>
           <div> {job.doneCount}/{job.taskAmount} </div>
           <div> 완료 </div>
+          </> : "이번주 할 일이 없습니다."
+          }
         </div>
       </div>
       <div className={styles.card2}>
         <div className={styles.title}> 이번주 투자 항목 </div>
         <div className={styles.card2_2}>
-          {fund.content}
+          {fund ? <> {fund.content} </> : "이번주 투자 항목이 없습니다."}
         </div>
       </div>
     </div>

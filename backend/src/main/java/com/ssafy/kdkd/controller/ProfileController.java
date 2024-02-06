@@ -2,6 +2,7 @@ package com.ssafy.kdkd.controller;
 
 import com.ssafy.kdkd.domain.dto.account.*;
 import com.ssafy.kdkd.domain.entity.account.Profile;
+import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.service.account.ProfileService;
 import com.ssafy.kdkd.service.account.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,12 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 
 //feat/BE-profile로 브랜치명을 변경하였습니다.
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/users")
 public class ProfileController {
@@ -45,11 +45,14 @@ public class ProfileController {
 	// 	}
 	// }
 
-	@GetMapping("/profile/selectAll")
+	@GetMapping("/profile/selectAll/{userId}")
 	@Operation(summary = "프로필 모두 가져오기")
-	public ResponseEntity<?> profileSelectAll(ProfileSelectAllDto profileSelectAllDto){
+	public ResponseEntity<?> profileSelectAll(@PathVariable Long userId){
+		System.out.println(userId);
+		ProfileSelectAllDto profileSelectAllDto = new ProfileSelectAllDto();
+		profileSelectAllDto.setUserId(userId);
 		List<ProfileSelectAllDto> returnDto = profileService.profileSelectAll(profileSelectAllDto);
-		return new ResponseEntity<List<?>>(returnDto,HttpStatus.OK);
+		return new ResponseEntity<>(returnDto, HttpStatus.OK);
 	}
 
 
@@ -75,31 +78,24 @@ public class ProfileController {
 	@Operation(summary = "프로필 수정")
 	public ResponseEntity<?> profileUpdate(ProfileUpdateDto profileUpdateDto){
 		profileService.profileUpdate(profileUpdateDto);
-			return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@DeleteMapping("/profile/delete")
+	@DeleteMapping("/profile/delete/{profileId}")
 	@Operation(summary = "프로필 삭제")
-	public ResponseEntity<?> profileDelete(ProfileDeleteDto profileDeleteDto){
+	public ResponseEntity<?> profileDelete(@PathVariable Long profileId){
+		ProfileDeleteDto profileDeleteDto = new ProfileDeleteDto();
+		profileDeleteDto.setProfileId(profileId);
 		profileService.profileDelete(profileDeleteDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping("/profile/childlist")
-	@Operation(summary = "내 자식 목록 가져오기")
-	public ResponseEntity<?> getChildList(GetChildListDto getChildListDto){
-		List<GetChildListDto> childProfile = profileService.getChildList(getChildListDto);
-		return new ResponseEntity<List<?>>(childProfile,HttpStatus.OK);
+	@GetMapping("/profile/getchild/{childId}")
+	@Operation(summary = "내 자식 접근")
+	public ResponseEntity<?> getChild(@PathVariable Long childId){
+		ChildDto returnDto = profileService.getChild(childId);
+		System.out.println(returnDto);
+		return new ResponseEntity<>(returnDto,HttpStatus.OK);
 	}
-
-
-//	@GetMapping("/profile/getchild/{nickname}")
-//	@Operation(summary = "내 자식 접근")
-//	public String getChild(@PathVariable String nickname){
-//		profileService.
-//
-//
-//		return "나의 자식 : " + nickname + "에게 접근하였습니다.";
-//	}
 
 }

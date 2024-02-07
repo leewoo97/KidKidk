@@ -111,9 +111,17 @@ public class JobReservationService {
                 false,
                 childId
             );
-        JobReservation jobReservation = JobReservation.createJobReservation(jobReservationDto);
-        jobReservation.setChild(child);
-        jobReservationRepository.save(jobReservation);
+        Optional<JobReservation> findJobReservation = jobReservationRepository.findById(childId);
+
+        if (findJobReservation.isEmpty()){
+            JobReservation jobReservation = JobReservation.createJobReservation(jobReservationDto);
+            jobReservation.setChild(child);
+            jobReservationRepository.save(jobReservation);
+        } else {
+            JobReservation jobReservation = findJobReservation.get();
+            jobReservation.updateJobReservation(jobReservationDto);
+        }
+
         return jobReservationDto;
     }
 

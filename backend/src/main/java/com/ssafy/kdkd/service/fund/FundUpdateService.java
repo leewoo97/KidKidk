@@ -64,7 +64,7 @@ public class FundUpdateService {
             Long childId = child.getId();
             int amount = fundStatus.getAmount();
 
-            if (amount == 0) {
+            if (amount <= 0) {
                 return;
             }
 

@@ -1,18 +1,25 @@
 package com.ssafy.kdkd.service.account;
 
+import static com.ssafy.kdkd.domain.entity.deposit.Deposit.createDeposit;
+
 import com.ssafy.kdkd.domain.dto.account.*;
+import com.ssafy.kdkd.domain.dto.account.TransferDto;
+import com.ssafy.kdkd.domain.dto.deposit.DepositDto;
 import com.ssafy.kdkd.domain.entity.account.Profile;
 import com.ssafy.kdkd.domain.entity.account.User;
+import com.ssafy.kdkd.domain.entity.deposit.Deposit;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.domain.entity.user.Parent;
 import com.ssafy.kdkd.repository.account.ProfileRepository;
 import com.ssafy.kdkd.repository.account.UserRepository;
+import com.ssafy.kdkd.repository.deposit.DepositRepository;
 import com.ssafy.kdkd.repository.user.ChildRepository;
 import com.ssafy.kdkd.repository.user.ParentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +36,9 @@ public class ProfileService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	DepositRepository depositRepository;
 
 	public int profileCreate(ProfileDto profileDto){
 		System.out.println(profileDto.toString());
@@ -125,5 +135,36 @@ public class ProfileService {
 
 	public ChildDto getChild(Long childId){
 		return childRepository.childDto(childId);
+	}
+
+	@Transactional
+	public boolean transferToFundMoney(TransferDto transferDto) {
+		int coin = transferDto.getCoin();
+		Long childId = transferDto.getChildId();
+		Optional<Child> findChild = childRepository.findById(childId);
+
+		if (findChild.isEmpty()) {
+			return false;
+		}
+
+		Child child = findChild.get();
+		int updateCoin = child.getCoin() - coin;
+		int updateFundMoney = child.getFundMoney() + coin;
+
+		if (updateCoin < 0) {
+			return false;
+		}
+
+		child.updateFundMoney(updateFundMoney);
+		child.updateChild(updateCoin);
+
+		String detail = "투자 출금";
+		boolean type = false;
+
+		DepositDto depositDto = new DepositDto(LocalDateTime.now(), detail, type, coin, updateCoin, childId);
+		Deposit deposit = createDeposit(depositDto);
+		deposit.setChild(child);
+		depositRepository.save(deposit);
+		return true;
 	}
 }

@@ -119,34 +119,34 @@ export default function Profile() {
     }, []);
 
   
-    // profileDelete API데이터 받아오기
-    const [deleteData, setDeleteData] = useState([{}]);
+    // profileDelete API데이터 받아오기(쓰지않는 코드)
+    // const [deleteData, setDeleteData] = useState([{}]);
 
     
-    const [profile, serProfile] = useState({
-        profileId: 1,
-        nickname: "string", 
-        profileImage: "string",
-        type: true,
-        userId: 1
-      });
-      useEffect(() => {
-      console.log('Profile Delete Enter');
-      profileDelete(profile,
-        (deleteData) => {
-          setDeleteData(deleteData.data);
-          console.log(deleteData.data);
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
-      return () => {
-        <div>
-        console.log('Profile Delete return');
-        </div>  
-      };
-    }, []);
+    // const [profile, serProfile] = useState({
+    //     profileId: 1,
+    //     nickname: "string", 
+    //     profileImage: "string",
+    //     type: true,
+    //     userId: 1
+    //   });
+    //   useEffect(() => {
+    //   console.log('Profile Delete Enter');
+    //   profileDelete(profile,
+    //     (deleteData) => {
+    //       setDeleteData(deleteData.data);
+    //       console.log(deleteData.data);
+    //     },
+    //     (fail) => {
+    //       console.log(fail);
+    //     }
+    //   );
+    //   return () => {
+    //     <div>
+    //     console.log('Profile Delete return');
+    //     </div>  
+    //   };
+    // }, []);
 
 
 

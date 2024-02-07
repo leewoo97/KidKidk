@@ -40,9 +40,8 @@ export default function Profile() {
       console.log('타켓 벨류 : ' + e.target.value)
       console.log('바뀐 핀 : ' + createUser.pin)
     };
-    //실험
+
     const onChangeCreateType = (e) => {
-      //실험
       if(e.target.value==('부모')){
         setCreateUser({
           ...createUser,
@@ -57,10 +56,7 @@ export default function Profile() {
       console.log('타켓 벨류 : ' + e.target.value)
       console.log('바뀐 타입 : ' + createUser.type)
     };
-    //실험
     
-
-
     const [user, setUser] = useState({
         profileId: 0,
         nickname: "string",
@@ -175,6 +171,9 @@ export default function Profile() {
                     {SelectAllData.map((profile) => (
                         <UserProfile
                             key={profile.profileId}
+                            //실험
+                            profileId={profile.profileId}
+                            //실험
                             nickname={profile.nickname}
                             profile_image={profile.profileImage}
                         />

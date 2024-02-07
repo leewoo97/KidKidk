@@ -1,4 +1,8 @@
-import { useState } from 'react';
+//실험
+import {profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from "/src/apis/api/profile.js";
+//실험
+
+import { useState,useEffect } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import { CgProfile } from 'react-icons/cg';
 import { RiLockPasswordFill } from 'react-icons/ri';
@@ -7,7 +11,11 @@ import ProfileModal from '../../src/components/ProfileModal.jsx';
 import styles from './UserProfile.module.css';
 import kidImg from '@images/kidImg.jpg';
 
-export default function UserProfile({ nickname, profile_image }) {
+export default function UserProfile({ profileId, nickname, profile_image }) {
+    //실험
+    console.log(profileId);
+    console.log(nickname);
+    //실험
     const [modalLoginOpen, setModalLoginOpen] = useState(false);
     const [modalUpdateOpen, setModalUpdateOpen] = useState(false);
 
@@ -16,6 +24,49 @@ export default function UserProfile({ nickname, profile_image }) {
 
     const openModalUpdate = () => setModalUpdateOpen(true);
     const closeModalUpdate = () => setModalUpdateOpen(false);
+
+    //삭제 실험
+    //버튼누르면 프로필 삭제
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+
+    const handleClick = (e) => {
+        // e.preventDefault();
+        setIsButtonClicked(true);
+      };
+    //버튼누르면 프로필 삭제
+
+    const [deleteData, setDeleteData] = useState([{}]);
+
+    
+    const [profile, serProfile] = useState({
+        profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
+        nickname: "string", 
+        profileImage: "string",
+        type: true,
+        userId: 1
+      });
+
+      useEffect(() => {
+        if (isButtonClicked) {
+      console.log('Profile Delete Enter');
+      profileDelete(profile,
+        (deleteData) => {
+          setDeleteData(deleteData.data);
+          console.log(deleteData.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+    }
+      return () => {
+        <div>
+        console.log('Profile Delete return');
+        </div>  
+      };
+    }, [isButtonClicked]);
+    //삭제 실험
+
     return (
         <>
             <div className={styles.userProfileContainer}>
@@ -109,7 +160,7 @@ export default function UserProfile({ nickname, profile_image }) {
                                     </li>
                                 </ul>
                             </div>
-                            <button>프로필 수정</button> <button>프로필 삭제</button>
+                            <button>프로필 수정</button> <button /*onClick={handleClick}은 실험*/onClick={handleClick}>프로필 삭제</button>
                         </form>
                     </div>
                 </ProfileModal>

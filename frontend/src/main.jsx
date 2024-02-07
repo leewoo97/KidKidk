@@ -4,7 +4,7 @@ import App from "./router/App.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // 실험 <React.StrictMode>
     <App />
-  </React.StrictMode>
+  //실험 </React.StrictMode>
 );

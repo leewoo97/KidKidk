@@ -236,3 +236,7 @@
 .jobForm input::placeholder {
     text-align: center;
 }
+
+.jobForm button:hover {
+    background-color: #a16951;
+}

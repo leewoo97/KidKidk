@@ -109,9 +109,10 @@ export default function ParentSaving() {
                             <tbody>
                                 <tr>
                                     {
-                                        payHistory.map((data) => {
+                                        payHistory.map((data, index) => {
                                             return (
                                                 <td
+                                                key = {index}
                                                 style={{
                                                         // backgroundColor: 'lightgreen'
                                                         backgroundColor:

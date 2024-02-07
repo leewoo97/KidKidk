@@ -23,8 +23,8 @@ export default function Profile() {
       type: true,
       userId: 1
     }); 
-
-    const onChangeCreateUser = (e) => {
+    
+    const onChangeCreateNickname = (e) => {
       setCreateUser({
         ...createUser,
         nickname: e.target.value,
@@ -32,7 +32,16 @@ export default function Profile() {
       console.log('타켓 벨류 : ' + e.target.value)
       console.log('바뀐 닉네임 : ' + createUser.nickname)
     };
-
+    // 실험
+    const onChangeCreatePin = (e) => {
+      setCreateUser({
+        ...createUser,
+        pin: e.target.value,
+      });
+      console.log('타켓 벨류 : ' + e.target.value)
+      console.log('바뀐 핀 : ' + createUser.pin)
+    };
+    //실험
 
     const [user, setUser] = useState({
         profileId: 0,
@@ -174,7 +183,7 @@ export default function Profile() {
                               <p>프로필 등록</p>
                               <form className={styles.profileCreateForm}>
                                   <div className={styles.profileInputContainer}>
-                                      <input type="text" onChange={onChangeCreateUser} placeholder="아이디" />
+                                      <input type="text" onChange={onChangeCreateNickname} placeholder="아이디" />
 
                                       <div className={styles.iconContainer}>
                                           <CgProfile />
@@ -182,7 +191,7 @@ export default function Profile() {
                                   </div>
 
                                   <div className={styles.profileInputContainer}>
-                                      <input type="text" onChange={onChangeCreateUser} placeholder="비밀번호" />
+                                      <input type="text" onChange={onChangeCreatePin} placeholder="비밀번호" />
 
                                       <div className={styles.iconContainer}>
                                           <RiLockPasswordFill />

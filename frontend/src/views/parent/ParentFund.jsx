@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import ParentFundAccountGraph from './ParentFundAccountGraph';
 import ParentFundProfitGraph from './ParentFundProfitGraph';
-import {createFund, createFundReservation, updateFundReservation, deleteFundReservation, getFund, getFundHistory, getFundReservation } from "@api/fund.js";
-
+import {createFund, createFundReservation, updateFundReservation, deleteFund, getFund, getFundReservation } from "@api/fund.js";
 import styles from './ParentFund.module.css';
 
 export default function ParentFund() {
@@ -105,9 +104,9 @@ export default function ParentFund() {
     };
 
     const handleFundReservationDelete = () => {
-        deleteFundReservation(
+        deleteFund(
             childId,
-            (success) => {
+            () => {
                 setSelectReservationFund(false);
             },
             (fail) => {

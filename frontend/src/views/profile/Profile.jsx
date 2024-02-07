@@ -32,7 +32,6 @@ export default function Profile() {
       console.log('타켓 벨류 : ' + e.target.value)
       console.log('바뀐 닉네임 : ' + createUser.nickname)
     };
-    // 실험
     const onChangeCreatePin = (e) => {
       setCreateUser({
         ...createUser,
@@ -42,6 +41,25 @@ export default function Profile() {
       console.log('바뀐 핀 : ' + createUser.pin)
     };
     //실험
+    const onChangeCreateType = (e) => {
+      //실험
+      if(e.target.value==('부모')){
+        setCreateUser({
+          ...createUser,
+          type: true,
+        });
+      }else if(e.target.value==('자식')){
+        setCreateUser({
+          ...createUser,
+          type: false,
+        });
+      }
+      console.log('타켓 벨류 : ' + e.target.value)
+      console.log('바뀐 타입 : ' + createUser.type)
+    };
+    //실험
+    
+
 
     const [user, setUser] = useState({
         profileId: 0,
@@ -104,9 +122,11 @@ export default function Profile() {
       };
     }, []);
 
-    //profileDelete API데이터 받아오기
+  
+    // profileDelete API데이터 받아오기
     const [deleteData, setDeleteData] = useState([{}]);
 
+    
     const [profile, serProfile] = useState({
         profileId: 1,
         nickname: "string", 
@@ -114,8 +134,7 @@ export default function Profile() {
         type: true,
         userId: 1
       });
-  
-    useEffect(() => {
+      useEffect(() => {
       console.log('Profile Delete Enter');
       profileDelete(profile,
         (deleteData) => {
@@ -132,7 +151,6 @@ export default function Profile() {
         </div>  
       };
     }, []);
-
 
 
 
@@ -199,7 +217,7 @@ export default function Profile() {
                                   </div>
 
                                   <div className={styles.profileInputContainer}>
-                                      <input type="text" placeholder="회원유형" />
+                                      <input type="text" onChange={onChangeCreateType} placeholder="회원유형" />
 
                                       <div className={styles.iconContainer}>
                                           <RiParentLine />

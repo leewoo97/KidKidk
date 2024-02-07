@@ -77,15 +77,16 @@ export default function ParentFundAccountGraph() {
         const reverseThisWeekData = thisWeekData.reverse();
         const tempThisWeekInvestments = [];
         const currentFundMoney = child.fundMoney;
-        let fundMoneyPointer = currentFundMoney;
+        let fundMoneyPointer = null;
 
         reverseThisWeekData.map((data) => {
-            let fundMoney = null;
+            let fundMoney = fundMoneyPointer;
             if (data.seedMoney != 0) {
                 fundMoneyPointer += (data.seedMoney - data.pnl);
                 fundMoney = fundMoneyPointer;
             } else if (data.dataLog === today) {
                 fundMoney = currentFundMoney;
+                fundMoneyPointer = currentFundMoney;
             }
             tempThisWeekInvestments.push(fundMoney);
         });

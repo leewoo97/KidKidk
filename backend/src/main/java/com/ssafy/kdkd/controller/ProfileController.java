@@ -98,4 +98,16 @@ public class ProfileController {
 		return new ResponseEntity<>(returnDto,HttpStatus.OK);
 	}
 
+	@PostMapping("/profile/transfer")
+	@Operation(summary = "아이 주머니에서 투자계좌로 송금")
+	public ResponseEntity<?> transfer(@RequestBody TransferDto transferDto){
+		boolean result = profileService.transferToFundMoney(transferDto);
+		if (result) {
+			return new ResponseEntity<>(transferDto,HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("Fail",HttpStatus.BAD_REQUEST);
+
+		}
+	}
+
 }

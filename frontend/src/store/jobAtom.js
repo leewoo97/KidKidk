@@ -5,7 +5,7 @@ export const getJobData = atom({
     default: [],
 });
 
-export const data2State = atom({
-    key: 'data2State',
-    default: 'Data 2 Initial Value',
+export const getJobReservationData = atom({
+    key: 'reservationJob',
+    default: [],
 });

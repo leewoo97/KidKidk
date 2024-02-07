@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-
 import { useRecoilState } from 'recoil';
-import { getRetrieve } from '@api/job.js';
-import { getJobData } from '@store/jobAtom.js';
+import { useQuery } from '@tanstack/react-query';
+
+import {
+    getJob,
+    getJobReservation,
+    deleteJob,
+    deleteJobReservation,
+    createJob,
+    createJobReservation,
+} from '@api/job.js';
+import { getJobData, getJobReservationData } from '@store/jobAtom.js';
 
 import styles from './ParentJob.module.css';
 import kidImg from '@images/kidImg.jpg';
@@ -16,11 +24,12 @@ export default function ParentJob() {
     const [jobUpdateModalOpen, setJobUpdateModalOpen] = useState(false);
 
     const [jobData, setJobData] = useRecoilState(getJobData);
+    const [jobReservationData, setJobReservationData] = useRecoilState(getJobReservationData);
 
     // 직업 조회 API
     const getJobDataAxios = useEffect(() => {
         console.log('Enter getJobDataAxios useEffect');
-        getRetrieve(
+        getJob(
             // 부모가 탭에서 선택한 아이 아이디
             2,
             (success) => {
@@ -35,13 +44,86 @@ export default function ParentJob() {
             console.log('Return getJobDataAxios useEffect');
         };
     }, []);
+    console.log('직업 조회 데이터 :', jobData);
+
+    // 예약 직업 조회 API
+    const getReservationJobDataAxios = useEffect(() => {
+        console.log('Enter getReservationJobDataAxios useEffect');
+        getJobReservation(
+            // 부모가 탭에서 선택한 아이 아이디 (전역 상태값)
+            2,
+            (success) => {
+                setJobReservationData(success.data.JobReservation);
+                console.log(success);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('Return getReservationJobDataAxios useEffect');
+        };
+    }, []);
+    console.log('예약 직업 조회 데이터 :', jobReservationData);
+
+    const handleJobDelete = () => {
+        const userConfirmation = confirm('정말로 직업을 삭제하시겠습니까?');
+        // 사용자가 확인을 입력한 경우에만 삭제 진행
+        if (userConfirmation) {
+            deleteJob(
+                2,
+                (success) => {
+                    console.log('직업 삭제 성공', success);
+                },
+                (fail) => {
+                    console.log('직업 삭제 실패', fail);
+                }
+            );
+        } else {
+            console.log('직업 삭제 취소');
+        }
+    };
+
+    const handleReservationJobDelete = () => {
+        const userConfirmation = confirm('정말로 예약 직업을 삭제하시겠습니까?');
+        // 사용자가 확인을 입력한 경우에만 삭제 진행
+        if (userConfirmation) {
+            deleteJobReservation(
+                2,
+                (success) => {
+                    console.log('예약 직업 삭제 성공', success);
+                },
+                (fail) => {
+                    console.log('예약 직업 삭제 실패', fail);
+                }
+            );
+        } else {
+            console.log('직업 삭제 취소');
+        }
+    };
+
+    const handleJobCreate = (event) => {
+        event.preventDefault();
+        console.log(event);
+        console.log('Enter handleJobCreate');
+
+        createJob(
+            (success) => {
+                console.log('직업 등록 성공', success);
+            },
+            (fail) => {
+                console.log('직업 등록 실패', fail);
+            }
+        );
+        setJobCreateModalOpen(false);
+    };
 
     return (
         <div className={styles.parentJobContainer}>
             <div className={styles.parentJobContainerStart}>
                 <div className={styles.childProfile}>
                     <p>짱아 어린이의 프로필</p>
-                    {selectJob ? (
+                    {jobData !== undefined && jobData ? (
                         <div className={styles.childProfileFrame}>
                             <div>
                                 <div className={styles.childProfileImage}>
@@ -58,20 +140,19 @@ export default function ParentJob() {
                             </div>
                             <div>
                                 <ul className={styles.childProfileContent}>
-                                    {jobData ? (
-                                        <>
-                                            <li>{jobData.name}</li>
-                                            <li>{jobData.task}</li>
-                                            <li>주 {jobData.taskAmount}일</li>
-                                            <li>{jobData.wage} 도토리</li>
-                                        </>
-                                    ) : (
-                                        <>직업이 없습니다.</>
-                                    )}
+                                    <li>{jobData.name}</li>
+                                    <li>{jobData.task}</li>
+                                    <li>주 {jobData.taskAmount}일</li>
+                                    <li>{jobData.wage} 도토리</li>
                                 </ul>
                             </div>
+                            {/* 예약 직업의 상태가 0이면 "직업 삭제하기" 버튼 사라짐 */}
                             <div>
-                                <button className={styles.jobDeleteButton}>직업 삭제하기</button>
+                                {jobReservationData !== undefined && jobReservationData.state ? (
+                                    <button onClick={handleJobDelete} className={styles.jobDeleteButton}>
+                                        직업 삭제하기
+                                    </button>
+                                ) : null}
                             </div>
                         </div>
                     ) : (
@@ -103,18 +184,25 @@ export default function ParentJob() {
                             >
                                 <div className={styles.jobModal}>
                                     <p>직업 등록</p>
-                                    <form className={styles.jobForm}>
+                                    <form onSubmit={handleJobCreate} className={styles.jobForm}>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="직업을 입력하세요" />
+                                            <input type="text" name="name" placeholder="직업을 입력하세요" />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="할 업무를 입력하세요" />
+                                            <input type="text" name="task" placeholder="할 업무를 입력하세요" />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="급여를 입력하세요" />
+                                            <input
+                                                type="text"
+                                                name="taskAmount"
+                                                placeholder="할 일 횟수를 입력하세요"
+                                            />
+                                        </div>
+                                        <div className={styles.jobInputContainer}>
+                                            <input type="text" name="wage" placeholder="급여를 입력하세요" />
                                         </div>
 
-                                        <button>직업 등록하기</button>
+                                        <button type="submit">직업 등록하기</button>
                                     </form>
                                 </div>
                             </Modal>
@@ -125,34 +213,47 @@ export default function ParentJob() {
                     <p>업무 진척도</p>
                     <div className={styles.jobProgressStatusFrame}>
                         <ul>
-                            <li>
-                                <label htmlFor="workProgress">똘이 산책시키기 :</label>
-                            </li>
-                            <li>
-                                <progress className={styles.progress} id="workProgress" max="100" value="40"></progress>
-                            </li>
-                            <li>2/5</li>
+                            {jobData !== undefined && jobData ? (
+                                <>
+                                    <li>
+                                        <label htmlFor="workProgress">{jobData.task} :</label>
+                                    </li>
+                                    <li>
+                                        <progress
+                                            className={styles.progress}
+                                            id="workProgress"
+                                            max={jobData.taskAmount}
+                                            value={jobData.doneCount}
+                                        ></progress>
+                                    </li>
+                                    <li>
+                                        {jobData.doneCount}/{jobData.taskAmount}
+                                    </li>
+                                </>
+                            ) : (
+                                <p style={{ color: 'red' }}>현재 등록된 직업이 없습니다.</p>
+                            )}
                         </ul>
                     </div>
                 </div>
                 <div className={styles.jobReservationStatus}>
                     <p>직업 예약 현황</p>
-                    {selectReservationJob ? (
+                    {jobReservationData !== undefined && selectReservationJob !== undefined && selectReservationJob ? (
                         <div className={styles.jobReservationStatusFrame}>
                             <div>
                                 <ul className={styles.jobReservationStatusTitle}>
-                                    <li>직업 </li>
-                                    <li>업무 </li>
-                                    <li>횟수 </li>
-                                    <li>급여 </li>
+                                    <li>직업</li>
+                                    <li>업무</li>
+                                    <li>횟수</li>
+                                    <li>급여</li>
                                 </ul>
                             </div>
                             <div>
                                 <ul className={styles.jobReservationStatusContent}>
-                                    <li>펫시터</li>
-                                    <li>똘이 산책 시키기</li>
-                                    <li>주 5일</li>
-                                    <li>20000 도토리</li>
+                                    <li>{jobReservationData.name} </li>
+                                    <li>{jobReservationData.task} </li>
+                                    <li>주 {jobReservationData.taskAmount} 일</li>
+                                    <li>{jobReservationData.wage} </li>
                                 </ul>
                             </div>
                             <div>
@@ -163,7 +264,12 @@ export default function ParentJob() {
                                     예약 직업 수정하기
                                 </button>
                                 &nbsp;&nbsp;
-                                <button className={styles.jobReservationDeleteButton}>예약 직업 삭제하기</button>
+                                <button
+                                    onClick={handleReservationJobDelete}
+                                    className={styles.jobReservationDeleteButton}
+                                >
+                                    예약 직업 삭제하기
+                                </button>
                             </div>
                             <Modal
                                 appElement={document.getElementById('root')}

@@ -1,4 +1,5 @@
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import ParentNav from '../components/ParentNav.jsx';
 import ParentMain from '../views/parent/ParentMain.jsx';
@@ -27,6 +28,8 @@ import TokenSave from '../views/auth/tokenSave.jsx';
 */
 
 const isLoggedIn = false; // 로그인 여부에 따라 조건 설정
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
     {
@@ -102,7 +105,9 @@ const router = createBrowserRouter([
 function App() {
     return (
         <>
-            <RouterProvider router={router} />
+            <QueryClientProvider client={queryClient}>
+                <RouterProvider router={router} />
+            </QueryClientProvider>
         </>
     );
 }

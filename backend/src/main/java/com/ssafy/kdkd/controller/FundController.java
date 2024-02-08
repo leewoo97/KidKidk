@@ -195,7 +195,7 @@ public class FundController {
     @Operation(summary = "투자 예약 조회")
     public ResponseEntity<?> confirmReservation(@PathVariable("childId") Long childId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.FOUND;
+        HttpStatus status = HttpStatus.OK;
         try {
             log.info("fund controller: confirmReservation() Enter");
             // 현재 childId에 대한 권한 확인

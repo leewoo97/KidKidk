@@ -20,4 +20,8 @@ async function getStatus(childId, success, fail) {
     await server.get(`${url}/status/confirm/${childId}`).then(success).catch(fail);
 }
 
-export { getFund, getFundHistory, getRoi, getStatus };
+async function deleteFund(childId, success, fail) {
+    await server.delete(`${url}/delete/${childId}`).then(success).catch(fail);
+}
+
+export { getFund, getFundHistory, getRoi, getStatus, deleteFund };

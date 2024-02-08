@@ -5,7 +5,7 @@ import successStamp from '../../assets/images/successStamp.PNG';
 import failStamp from '../../assets/images/failStamp.PNG';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO } from 'date-fns';
 import { getFund, getFundHistory, deleteFund } from "@api/fund.js";
-import { getSavingHistory } from "@api/saving.js";
+import { getSaving } from "@api/saving.js";
 import { getChild } from "@api/child.js";
 
 export default function ParentMain() {
@@ -50,11 +50,13 @@ export default function ParentMain() {
     }, []);
 
     useEffect(() => {
-        getSavingHistory(
+        getSaving(
             childId,
             (success) => {
-            let saving = success.data.Saving;
-            setSavingMoney((4-saving.count)*saving.payment);
+                if (success.status == 200) {
+                    let saving = success.data.Saving;
+                    setSavingMoney((4-saving.count)*saving.payment);
+                }
             },
             (fail) => {
             console.log(fail);
@@ -230,9 +232,9 @@ export default function ParentMain() {
                                             <td>5</td>
                                             <td>6</td>
                                             <td>7</td> */}
-                                            {thisWeekInvestments && thisWeekInvestments.map((row) => {
+                                            {thisWeekInvestments && thisWeekInvestments.map((row, index) => {
                                             return(
-                                                <td>
+                                                <td key={index}>
                                                     {row.seedMoney == 0 ?
                                                     <></>
                                                     :<>

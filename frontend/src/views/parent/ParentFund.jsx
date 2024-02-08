@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import ParentFundAccountGraph from './ParentFundAccountGraph';
 import ParentFundProfitGraph from './ParentFundProfitGraph';
-import {createFund, createFundReservation, updateFundReservation, deleteFund, getFund, getFundReservation } from "@api/fund.js";
+import {createFund, createFundReservation, updateFundReservation, deleteFund, deleteFundReservation, getFund, getFundReservation } from "@api/fund.js";
 import styles from './ParentFund.module.css';
 
 export default function ParentFund() {
@@ -62,6 +62,7 @@ export default function ParentFund() {
                 childId: childId
             },
             (success) => {
+                console.log(success.data.Fund);
                 setFundReservation(success.data.Fund);
                 setSelectReservationFund(true);
             },
@@ -90,6 +91,7 @@ export default function ParentFund() {
     const handleFundReservationUpdate = () => {
         updateFundReservation(
             {
+                state: true,
                 content: fundContent,
                 childId: childId
             },
@@ -104,10 +106,25 @@ export default function ParentFund() {
     };
 
     const handleFundReservationDelete = () => {
-        deleteFund(
+        deleteFundReservation(
             childId,
             () => {
                 setSelectReservationFund(false);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+    };
+
+    const handleFundDelete = () => {
+        deleteFund(
+            childId,
+            () => {
+                setSelectReservationFund(true);
+                setFundReservation({
+                    content: "삭제 예약 되었습니다"
+                });
             },
             (fail) => {
                 console.log(fail);
@@ -130,13 +147,19 @@ export default function ParentFund() {
                 </div>
                 <div className={styles.childFundStatus}>
                     <p>신짱아 어린이의 투자 내역</p>
-                    {selectFund && selectReservationFund? (
+                    {selectFund ? (
                         <div className={styles.childFundStatusFrame}>
-                            <p>투자 종목 : 엄마의 몸무게는 증가할 것이다</p>
+                            <p>투자 종목 : {fund.content}</p>
                             <div style={{ textAlign: 'right' }}>
+                            {!selectReservationFund ? 
                                 <button onClick={() => setFundUpdateModalOpen(true)}>투자종목 수정하기</button>
-                                &nbsp;&nbsp;
-                                <button>투자종목 종료하기</button>
+                                : <></>
+                            }
+                            &nbsp;&nbsp;
+                            {!selectReservationFund || (fundReservation && fundReservation.state) ?
+                            <button onClick={handleFundDelete}>투자종목 종료하기</button>
+                            :<></>
+                            }
                             </div>
                             <Modal
                                 appElement={document.getElementById('root')}
@@ -161,10 +184,10 @@ export default function ParentFund() {
                                     <p>투자 수정</p>
                                     <form className={styles.fundForm}>
                                         <div className={styles.fundInputContainer}>
-                                            <input type="text" placeholder="투자 항목을 입력하세요" />
+                                            <input type="text" value={fundContent} onChange={handelInputFundContent} placeholder="투자 항목을 입력하세요" />
                                         </div>
 
-                                        <button>투자 수정하기</button>
+                                        <button onClick={handleFundReservationRegist}>투자 수정하기</button>
                                     </form>
                                 </div>
                             </Modal>
@@ -255,11 +278,14 @@ export default function ParentFund() {
                     ) : (
                         <div className={styles.childNoReservationFundStatusFrame}>
                             <p style={{ color: 'red' }}>현재 예약된 투자항목이 없습니다.</p>
-                            <div>
-                                <button onClick={() => setReservationFundCreateModalOpen(true)}>
-                                    예약 투자 등록하기
-                                </button>
-                            </div>
+                                {selectFund?
+                                    <div>
+                                    <button onClick={() => setReservationFundCreateModalOpen(true)}>
+                                        예약 투자 등록하기
+                                    </button>
+                                </div>
+                                :<></>
+                                }
                             <Modal
                                 appElement={document.getElementById('root')}
                                 isOpen={reservationFundCreateModalOpen}

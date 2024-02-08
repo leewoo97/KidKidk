@@ -37,7 +37,11 @@ async function updateFundReservation(fundResrvation, success, fail) {
 }
 
 async function deleteFund(childId, success, fail) {
+    await server.delete(`${url}/delete/${childId}`).then(success).catch(fail);
+}
+
+async function deleteFundReservation(childId, success, fail) {
     await server.delete(`${url}/reservation/delete/${childId}`).then(success).catch(fail);
 }
 
-export { createFund, createFundReservation, updateFundReservation, deleteFund, getFund, getFundHistory, getFundReservation, getRoi, getStatus };
+export { createFund, createFundReservation, updateFundReservation, deleteFund, deleteFundReservation, getFund, getFundHistory, getFundReservation, getRoi, getStatus };

@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.notification.repository;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Repository
+@NoArgsConstructor
 public class EmitterRepository {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
@@ -18,9 +20,9 @@ public class EmitterRepository {
         return sseEmitter;
     }
 
-    public void saveEventCache(String emitterId, Object event) {
-        eventCache.put(emitterId,event);
-        System.out.println("eventCache size : " + eventCache.size());
+    public void saveEventCache(String eventCacheId, Object event) {
+        eventCache.put(eventCacheId,event);
+        System.out.println(eventCache.size());
     }
 
     public Map<String, SseEmitter> findAllEmitters() {
@@ -41,5 +43,25 @@ public class EmitterRepository {
 
     public void deleteById(String emitterId) {
         emitters.remove(emitterId);
+    }
+
+    public void deleteAllEmitterStartWithID(String memberId){
+        emitters.forEach(
+                (key,emitter) -> {
+                    if (key.startsWith(memberId)) {
+                        emitters.remove(key);
+                    }
+                }
+        );
+    }
+
+    public void deleteAllEventCacheStartWithId(String memberId){
+        eventCache.forEach(
+                (key,emitter) -> {
+                    if (key.startsWith(memberId)) {
+                        emitters.remove(key);
+                    }
+                }
+        );
     }
 }

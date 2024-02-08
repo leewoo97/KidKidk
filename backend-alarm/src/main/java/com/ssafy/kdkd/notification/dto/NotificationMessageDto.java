@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationMessageDto {
-    private String userId;
+    private String subId;
+    private String pubName;
     private String message;
     private String sub_message;
 }

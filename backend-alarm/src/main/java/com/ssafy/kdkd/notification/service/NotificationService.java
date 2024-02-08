@@ -4,6 +4,7 @@ import com.ssafy.kdkd.notification.entity.NotificationMessage;
 import com.ssafy.kdkd.notification.repository.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,40 +23,36 @@ public class NotificationService {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
     private final EmitterRepository emitterRepository;
 
-    public void send(String userId, String message, String sub_message) {
-        NotificationMessage notificationMessage = new NotificationMessage(userId , message, sub_message);
-        log.info("알림 전송. userId : {}, message : {}, sub_message : {}",userId, message,sub_message);
-        kafkaTemplate.send("ssafy", notificationMessage);
+    private String makeTimeIncludeId(String userId){
+        return userId+"_"+System.currentTimeMillis();
     }
 
-    @KafkaListener(topics = "ssafy", groupId = "group_1")
-    public void listen(NotificationMessage message) {
-        String userId = message.getUserId();
-
-        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithById(userId);
-        System.out.println(sseEmitters.size()+"-------------------");
-        sseEmitters.forEach(
-                (key, emitter) -> {
-                    emitterRepository.saveEventCache(key, message);
-                    sendToClient(emitter, key, message);
-                }
-        );
-    }
-
-    private void sendToClient(SseEmitter emitter, String emitterId, Object data) {
+    private void sendToClient(SseEmitter emitter, String eventId, String emitterId, Object data) {
         try {
             emitter.send(SseEmitter.event()
-                    .id(emitterId)
+                    .id(eventId)
                     .data(data));
-            log.info("Kafka로 부터 전달 받은 메세지 전송. emitterId : {}, message : {}", emitterId, data);
+            log.info("Kafka로 부터 전달 받은 메세지 전송. eventId : {},  emitterId : {}, message : {}", eventId, emitterId, data);
         } catch (IOException e) {
             emitterRepository.deleteById(emitterId);
             log.error("메시지 전송 에러 : {}", e);
         }
     }
 
+    private boolean hasLostData(String lastEventId){
+        return !lastEventId.isEmpty();
+    }
+
+    private void sendLostData(String lastEventId, String userId, String emitterId, SseEmitter emitter){
+        Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithById(userId);
+        System.out.println(eventCaches.size());
+        eventCaches.entrySet().stream()
+                .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+                .forEach(entry -> sendToClient(emitter, entry.getKey(), emitterId, entry.getValue()));
+    }
+
     public SseEmitter subscribe(String userId, String lastEventId) {
-        String emitterId = userId + "_" + System.currentTimeMillis();
+        String emitterId = makeTimeIncludeId(userId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
         log.info("emitterId : {} 사용자 emitter 연결 ", emitterId);
 
@@ -68,16 +65,51 @@ public class NotificationService {
             emitterRepository.deleteById(emitterId);
         });
 
-        sendToClient(emitter, emitterId, "connected!"); // 503 에러방지 더미 데이터
+        String eventId = makeTimeIncludeId(userId);
+        sendToClient(emitter, eventId, emitterId, "connected!"); // 503 에러방지 더미 데이터
 
-        if (!lastEventId.isEmpty()) {
-            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithById(userId);
-            System.out.printf("Events size : %d\n", events.size());
-            events.entrySet().stream()
-                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
+        if (hasLostData(lastEventId)) {
+            sendLostData(lastEventId,userId,emitterId,emitter);
         }
         return emitter;
+    }
+
+
+
+//    @KafkaListener(topics = "notification", groupId = "group_1")
+//    public void listen(NotificationMessage message) {
+//        String receiverId = message.getUserId();
+//
+//        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithById(receiverId);
+//        sseEmitters.forEach(
+//                (key, emitter) -> {
+//                    emitterRepository.saveEventCache(key, message);
+//                    sendToClient(emitter, key, message);
+//                }
+//        );
+//    }
+
+    @KafkaListener(topics = "notification", groupId = "group_1")
+    public void listen(NotificationMessage notification) {
+        String receiverId = notification.getSubId();
+        String eventId = makeTimeIncludeId(receiverId);
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithById(receiverId);
+        sseEmitters.forEach(
+                (emitterId, emitter) -> {
+                    emitterRepository.saveEventCache(emitterId, notification);
+                    sendToClient(emitter, eventId, emitterId, notification);
+                }
+        );
+    }
+
+
+
+    public void publish(String subId, String pubName, String message, String sub_message) {
+        NotificationMessage notificationMessage = NotificationMessage.builder()
+                .subId(subId).pubName(pubName).message(message).sub_message(sub_message).
+        key(makeTimeIncludeId(subId)).build();
+        log.info("알림 전송. userId : {}, message : {}, sub_message : {}",subId, message,sub_message);
+        kafkaTemplate.send("notification", notificationMessage);
     }
 
     @Scheduled(fixedRate = 180000) // 3분마다 heartbeat 메세지 전달.

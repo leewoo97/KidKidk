@@ -15,15 +15,8 @@ import kidImg from '@images/kidImg.jpg';
 import profilePlus from '@images/profilePlus.png';
 
 export default function Profile() {
-    //Dto 정리 
-    const [createUser, setCreateUser] = useState({
-      nickname: "",
-      pin: 0,
-      profileImage: "",
-      type: true,
-      userId: 1
-    }); 
-    
+  
+    //onChange
     const onChangeCreateNickname = (e) => {
       setCreateUser({
         ...createUser,
@@ -56,15 +49,7 @@ export default function Profile() {
       console.log('타켓 벨류 : ' + e.target.value)
       console.log('바뀐 타입 : ' + createUser.type)
     };
-    
-    const [user, setUser] = useState({
-        profileId: 0,
-        nickname: "string",
-        profileImage: "string",
-        type: true,
-        userId: 1
-      });
-
+    //onChange
 
     //버튼누르면 프로필 생성
     const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -75,7 +60,14 @@ export default function Profile() {
 
     //profileCreate API데이터 받아오기
     const [createData, setCreateData] = useState([{}]);
-
+    
+    const [createUser, setCreateUser] = useState({
+      nickname: "",
+      pin: 0,
+      profileImage: "",
+      type: true,
+      userId: 1
+    }); 
   
     useEffect(() => {
       if (isButtonClicked) {
@@ -100,6 +92,14 @@ export default function Profile() {
     //profileSelectAll API데이터 받아오기
     const [SelectAllData, setSelectAllData] = useState([{}]);
   
+    const [user, setUser] = useState({
+      profileId: 0,
+      nickname: "string",
+      profileImage: "string",
+      type: true,
+      userId: 1
+    });
+
     useEffect(() => {
       console.log('Profile SelectAll Enter');
       profileSelectAll(user,
@@ -117,6 +117,36 @@ export default function Profile() {
         </div>  
       };
     }, []);
+
+    // profileUpdate API 데이터 받아오기 실험중 2024/02/07
+    // const [updateData, setUpdateData] = useState([{}]);
+
+    // const [updateUser, setUpdateUser] = useState({
+    //   profileId: 0,
+    //   nickname: "string",
+    //   pin: 0,
+    //   profileImage: "string"
+    // });
+
+    //   useEffect(() => {
+    //   console.log('Profile Update Enter');
+    //   profileUpdate(updateUser,
+    //     (updateData) => {
+    //       setUpdateData(updateData.data);
+    //       console.log(updateData.data);
+    //     },
+    //     (fail) => {
+    //       console.log(fail);
+    //     }
+    //   );
+    //   return () => {
+    //     <div>
+    //     console.log('Profile Update return');
+    //     </div>  
+    //   };
+    // }, []);
+
+    //실험 2024/02/07
 
   
     // profileDelete API데이터 받아오기(쓰지않는 코드)

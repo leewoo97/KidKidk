@@ -1,4 +1,8 @@
-import { useState } from 'react';
+//실험
+import {profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from "/src/apis/api/profile.js";
+//실험
+
+import { useState,useEffect } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import { CgProfile } from 'react-icons/cg';
 import { RiLockPasswordFill } from 'react-icons/ri';
@@ -7,7 +11,33 @@ import ProfileModal from '../../src/components/ProfileModal.jsx';
 import styles from './UserProfile.module.css';
 import kidImg from '@images/kidImg.jpg';
 
-export default function UserProfile({ nickname, profile_image }) {
+export default function UserProfile({ profileId, nickname, profile_image }) {
+    //onChange
+        //업데이트 API에 쓰이는 onChange
+    const onChangeUpdateNickname = (e) => {
+        setUpdateUser({
+          ...updateUser,
+          nickname: e.target.value,
+        });
+        console.log('타켓 벨류 : ' + e.target.value)
+        console.log('바뀐 닉네임 : ' + updateUser.nickname)
+      };
+      const onChangeUpdatePin = (e) => {
+        setUpdateUser({
+          ...updateUser,
+          pin: e.target.value,
+        });
+        console.log('타켓 벨류 : ' + e.target.value)
+        console.log('바뀐 핀 : ' + updateUser.pin)
+      };
+        //업데이트 API에 쓰이는 onChange
+      //onChange
+
+
+    //실험
+    console.log(profileId);
+    console.log(nickname);
+    //실험
     const [modalLoginOpen, setModalLoginOpen] = useState(false);
     const [modalUpdateOpen, setModalUpdateOpen] = useState(false);
 
@@ -16,6 +46,90 @@ export default function UserProfile({ nickname, profile_image }) {
 
     const openModalUpdate = () => setModalUpdateOpen(true);
     const closeModalUpdate = () => setModalUpdateOpen(false);
+
+    //삭제 실험
+    //버튼누르면 프로필 삭제
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+
+    const handleClick = (e) => {
+        // e.preventDefault();
+        setIsButtonClicked(true);
+      };
+    //버튼누르면 프로필 삭제
+
+    const [deleteData, setDeleteData] = useState([{}]);
+
+    
+    const [profile, serProfile] = useState({
+        profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
+        nickname: "string", 
+        profileImage: "string",
+        type: true,
+        userId: 1
+      });
+
+      useEffect(() => {
+        if (isButtonClicked) {
+      console.log('Profile Delete Enter');
+      profileDelete(profile,
+        (deleteData) => {
+          setDeleteData(deleteData.data);
+          console.log(deleteData.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+    }
+      return () => {
+        <div>
+        console.log('Profile Delete return');
+        </div>  
+      };
+    }, [isButtonClicked]);
+    //삭제 실험
+
+     // 수정 실험 2024/02/07
+     const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
+
+    const updateClick = (e) => {
+        // e.preventDefault();
+        setUpdateButtonClicked(true);
+      };
+     const [updateData, setUpdateData] = useState([{}]);
+
+     const [updateUser, setUpdateUser] = useState({
+       profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
+       nickname: "",
+       pin: 0,
+       profileImage: "",
+     });
+     
+     console.log(updateUser.profileId);
+     console.log(updateUser.nickname);
+     useEffect(() => {
+        if (updateButtonClicked) {
+            console.log('Profile Update Enter');
+            // console.log(updateUser.profileId);
+       profileUpdate(updateUser,
+         (updateData) => {
+            console.log(updateData.data);
+           setUpdateData(updateData.data);
+           console.log(updateUser.profileId);
+         },
+         (fail) => {
+           console.log(fail);
+         }
+       );
+       console.log('Profile Update mid');
+        }
+       return () => {
+         console.log('Profile Update return');
+       };
+     }, [updateButtonClicked]);
+ 
+     //수정 실험 2024/02/07
+ 
     return (
         <>
             <div className={styles.userProfileContainer}>
@@ -80,13 +194,13 @@ export default function UserProfile({ nickname, profile_image }) {
                                     <li>
                                         <div className={styles.profileUpdateFormInputContainer}>
                                             <span style={{ width: '97.99px' }}>닉네임</span>
-                                            <input type="text" />
+                                            <input type="text" onChange={onChangeUpdateNickname} />
                                         </div>
                                     </li>
                                     <li>
                                         <div className={styles.profileUpdateFormInputContainer}>
                                             <span style={{ width: '97.99px' }}>비밀번호</span>
-                                            <input type="text" />
+                                            <input type="text" onChange={onChangeUpdatePin} />
                                         </div>
                                     </li>
                                     <li>
@@ -109,7 +223,7 @@ export default function UserProfile({ nickname, profile_image }) {
                                     </li>
                                 </ul>
                             </div>
-                            <button>프로필 수정</button> <button>프로필 삭제</button>
+                            <button /*onClick={updateClick}은 실험*/onClick={updateClick}>프로필 수정</button> <button /*onClick={handleClick}은 실험*/onClick={handleClick}>프로필 삭제</button>
                         </form>
                     </div>
                 </ProfileModal>

@@ -95,19 +95,6 @@ export default function ChildRefund() {
     setIsModalOpen(false);
   };
 
-  // const quizData = [
-  //   {
-  //     id: 0,
-  //     question: "엄마의 생년월일은 1970년 2월 8일이다.",
-  //     ans: "O",
-  //   },
-  //   {
-  //     id: 1,
-  //     question: "아빠는 일주일에 3번씩 수영을 한다.",
-  //     ans: "X",
-  //   },
-  // ];
-
   return (
     <div className={styles.main}>
       <div className={styles.title}>도토리 환전하기</div>

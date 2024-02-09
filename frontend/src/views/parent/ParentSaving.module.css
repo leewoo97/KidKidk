@@ -55,3 +55,16 @@
 .childSavingStatusFrame_paymentTimes > table td {
     width: 70px;
 }
+
+.childSavingStatusFram_none {
+    background-color: var(--component-background);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    text-align: center;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+    margin-top: 10px;
+}

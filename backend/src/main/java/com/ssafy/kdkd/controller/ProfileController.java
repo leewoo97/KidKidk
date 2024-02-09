@@ -105,8 +105,8 @@ public class ProfileController {
 	@PutMapping("/profile/child/update")
 	@Operation(summary = "아이 테이블 coin,fund_money 수정")
 	public ResponseEntity<?> childUpdate(@RequestBody ChildDto childDto){
-		childService.
-
+		childService.childUpdate(childDto);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("/profile/transfer")

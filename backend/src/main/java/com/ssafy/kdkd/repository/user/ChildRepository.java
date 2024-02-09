@@ -14,7 +14,7 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 	ChildDto childDto(@Param("childId") Long id);
 
 	@Modifying
-	@Query("UPDATE Child= c SET c.coin = :coin, c.fund_money = :fund_money WHERE c.id = :child_id")
-	void childUpdate(@Param("child_id") Long childId,@Param("coin") int coin, @Param("fund_money") int fundMoney)
+	@Query("UPDATE Child c SET c.coin = :coin, c.fundMoney = :fund_money WHERE c.id = :child_id")
+	void childUpdate(@Param("child_id") Long childId,@Param("coin") int coin, @Param("fund_money") int fundMoney);
 
 }

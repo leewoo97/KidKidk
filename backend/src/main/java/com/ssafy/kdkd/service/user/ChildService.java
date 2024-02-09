@@ -1,6 +1,7 @@
 package com.ssafy.kdkd.service.user;
 
 import com.ssafy.kdkd.domain.dto.account.ChildDto;
+import com.ssafy.kdkd.domain.entity.account.Profile;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.user.ChildRepository;
 
@@ -29,8 +30,28 @@ public class ChildService {
     @Transactional
     public void childUpdate(ChildDto childDto) {
         Long childId = childDto.getChildId();
-        int coin = childDto.getCoin();
-        int fundMoney = childDto.getFundMoney();
+        int coin = 0;
+        int fundMoney = 0;
+
+        Optional<Child> childUpdate = childRepository.findById(childId);
+        if (childUpdate.isPresent()) {
+            Child child = childUpdate.get();
+            coin = child.getCoin();
+            fundMoney = child.getFundMoney();
+        }else{
+
+        }
+        int updateCoin = childDto.getCoin();
+        int updateFundMoney = childDto.getFundMoney();
+
+        if(updateCoin != 0){
+            coin = updateCoin;
+        }
+
+        if(updateFundMoney != 0){
+            fundMoney = updateFundMoney;
+        }
+
 
         childRepository.childUpdate(childId, coin, fundMoney);
     }

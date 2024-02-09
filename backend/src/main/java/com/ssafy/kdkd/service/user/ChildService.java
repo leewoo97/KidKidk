@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.service.user;
 
+import com.ssafy.kdkd.domain.dto.account.ChildDto;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.repository.user.ChildRepository;
 
@@ -21,4 +22,10 @@ public class ChildService {
         return childRepository.findById(id);
     }
 
+    @Transactional
+    public void childUpdate(ChildDto childDto) {
+        Long childId = childDto
+
+        childRepository.childUpdate();
+    }
 }

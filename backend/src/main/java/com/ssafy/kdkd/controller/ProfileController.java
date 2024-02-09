@@ -5,6 +5,7 @@ import com.ssafy.kdkd.domain.entity.account.Profile;
 import com.ssafy.kdkd.domain.entity.user.Child;
 import com.ssafy.kdkd.service.account.ProfileService;
 import com.ssafy.kdkd.service.account.UserService;
+import com.ssafy.kdkd.service.user.ChildService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class ProfileController {
 
 	@Autowired
 	private ProfileService profileService;
+
+	@Autowired
+	private ChildService childService;
 
 	// @PostMapping("/signup")
 	// @Operation(summary = "회원가입")
@@ -96,6 +100,13 @@ public class ProfileController {
 		ChildDto returnDto = profileService.getChild(childId);
 		System.out.println(returnDto);
 		return new ResponseEntity<>(returnDto,HttpStatus.OK);
+	}
+
+	@PutMapping("/profile/child/update")
+	@Operation(summary = "아이 테이블 coin,fund_money 수정")
+	public ResponseEntity<?> childUpdate(@RequestBody ChildDto childDto){
+		childService.
+
 	}
 
 	@PostMapping("/profile/transfer")

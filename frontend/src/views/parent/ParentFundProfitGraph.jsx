@@ -7,45 +7,46 @@ import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function ParentFundProfitGraph() {
-    
     const childId = 2;
     const [statementdata, setStatementdata] = useState([]);
     const [rateList, setRateList] = useState([]);
-    
+
     useEffect(() => {
         getFundHistory(
-          childId,
-          (success) => {
-            setStatementdata(success.data.FundHistory);
-          },
-          (fail) => {
-            console.log(fail);
-          }
+            childId,
+            (success) => {
+                setStatementdata(success.data.FundHistory);
+            },
+            (fail) => {
+                console.log(fail);
+            }
         );
         return () => {
-          console.log('ChildManagement userEffect return');
+            console.log('ChildManagement userEffect return');
         };
-      }, []);
+    }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
         const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
         const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
-    
-        const thisWeekData = eachDayThisWeek.map(day => {
+
+        const thisWeekData = eachDayThisWeek.map((day) => {
             const formattedDay = format(day, 'yyyy-MM-dd');
-            const foundItem = statementdata.find(item => {
-                const itemDate = parseISO(item.dataLog);
-                return isSameDay(itemDate, day);
-            });
-            
+            const foundItem =
+                statementdata &&
+                statementdata.find((item) => {
+                    const itemDate = parseISO(item.dataLog);
+                    return isSameDay(itemDate, day);
+                });
+
             if (foundItem) {
                 return foundItem;
             } else {
                 return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
             }
         });
-    
+
         const tempRateList = [];
         thisWeekData.map((data) => {
             let sign = data.pnl < data.seedMoney ? -1 : 1;

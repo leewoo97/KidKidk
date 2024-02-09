@@ -240,10 +240,12 @@ export default function ChildFundManagement() {
     // 투자 성공률 변동을 setSuccessRate에 저장
     // 투자 성공률 roi 객체가 변경될 때마다 콜백 함수 실행
     useEffect(() => {
-        let isZero = roi.count; // 투자 횟수
-        let count = isZero == 0 ? 1 : isZero;
-        let rate = (roi.success / count) * 100;
-        setSuccessRate(rate);
+        if (roi && roi.count !== undefined && roi.success !== undefined) {
+            let isZero = roi.count; // 투자 횟수
+            let count = isZero === 0 ? 1 : isZero;
+            let rate = (roi.success / count) * 100;
+            setSuccessRate(rate);
+        }
     }, [roi]);
 
     // 평균 투자금액, 이익률을 저장
@@ -252,11 +254,12 @@ export default function ChildFundManagement() {
         let count = 0;
         let sumSeedMoney = 0;
         let sumPnl = 0;
-        fundHistory.map((row) => {
-            sumSeedMoney += row.seedMoney;
-            sumPnl += row.pnl;
-            count += 1;
-        });
+        fundHistory &&
+            fundHistory.map((row) => {
+                sumSeedMoney += row.seedMoney;
+                sumPnl += row.pnl;
+                count += 1;
+            });
 
         count = count == 0 ? 1 : count;
         sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;

@@ -18,7 +18,6 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function ParentFundAccountGraph() {
-
     const childId = 2;
     const [child, setChild] = useState([]);
     const [statementdata, setStatementdata] = useState([]);
@@ -41,32 +40,34 @@ export default function ParentFundAccountGraph() {
 
     useEffect(() => {
         getFundHistory(
-          childId,
-          (success) => {
-            setStatementdata(success.data.FundHistory);
-          },
-          (fail) => {
-            console.log(fail);
-          }
+            childId,
+            (success) => {
+                setStatementdata(success.data.FundHistory);
+            },
+            (fail) => {
+                console.log(fail);
+            }
         );
         return () => {
-          console.log('ChildManagement userEffect return');
+            console.log('ChildManagement userEffect return');
         };
-      }, []);
+    }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
         const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
         const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
         const today = format(new Date(), 'yyyy-MM-dd');
 
-        const thisWeekData = eachDayThisWeek.map(day => {
+        const thisWeekData = eachDayThisWeek.map((day) => {
             const formattedDay = format(day, 'yyyy-MM-dd');
-            const foundItem = statementdata.find(item => {
-                const itemDate = parseISO(item.dataLog);
-                return isSameDay(itemDate, day);
-            });
-            
+            const foundItem =
+                statementdata &&
+                statementdata.find((item) => {
+                    const itemDate = parseISO(item.dataLog);
+                    return isSameDay(itemDate, day);
+                });
+
             if (foundItem) {
                 return foundItem;
             } else {
@@ -82,7 +83,7 @@ export default function ParentFundAccountGraph() {
         reverseThisWeekData.map((data) => {
             let fundMoney = fundMoneyPointer;
             if (data.seedMoney != 0) {
-                fundMoneyPointer += (data.seedMoney - data.pnl);
+                fundMoneyPointer += data.seedMoney - data.pnl;
                 fundMoney = fundMoneyPointer;
             } else if (data.dataLog === today) {
                 fundMoney = currentFundMoney;
@@ -90,7 +91,7 @@ export default function ParentFundAccountGraph() {
             }
             tempThisWeekInvestments.push(fundMoney);
         });
-    
+
         setThisWeekInvestments(tempThisWeekInvestments.reverse());
     }, [statementdata]);
 

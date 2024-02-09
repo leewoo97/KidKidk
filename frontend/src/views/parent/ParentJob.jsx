@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { useRecoilState } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
 
 import {
     getJob,
@@ -10,6 +9,7 @@ import {
     deleteJobReservation,
     createJob,
     createJobReservation,
+    modifyJobReservation,
 } from '@api/job.js';
 import { getJobData, getJobReservationData } from '@store/jobAtom.js';
 
@@ -17,14 +17,33 @@ import styles from './ParentJob.module.css';
 import kidImg from '@images/kidImg.jpg';
 
 export default function ParentJob() {
-    const [selectJob, setSelectedJob] = useState(true);
-    const [selectReservationJob, setSelectReservationJob] = useState(true);
     const [jobCreateModalOpen, setJobCreateModalOpen] = useState(false);
     const [reservationJobCreateModalOpen, setReservationJobCreateModalOpen] = useState(false);
     const [jobUpdateModalOpen, setJobUpdateModalOpen] = useState(false);
 
     const [jobData, setJobData] = useRecoilState(getJobData);
     const [jobReservationData, setJobReservationData] = useRecoilState(getJobReservationData);
+
+    const [createJobData, setcreateJobData] = useState({
+        name: '',
+        task: '',
+        taskAmount: '',
+        wage: '',
+    });
+
+    const [createJobReservationData, setcreateJobReservationData] = useState({
+        name: '',
+        task: '',
+        taskAmount: '',
+        wage: '',
+    });
+
+    const [modifyJobReservationData, setmodifyJobReservationData] = useState({
+        name: '',
+        task: '',
+        taskAmount: '',
+        wage: '',
+    });
 
     // 직업 조회 API
     const getJobDataAxios = useEffect(() => {
@@ -44,7 +63,6 @@ export default function ParentJob() {
             console.log('Return getJobDataAxios useEffect');
         };
     }, []);
-    console.log('직업 조회 데이터 :', jobData);
 
     // 예약 직업 조회 API
     const getReservationJobDataAxios = useEffect(() => {
@@ -64,8 +82,8 @@ export default function ParentJob() {
             console.log('Return getReservationJobDataAxios useEffect');
         };
     }, []);
-    console.log('예약 직업 조회 데이터 :', jobReservationData);
 
+    // 직업 삭제 API
     const handleJobDelete = () => {
         const userConfirmation = confirm('정말로 직업을 삭제하시겠습니까?');
         // 사용자가 확인을 입력한 경우에만 삭제 진행
@@ -74,6 +92,7 @@ export default function ParentJob() {
                 2,
                 (success) => {
                     console.log('직업 삭제 성공', success);
+                    setJobData();
                 },
                 (fail) => {
                     console.log('직업 삭제 실패', fail);
@@ -84,6 +103,7 @@ export default function ParentJob() {
         }
     };
 
+    // 예약 직업 삭제 API
     const handleReservationJobDelete = () => {
         const userConfirmation = confirm('정말로 예약 직업을 삭제하시겠습니까?');
         // 사용자가 확인을 입력한 경우에만 삭제 진행
@@ -92,6 +112,7 @@ export default function ParentJob() {
                 2,
                 (success) => {
                     console.log('예약 직업 삭제 성공', success);
+                    setJobReservationData();
                 },
                 (fail) => {
                     console.log('예약 직업 삭제 실패', fail);
@@ -102,20 +123,95 @@ export default function ParentJob() {
         }
     };
 
+    const handleJobCreateChange = (event) => {
+        console.log(event.target);
+        const { name, value } = event.target;
+        // childId 나중에 바꿔주기 필요
+        setcreateJobData({
+            ...createJobData,
+            [name]: name === 'name' || name === 'task' ? value : +value,
+            childId: 2,
+        });
+    };
+
+    // 직업 등록 API
     const handleJobCreate = (event) => {
+        setcreateJobData({}); // 초기화
         event.preventDefault();
-        console.log(event);
         console.log('Enter handleJobCreate');
 
         createJob(
+            createJobData,
             (success) => {
                 console.log('직업 등록 성공', success);
+                setJobData(createJobData);
             },
             (fail) => {
                 console.log('직업 등록 실패', fail);
             }
         );
-        setJobCreateModalOpen(false);
+        setJobCreateModalOpen(false); // 모달 끄기
+    };
+
+    const handleJobReservationCreateChange = (event) => {
+        console.log(event.target);
+        const { name, value } = event.target;
+        // childId 나중에 바꿔주기 필요
+        setcreateJobReservationData({
+            ...createJobReservationData,
+            [name]: name === 'name' || name === 'task' ? value : +value,
+            childId: 2,
+        });
+    };
+
+    // 예약 직업 등록 API
+    const handleJobReservationCreate = (event) => {
+        setcreateJobReservationData({}); // 초기화
+        event.preventDefault();
+        console.log('Enter handleJobReservationCreate');
+
+        createJobReservation(
+            createJobReservationData,
+            (success) => {
+                console.log('예약 직업 등록 성공', success);
+                setJobReservationData(createJobReservationData);
+            },
+            (fail) => {
+                console.log('예약 직업 등록 실패', fail);
+            }
+        );
+        setReservationJobCreateModalOpen(false); // 모달 끄기
+    };
+
+    const handleJobReservationModifyChange = (event) => {
+        console.log(event.target);
+        const { name, value } = event.target;
+        // childId 나중에 바꿔주기 필요
+        setmodifyJobReservationData({
+            ...modifyJobReservationData,
+            [name]: name === 'name' || name === 'task' ? value : +value,
+            childId: 2,
+            state: 0,
+        });
+    };
+
+    // 예약 직업 수정 API
+    const handleJobReservationModfiy = (event) => {
+        setmodifyJobReservationData({}); // 초기화
+        event.preventDefault();
+        console.log('Enter handleJobReservationModify');
+
+        modifyJobReservation(
+            modifyJobReservationData,
+            (success) => {
+                console.log('예약 직업 수정 성공', success);
+                setJobReservationData(modifyJobReservationData);
+            },
+            (fail) => {
+                console.log('예약 직업 수정 실패', fail);
+            }
+        );
+        setJobUpdateModalOpen(false); // 모달 끄기
     };
 
     return (
@@ -186,22 +282,41 @@ export default function ParentJob() {
                                     <p>직업 등록</p>
                                     <form onSubmit={handleJobCreate} className={styles.jobForm}>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" name="name" placeholder="직업을 입력하세요" />
-                                        </div>
-                                        <div className={styles.jobInputContainer}>
-                                            <input type="text" name="task" placeholder="할 업무를 입력하세요" />
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={createJobData.name}
+                                                onChange={handleJobCreateChange}
+                                                placeholder="직업을 입력하세요"
+                                            />
                                         </div>
                                         <div className={styles.jobInputContainer}>
                                             <input
                                                 type="text"
+                                                name="task"
+                                                value={createJobData.task}
+                                                onChange={handleJobCreateChange}
+                                                placeholder="할 업무를 입력하세요"
+                                            />
+                                        </div>
+                                        <div className={styles.jobInputContainer}>
+                                            <input
+                                                type="number"
                                                 name="taskAmount"
+                                                value={createJobData.taskAmount}
+                                                onChange={handleJobCreateChange}
                                                 placeholder="할 일 횟수를 입력하세요"
                                             />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" name="wage" placeholder="급여를 입력하세요" />
+                                            <input
+                                                type="number"
+                                                name="wage"
+                                                value={createJobData.wage}
+                                                onChange={handleJobCreateChange}
+                                                placeholder="급여를 입력하세요"
+                                            />
                                         </div>
-
                                         <button type="submit">직업 등록하기</button>
                                     </form>
                                 </div>
@@ -238,7 +353,7 @@ export default function ParentJob() {
                 </div>
                 <div className={styles.jobReservationStatus}>
                     <p>직업 예약 현황</p>
-                    {jobReservationData !== undefined && selectReservationJob !== undefined && selectReservationJob ? (
+                    {jobReservationData !== undefined && jobReservationData ? (
                         <div className={styles.jobReservationStatusFrame}>
                             <div>
                                 <ul className={styles.jobReservationStatusTitle}>
@@ -292,18 +407,45 @@ export default function ParentJob() {
                             >
                                 <div className={styles.jobModal}>
                                     <p>예약 직업 수정</p>
-                                    <form className={styles.jobForm}>
+                                    <form className={styles.jobForm} onSubmit={handleJobReservationModfiy}>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="직업을 입력하세요" />
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={modifyJobReservationData.name}
+                                                onChange={handleJobReservationModifyChange}
+                                                placeholder="직업을 입력하세요"
+                                            />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="할 업무를 입력하세요" />
+                                            <input
+                                                type="text"
+                                                name="task"
+                                                value={modifyJobReservationData.task}
+                                                onChange={handleJobReservationModifyChange}
+                                                placeholder="할 업무를 입력하세요"
+                                            />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="급여를 입력하세요" />
+                                            <input
+                                                type="number"
+                                                name="taskAmount"
+                                                value={modifyJobReservationData.taskAmount}
+                                                onChange={handleJobReservationModifyChange}
+                                                placeholder="할 일 횟수를 입력하세요"
+                                            />
+                                        </div>
+                                        <div className={styles.jobInputContainer}>
+                                            <input
+                                                type="number"
+                                                name="wage"
+                                                value={modifyJobReservationData.wage}
+                                                onChange={handleJobReservationModifyChange}
+                                                placeholder="급여를 입력하세요"
+                                            />
                                         </div>
 
-                                        <button>예약 직업 수정하기</button>
+                                        <button type="submit">예약 직업 수정하기</button>
                                     </form>
                                 </div>
                             </Modal>
@@ -340,18 +482,45 @@ export default function ParentJob() {
                             >
                                 <div className={styles.jobModal}>
                                     <p>예약 직업 등록</p>
-                                    <form className={styles.jobForm}>
+                                    <form className={styles.jobForm} onSubmit={handleJobReservationCreate}>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="예약 직업을 입력하세요" />
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={createJobReservationData.name}
+                                                onChange={handleJobReservationCreateChange}
+                                                placeholder="예약 직업을 입력하세요"
+                                            />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="예약 할 업무를 입력하세요" />
+                                            <input
+                                                type="text"
+                                                name="task"
+                                                value={createJobReservationData.task}
+                                                onChange={handleJobReservationCreateChange}
+                                                placeholder="예약 할 업무를 입력하세요"
+                                            />
                                         </div>
                                         <div className={styles.jobInputContainer}>
-                                            <input type="text" placeholder="예약 할 급여를 입력하세요" />
+                                            <input
+                                                type="number"
+                                                name="taskAmount"
+                                                value={createJobReservationData.taskAmount}
+                                                onChange={handleJobReservationCreateChange}
+                                                placeholder="할 일 횟수를 입력하세요"
+                                            />
+                                        </div>
+                                        <div className={styles.jobInputContainer}>
+                                            <input
+                                                type="number"
+                                                name="wage"
+                                                value={createJobReservationData.wage}
+                                                onChange={handleJobReservationCreateChange}
+                                                placeholder="예약 할 급여를 입력하세요"
+                                            />
                                         </div>
 
-                                        <button>예약 직업 등록하기</button>
+                                        <button type="submit">예약 직업 등록하기</button>
                                     </form>
                                 </div>
                             </Modal>

@@ -28,31 +28,33 @@ export default function ParentFundProfitGraph() {
       }, []);
 
       useEffect(() => {
-        const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
-        const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
-        const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
-    
-        const thisWeekData = eachDayThisWeek.map(day => {
-            const formattedDay = format(day, 'yyyy-MM-dd');
-            const foundItem = statementdata.find(item => {
-                const itemDate = parseISO(item.dataLog);
-                return isSameDay(itemDate, day);
+        if (statementdata) {
+            const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+            const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
+            const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
+        
+            const thisWeekData = eachDayThisWeek.map(day => {
+                const formattedDay = format(day, 'yyyy-MM-dd');
+                const foundItem = statementdata.find(item => {
+                    const itemDate = parseISO(item.dataLog);
+                    return isSameDay(itemDate, day);
+                });
+                
+                if (foundItem) {
+                    return foundItem;
+                } else {
+                    return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
+                }
             });
-            
-            if (foundItem) {
-                return foundItem;
-            } else {
-                return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
-            }
-        });
-    
-        const tempRateList = [];
-        thisWeekData.map((data) => {
-            let sign = data.pnl < data.seedMoney ? -1 : 1;
-            tempRateList.push(sign * data.yield);
-        });
+        
+            const tempRateList = [];
+            thisWeekData.map((data) => {
+                let sign = data.pnl < data.seedMoney ? -1 : 1;
+                tempRateList.push(sign * data.yield);
+            });
 
-        setRateList(tempRateList);
+            setRateList(tempRateList);
+        }
     }, [statementdata]);
 
     const options = {

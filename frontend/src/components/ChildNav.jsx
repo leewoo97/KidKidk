@@ -75,48 +75,38 @@ function ChildNav() {
     };
 
     const handleCoinIn = () => {
-        transferToFundMoney(
-            {
-                coin : chargeCoinIn,
-                childId : childId
-            },
-            () => {
-                setChild({
-                    childId: child.childId,
-                    coin: child.coin - chargeCoinIn,
-                    fundMoney: child.fundMoney + chargeCoinIn
-                });
-            },
-            (fail) => {
-                console.log(fail);
-            }
-        );
-        return () => {
-            console.log('ChildManagement userEffect return');
-        };
+        const coinInValue = parseInt(chargeCoinIn, 10);
+        transferToFundMoney({
+            coin: coinInValue,
+            childId: childId
+        }, () => {
+            setChild(prevChild => ({
+                ...prevChild,
+                coin: prevChild.coin - coinInValue,
+                fundMoney: prevChild.fundMoney + coinInValue
+            }));
+        }, (fail) => {
+            console.log(fail);
+        });
     };
+    
 
     const handleCoinOut = () => {
-        transferToCoin(
-            {
-                fundMoney : chargeCoinOut,
-                childId : childId
-            },
-            () => {
-                setChild({
-                    childId: child.childId,
-                    coin: child.coin + chargeCoinIn,
-                    fundMoney: child.FundMoney - chargeCoinIn
-                });
-            },
-            (fail) => {
-                console.log(fail);
-            }
-        );
-        return () => {
-            console.log('ChildManagement userEffect return');
-        };
+        const coinOutValue = parseInt(chargeCoinOut, 10);
+        transferToCoin({
+            fundMoney: coinOutValue,
+            childId: childId
+        }, () => {
+            setChild(prevChild => ({
+                ...prevChild,
+                coin: prevChild.coin + coinOutValue,
+                fundMoney: prevChild.fundMoney - coinOutValue
+            }));
+        }, (fail) => {
+            console.log(fail);
+        });
     };
+    
 
     const changeModalContent = (index) => {
         setCurrentIndex(index);

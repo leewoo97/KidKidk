@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JobReservationService {
 
     private final JobReservationRepository jobReservationRepository;
+    private final JobService jobService;
     private final JobRepository jobRepository;
     private final ChildService childService;
 
@@ -54,6 +55,10 @@ public class JobReservationService {
         JobReservation reservation = JobReservation.createJobReservation(jobReservationDto);
         reservation.setChild(child);
         jobReservationRepository.save(reservation);
+        if (type) {
+            // 직업 처음 생성 -> 바로 생성
+            jobService.insertJob(reservation);
+        }
         return jobReservationDto;
     }
 

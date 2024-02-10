@@ -9,8 +9,10 @@ import lombok.*;
 public class NotificationMessage {
     private String subId;
     private String pubName;
-    private String message;
-    private String sub_message;
+    private String title;
+    private String content;
+    private String require;
+
     private String key;
     private boolean isRead;
 }

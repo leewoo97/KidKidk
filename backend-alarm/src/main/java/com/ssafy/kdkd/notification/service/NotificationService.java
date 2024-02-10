@@ -104,11 +104,11 @@ public class NotificationService {
 
 
 
-    public void publish(String subId, String pubName, String message, String sub_message) {
+    public void publish(String subId, String pubName, String title, String content, String require) {
         NotificationMessage notificationMessage = NotificationMessage.builder()
-                .subId(subId).pubName(pubName).message(message).sub_message(sub_message).
-        key(makeTimeIncludeId(subId)).build();
-        log.info("알림 전송. userId : {}, message : {}, sub_message : {}",subId, message,sub_message);
+                .subId(subId).pubName(pubName).title(title).content(content).
+        key(makeTimeIncludeId(subId)).require(require).build();
+        log.info("알림 전송. userId : {}, message : {}, sub_message : {}",subId, title,content);
         kafkaTemplate.send("notification", notificationMessage);
     }
 

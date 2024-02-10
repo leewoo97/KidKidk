@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class NotificationMessageDto {
     private String subId;
     private String pubName;
-    private String message;
-    private String sub_message;
+    private String title;
+    private String content;
+    private String require;
 }

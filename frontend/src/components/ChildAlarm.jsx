@@ -1,5 +1,7 @@
 import styles from './ChildAlarm.module.css';
-import alarmCheak from '@images/alarmCheck.png';
+import alarmCheck from '@images/alarmCheck.png';
+import alarmCheckRead from '@images/alarmCheckRead.png'
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
@@ -10,8 +12,9 @@ function ChildAlarm() {
     const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
     const [notifications, setNotifications] = useRecoilState(notificationsState);
     
+    const [profileId, setProfileId] = useState(2);
     const kafkaSub = () => {
-        setSse(new EventSource(`http://localhost:8080/kafka/subscribe/2`, {
+        setSse(new EventSource(`http://localhost:8081/kafka/subscribe/${profileId}`, {
             headers: {
                 "Last-Event-ID" : lastEventId,
             },
@@ -38,13 +41,28 @@ function ChildAlarm() {
         return (
             <>
                 {alarmData.map((item) => (
-                    <div key={item.key} className={styles.card}>
-                        <div className={styles.cardContent}>
-                            <div>{item.message}</div>
-                            <div style={{ fontSize: '12px' }}>{item.sub_message}</div>
+                    <>
+                    { !item.read ? (
+                        <div key={item.key} className={styles.card}>
+                            <div className={styles.cardContent}>
+                                <div>{item.title}</div>
+                                <div style={{ fontSize: '12px' }}>{item.content}</div>
+                            </div>
+                            <img src={alarmCheck} onClick={() => handleClickRead(item.key)} style={{ width: '2vw', height: '2vw', cursor: 'pointer' }} />
                         </div>
-                        { !item.read && <img src={alarmCheak} onClick={() => handleClickRead(item.key)} style={{ width: '2vw', height: '2vw', cursor: 'pointer' }} />}
+                    ) :
+                    ( 
+                        <div key={item.key} className={styles.cardRead}>
+                        <div className={styles.cardContent}>
+                            <div>{item.title}</div>
+                            <div style={{ fontSize: '12px' }}>{item.content}</div>
+                        </div>
+                        <img src={alarmCheckRead} style={{ width: '2vw', height: '2vw'}} />
                     </div>
+
+                    )}
+                    </>
+                    
                 ))}
             </>
         );
@@ -56,7 +74,7 @@ function ChildAlarm() {
             <div className={styles.title}>알림 현황</div>
             <div className={styles.content}>
                 <div className={styles.cardHead}>
-                    <div>미확인 알림 : {notifications.length}개</div>
+                    <div>미확인 알림 : {notifications.filter(noti => !noti.read).length}개</div>
                     <div className={styles.alarmDel} onClick={deleteReadNotifications}>모든 읽은 알림 삭제</div>
                 </div>
                 <div className={styles.cards}>

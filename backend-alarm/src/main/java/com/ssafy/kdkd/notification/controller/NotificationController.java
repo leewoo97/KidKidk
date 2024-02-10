@@ -27,7 +27,7 @@ public class NotificationController {
 
     @PostMapping(value = "/kafka/publish")
     public ResponseEntity<?> publish(@RequestBody NotificationMessageDto msg){
-        notificationService.publish(msg.getSubId(), msg.getPubName(), msg.getMessage(), msg.getSub_message());
+        notificationService.publish(msg.getSubId(), msg.getPubName(), msg.getTitle(), msg.getContent(), msg.getRequire());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

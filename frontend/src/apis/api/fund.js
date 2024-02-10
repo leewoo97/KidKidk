@@ -48,6 +48,10 @@ async function deleteFundReservation(childId, success, fail) {
     await server.delete(`${url}/reservation/delete/${childId}`).then(success).catch(fail);
 }
 
+async function transferToCoin(coinIn, success, fail) {
+    await server.post(`${url}/transfer`, coinIn).then(success).catch(fail);
+}
+
 export {
     createFund,
     createFundReservation,
@@ -59,4 +63,5 @@ export {
     getFundReservation,
     getRoi,
     getStatus,
+    transferToCoin
 };

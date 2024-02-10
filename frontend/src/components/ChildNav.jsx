@@ -5,10 +5,15 @@ import acornImg from '@images/acorn.png';
 import styles from './ChildNav.module.css';
 import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import { useState, useEffect } from 'react';
+import { getChild } from '@api/child.js';
+import { transferToFundMoney } from '@api/profile.js';
+import { transferToCoin } from '@api/fund.js';
 import Modal from 'react-modal';
 import ChildAlarm from './ChildAlarm.jsx';
 
 function ChildNav() {
+
+    const childId = 2;
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
@@ -19,6 +24,25 @@ function ChildNav() {
     const [chargeCoinOut, setChargeCoinOut] = useState(''); // 출금 input 모달 페이지
     const [chargeBtnActive, setChargeBtnActive] = useState(false); // 입/출금 모달 버튼 활성화 여부
     const a = ['5.5%', '18%', '29.5%', '41.5%'];
+    const [child, setChild] = useState([{
+        coin : 0,
+        fundMoney : 0
+    }]);
+
+    useEffect(() => {
+        getChild(
+            childId,
+            (success) => {
+                setChild(success.data);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
+    }, []);
 
     useEffect(() => {
         // 페이지가 로드될 때 현재 URL을 확인하여 알맞은 탭을 활성화
@@ -48,6 +72,50 @@ function ChildNav() {
     const handleInputChargeOut = (e) => {
         const value = e.target.value;
         setChargeCoinOut(value);
+    };
+
+    const handleCoinIn = () => {
+        transferToFundMoney(
+            {
+                coin : chargeCoinIn,
+                childId : childId
+            },
+            () => {
+                setChild({
+                    childId: child.childId,
+                    coin: child.coin - chargeCoinIn,
+                    fundMoney: child.fundMoney + chargeCoinIn
+                });
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
+    };
+
+    const handleCoinOut = () => {
+        transferToCoin(
+            {
+                fundMoney : chargeCoinOut,
+                childId : childId
+            },
+            () => {
+                setChild({
+                    childId: child.childId,
+                    coin: child.coin + chargeCoinIn,
+                    fundMoney: child.FundMoney - chargeCoinIn
+                });
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            console.log('ChildManagement userEffect return');
+        };
     };
 
     const changeModalContent = (index) => {
@@ -109,7 +177,7 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>나의 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        12700 도토리
+                        {child.coin} 도토리
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={() => navigate('/child/refund')}>
@@ -121,7 +189,7 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>투자 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        12700 도토리
+                        {child.fundMoney} 도토리
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={openChargeModal}>
@@ -177,7 +245,7 @@ function ChildNav() {
                                 <div className={styles.chargeModalContent}>
                                     <div className={styles.chargeModalText}>최대 입금 가능</div>
                                     <div className={styles.chargeModalContent2}>
-                                        <div className={styles.chargeModalText}>2700 도토리</div>
+                                        <div className={styles.chargeModalText}>{child.coin} 도토리</div>
                                         <img src={acornImg} style={{ width: '1.5vw' }} />
                                     </div>
                                 </div>
@@ -191,7 +259,7 @@ function ChildNav() {
                                     />
                                     <div className={styles.modalMax}>개 도토리 입금하기</div>
                                 </div>
-                                <div className={styles.chargeModalBtn1}>입금하기</div>
+                                <div className={styles.chargeModalBtn1} onClick={handleCoinIn}>입금하기</div>
                             </div>
                         )}
                         {currentIndex === 1 && (
@@ -200,7 +268,7 @@ function ChildNav() {
                                 <div className={styles.chargeModalContent}>
                                     <div className={styles.chargeModalText}>최대 출금 가능</div>
                                     <div className={styles.chargeModalContent2}>
-                                        <div className={styles.chargeModalText}>2700 도토리</div>
+                                        <div className={styles.chargeModalText}>{child.fundMoney} 도토리</div>
                                         <img src={acornImg} style={{ width: '1.5vw' }} />
                                     </div>
                                 </div>
@@ -214,7 +282,7 @@ function ChildNav() {
                                     />
                                     <div className={styles.modalMax}>개 도토리 출금하기</div>
                                 </div>
-                                <div className={styles.chargeModalBtn2}>출금하기</div>
+                                <div className={styles.chargeModalBtn2} onClick={handleCoinOut}>출금하기</div>
                             </div>
                         )}
                     </div>

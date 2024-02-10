@@ -249,23 +249,25 @@ export default function ChildFundManagement() {
     // 평균 투자금액, 이익률을 저장
     // fundHistory 객체가 변경될 때마다 콜백 함수 실행
     useEffect(() => {
-        let count = 0;
-        let sumSeedMoney = 0;
-        let sumPnl = 0;
-        fundHistory.map((row) => {
-            sumSeedMoney += row.seedMoney;
-            sumPnl += row.pnl;
-            count += 1;
-        });
+        if (fundHistory) {
+            let count = 0;
+            let sumSeedMoney = 0;
+            let sumPnl = 0;
+            fundHistory.map((row) => {
+                sumSeedMoney += row.seedMoney;
+                sumPnl += row.pnl;
+                count += 1;
+            });
 
-        count = count == 0 ? 1 : count;
-        sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;
+            count = count == 0 ? 1 : count;
+            sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;
 
-        let avg = sumSeedMoney / count; // 평균 투자금액
-        let pRate = (sumPnl / sumSeedMoney) * 100; // 이익률
+            let avg = sumSeedMoney / count; // 평균 투자금액
+            let pRate = (sumPnl / sumSeedMoney) * 100; // 이익률
 
-        setAvgFundMoney(avg);
-        setPnlRate(pRate);
+            setAvgFundMoney(avg);
+            setPnlRate(pRate);
+        }
     }, [fundHistory]);
 
     return (
@@ -561,11 +563,11 @@ export default function ChildFundManagement() {
                             </div>
                             <div className={styles.card3}>
                                 <div className={styles.title2}>투자 성공률</div>
-                                <div className={styles.card3Text2}>{successRate}%</div>
+                                <div className={styles.card3Text2}>{Math.floor(successRate)}%</div>
                             </div>
                             <div className={styles.card3}>
                                 <div className={styles.title2}>이익률</div>
-                                <div className={styles.card3Text2}>{pnlRate}%</div>
+                                <div className={styles.card3Text2}>{Math.floor(pnlRate)}%</div>
                             </div>
                         </div>
                     </div>

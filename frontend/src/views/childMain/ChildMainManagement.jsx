@@ -18,7 +18,10 @@ export default function ManagementContent() {
     const [job, setJob] = useState([]);
     const [fund, setFund] = useState([]);
     const [savingMoney, setSavingMoney] = useState(0);
-    const [child, setChild] = useState([]);
+    const [child, setChild] = useState([{
+        coin : 0,
+        fundMoney : 0
+    }]);
     const [ratioPercentage, setRatioPercentage] = useState([]);
 
     useEffect(() => {

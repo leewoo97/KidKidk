@@ -91,27 +91,27 @@ export default function ParentMain() {
     }, [child, savingMoney]);
 
     useEffect(() => {
-        const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
-        const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
-        const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
+        if (statementdata) {
+            const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+            const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
+            const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
 
-        const thisWeekData = eachDayThisWeek.map((day) => {
-            const formattedDay = format(day, 'yyyy-MM-dd');
-            const foundItem =
-                statementdata &&
-                statementdata.find((item) => {
+            const thisWeekData = eachDayThisWeek.map((day) => {
+                const formattedDay = format(day, 'yyyy-MM-dd');
+                const foundItem = statementdata.find((item) => {
                     const itemDate = parseISO(item.dataLog);
                     return isSameDay(itemDate, day);
                 });
 
-            if (foundItem) {
-                return foundItem;
-            } else {
-                return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
-            }
-        });
+                if (foundItem) {
+                    return foundItem;
+                } else {
+                    return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
+                }
+            });
 
-        setThisWeekInvestments(thisWeekData);
+            setThisWeekInvestments(thisWeekData);
+        }
     }, [statementdata]);
 
     const handleFundClose = () => {

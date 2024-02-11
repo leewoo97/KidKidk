@@ -63,6 +63,10 @@ async function createFundAnswer(answerData, success, fail) {
     await server.post(`${url}/parent/submit`, JSON.stringify(answerData)).then(success).catch(fail);
 }
 
+async function transferToCoin(coinIn, success, fail) {
+    await server.post(`${url}/transfer`, coinIn).then(success).catch(fail);
+}
+
 export {
     createFund,
     createFundReservation,
@@ -77,4 +81,5 @@ export {
     getFundNews,
     createFundNews,
     createFundAnswer,
+    transferToCoin,
 };

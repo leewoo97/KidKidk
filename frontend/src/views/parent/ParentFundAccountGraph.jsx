@@ -54,45 +54,45 @@ export default function ParentFundAccountGraph() {
     }, []);
 
     useEffect(() => {
-        const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
-        const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
-        const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
-        const today = format(new Date(), 'yyyy-MM-dd');
+        if (statementdata) {
+            const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+            const endOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
+            const eachDayThisWeek = eachDayOfInterval({ start: startOfThisWeek, end: endOfThisWeek });
+            const today = format(new Date(), 'yyyy-MM-dd');
 
-        const thisWeekData = eachDayThisWeek.map((day) => {
-            const formattedDay = format(day, 'yyyy-MM-dd');
-            const foundItem =
-                statementdata &&
-                statementdata.find((item) => {
+            const thisWeekData = eachDayThisWeek.map((day) => {
+                const formattedDay = format(day, 'yyyy-MM-dd');
+                const foundItem = statementdata.find((item) => {
                     const itemDate = parseISO(item.dataLog);
                     return isSameDay(itemDate, day);
                 });
 
-            if (foundItem) {
-                return foundItem;
-            } else {
-                return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
-            }
-        });
+                if (foundItem) {
+                    return foundItem;
+                } else {
+                    return { dataLog: formattedDay, seedMoney: 0, yield: 0, pnl: 0, childId: 0 };
+                }
+            });
 
-        const reverseThisWeekData = thisWeekData.reverse();
-        const tempThisWeekInvestments = [];
-        const currentFundMoney = child.fundMoney;
-        let fundMoneyPointer = null;
+            const reverseThisWeekData = thisWeekData.reverse();
+            const tempThisWeekInvestments = [];
+            const currentFundMoney = child.fundMoney;
+            let fundMoneyPointer = null;
 
-        reverseThisWeekData.map((data) => {
-            let fundMoney = fundMoneyPointer;
-            if (data.seedMoney != 0) {
-                fundMoneyPointer += data.seedMoney - data.pnl;
-                fundMoney = fundMoneyPointer;
-            } else if (data.dataLog === today) {
-                fundMoney = currentFundMoney;
-                fundMoneyPointer = currentFundMoney;
-            }
-            tempThisWeekInvestments.push(fundMoney);
-        });
+            reverseThisWeekData.map((data) => {
+                let fundMoney = fundMoneyPointer;
+                if (data.seedMoney != 0) {
+                    fundMoneyPointer += data.seedMoney - data.pnl;
+                    fundMoney = fundMoneyPointer;
+                } else if (data.dataLog === today) {
+                    fundMoney = currentFundMoney;
+                    fundMoneyPointer = currentFundMoney;
+                }
+                tempThisWeekInvestments.push(fundMoney);
+            });
 
-        setThisWeekInvestments(tempThisWeekInvestments.reverse());
+            setThisWeekInvestments(tempThisWeekInvestments.reverse());
+        }
     }, [statementdata]);
 
     const options = {

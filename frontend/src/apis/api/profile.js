@@ -29,5 +29,9 @@ async function profileDelete(profile, success, fail) {
     await server.delete(`${url}/delete/${profile.profileId}`).then(success).catch(fail);
 }
 
+async function transferToFundMoney(coinIn, success, fail) {
+    await server.post(`${url}/transfer`, coinIn).then(success).catch(fail);
+}
 
-export { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete};
+
+export { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete, transferToFundMoney};

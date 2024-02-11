@@ -11,7 +11,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
-@CrossOrigin("*")
 @RestController
 @Slf4j
 @RequiredArgsConstructor

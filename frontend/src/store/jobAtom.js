@@ -7,5 +7,5 @@ export const getJobData = atom({
 
 export const getJobReservationData = atom({
     key: 'reservationJob',
-    default: { name: '', task: '', taskAmount: '', wage: '', childId: '' },
+    default: { state: '', name: '', task: '', taskAmount: '', wage: '', childId: '' },
 });

@@ -92,7 +92,8 @@ export default function ParentJob() {
                 2,
                 (success) => {
                     console.log('직업 삭제 성공', success);
-                    setJobData();
+                    alert('직업 예약 현황에 삭제 예약 되었습니다');
+                    setJobReservationData({ ...jobData, state: 0 });
                 },
                 (fail) => {
                     console.log('직업 삭제 실패', fail);
@@ -145,6 +146,7 @@ export default function ParentJob() {
             (success) => {
                 console.log('직업 등록 성공', success);
                 setJobData(createJobData);
+                setJobReservationData(createJobData);
             },
             (fail) => {
                 console.log('직업 등록 실패', fail);
@@ -191,7 +193,7 @@ export default function ParentJob() {
             ...modifyJobReservationData,
             [name]: name === 'name' || name === 'task' ? value : +value,
             childId: 2,
-            state: 0,
+            state: 1,
         });
     };
 
@@ -244,20 +246,25 @@ export default function ParentJob() {
                             </div>
                             {/* 예약 직업의 상태가 0이면 "직업 삭제하기" 버튼 사라짐 */}
                             <div>
-                                {jobReservationData !== undefined && jobReservationData.state ? (
+                                {jobReservationData !== undefined && jobReservationData.state == 0 ? null : (
                                     <button onClick={handleJobDelete} className={styles.jobDeleteButton}>
                                         직업 삭제하기
                                     </button>
-                                ) : null}
+                                )}
                             </div>
                         </div>
                     ) : (
                         <div className={styles.childNoProfileFrame}>
                             <p style={{ color: 'red' }}>현재 등록된 직업이 없습니다.</p>
                             <div>
-                                <button onClick={() => setJobCreateModalOpen(true)} className={styles.jobCreateButton}>
-                                    직업 등록하기
-                                </button>
+                                {jobReservationData !== undefined && jobReservationData ? null : (
+                                    <button
+                                        onClick={() => setJobCreateModalOpen(true)}
+                                        className={styles.jobCreateButton}
+                                    >
+                                        직업 등록하기
+                                    </button>
+                                )}
                             </div>
                             <Modal
                                 appElement={document.getElementById('root')}
@@ -372,6 +379,9 @@ export default function ParentJob() {
                                 </ul>
                             </div>
                             <div>
+                                {jobReservationData !== undefined && jobReservationData.state == 0 ? (
+                                    <p style={{ color: 'red' }}>&nbsp;삭제 예정</p>
+                                ) : null}
                                 <button
                                     onClick={() => setJobUpdateModalOpen(true)}
                                     className={styles.jobReservationUpdateButton}
@@ -454,12 +464,14 @@ export default function ParentJob() {
                         <div className={styles.jobReservationNoStatusFrame}>
                             <p style={{ color: 'red' }}>현재 예약된 직업이 없습니다.</p>
                             <div>
-                                <button
-                                    onClick={() => setReservationJobCreateModalOpen(true)}
-                                    className={styles.jobCreateButton}
-                                >
-                                    예약 직업 등록하기
-                                </button>
+                                {jobData === undefined ? null : (
+                                    <button
+                                        onClick={() => setReservationJobCreateModalOpen(true)}
+                                        className={styles.jobCreateButton}
+                                    >
+                                        예약 직업 등록하기
+                                    </button>
+                                )}
                             </div>
                             <Modal
                                 appElement={document.getElementById('root')}

@@ -48,6 +48,21 @@ async function deleteFundReservation(childId, success, fail) {
     await server.delete(`${url}/reservation/delete/${childId}`).then(success).catch(fail);
 }
 
+// 투자 뉴스 조회
+async function getFundNews(success, fail) {
+    await server.get(`${url}/confirm/news`).then(success).catch(fail);
+}
+
+// 투자 뉴스 : 투자 베팅에 대한 힌트 등록
+async function createFundNews(newsData, success, fail) {
+    await server.post(`${url}/news`, JSON.stringify(newsData)).then(success).catch(fail);
+}
+
+// 투자 뉴스에 대한 해당 당일의 정답 등록
+async function createFundAnswer(answerData, success, fail) {
+    await server.post(`${url}/parent/submit`, JSON.stringify(answerData)).then(success).catch(fail);
+}
+
 export {
     createFund,
     createFundReservation,
@@ -59,4 +74,7 @@ export {
     getFundReservation,
     getRoi,
     getStatus,
+    getFundNews,
+    createFundNews,
+    createFundAnswer,
 };

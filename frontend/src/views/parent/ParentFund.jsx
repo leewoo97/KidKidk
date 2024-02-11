@@ -2,12 +2,24 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import ParentFundAccountGraph from './ParentFundAccountGraph';
 import ParentFundProfitGraph from './ParentFundProfitGraph';
-import {createFund, createFundReservation, updateFundReservation, deleteFund, deleteFundReservation, getFund, getFundReservation } from "@api/fund.js";
+import {
+    createFund,
+    createFundReservation,
+    updateFundReservation,
+    deleteFund,
+    deleteFundReservation,
+    getFund,
+    getFundReservation,
+    getFundNews,
+    createFundNews,
+    createFundAnswer,
+} from '@api/fund.js';
+import { format } from 'date-fns';
+
 import styles from './ParentFund.module.css';
 
 export default function ParentFund() {
-
-    const childId = 2;  
+    const childId = 2;
     const [selectFund, setSelectedFund] = useState(false);
     const [selectReservationFund, setSelectReservationFund] = useState(false);
     const [fundCreateModalOpen, setFundCreateModalOpen] = useState(false);
@@ -19,6 +31,10 @@ export default function ParentFund() {
     const [fundReservation, setFundReservation] = useState([]);
     const [fundContent, setFundContent] = useState('');
 
+    const [fundNews, setFundNews] = useState();
+    const [fundAnswer, setFundAnswer] = useState();
+
+    // 투자 항목 조회
     useEffect(() => {
         getFund(
             childId,
@@ -37,6 +53,7 @@ export default function ParentFund() {
         };
     }, []);
 
+    // 예약 투자 항목 조회
     useEffect(() => {
         getFundReservation(
             childId,
@@ -55,11 +72,24 @@ export default function ParentFund() {
         };
     }, []);
 
+    // 투자 뉴스 조회
+    useEffect(() => {
+        getFundNews(
+            (success) => {
+                // setFundNews(success.data.FundNews);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+    }, []);
+
+    // 투자 등록
     const handleFundRegist = () => {
         createFund(
             {
                 content: fundContent,
-                childId: childId
+                childId: childId,
             },
             (success) => {
                 console.log(success.data.Fund);
@@ -72,11 +102,12 @@ export default function ParentFund() {
         );
     };
 
+    // 예약 투자 등록
     const handleFundReservationRegist = () => {
         createFundReservation(
             {
                 content: fundContent,
-                childId: childId
+                childId: childId,
             },
             (success) => {
                 setFundReservation(success.data.Fund);
@@ -88,12 +119,13 @@ export default function ParentFund() {
         );
     };
 
+    // 예약 투자 수정
     const handleFundReservationUpdate = () => {
         updateFundReservation(
             {
                 state: true,
                 content: fundContent,
-                childId: childId
+                childId: childId,
             },
             (success) => {
                 setFundReservation(success.data.Fund);
@@ -105,6 +137,7 @@ export default function ParentFund() {
         );
     };
 
+    // 예약 투자 삭제
     const handleFundReservationDelete = () => {
         deleteFundReservation(
             childId,
@@ -117,13 +150,14 @@ export default function ParentFund() {
         );
     };
 
+    // 투자 삭제
     const handleFundDelete = () => {
         deleteFund(
             childId,
             () => {
                 setSelectReservationFund(true);
                 setFundReservation({
-                    content: "삭제 예약 되었습니다"
+                    content: '삭제 예약 되었습니다',
                 });
             },
             (fail) => {
@@ -134,6 +168,45 @@ export default function ParentFund() {
 
     const handelInputFundContent = (e) => {
         setFundContent(e.target.value);
+    };
+
+    const handleFundNewsChange = (event) => {
+        setFundNews(event.target.value);
+    };
+
+    const handleFundAnswerChange = (event) => {
+        setFundAnswer(event.target.value);
+    };
+
+    const handleFundNewsCreate = (event) => {
+        event.preventDefault();
+        setFundNews();
+        setFundAnswer();
+
+        const now = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        const localDateTime = now.toLocaleString(); // 날짜와 시간을 함께 얻기
+
+        createFundNews(
+            { dataLog: localDateTime, content: fundNews, childId: childId },
+            (success) => {
+                console.log('투자 뉴스 등록 성공', success);
+                setFundNews(fundNews);
+            },
+            (fail) => {
+                console.log('투자 뉴스 등록 실패', fail);
+            }
+        );
+        createFundAnswer(
+            { answer: fundAnswer, childId: childId },
+            (success) => {
+                console.log('투자 정답 등록 성공', success);
+                setFundAnswer(fundAnswer);
+            },
+            (fail) => {
+                console.log('투자 정답 등록 실패', fail);
+            }
+        );
+        setFundNewsCreateModalOpen(false);
     };
 
     return (
@@ -151,15 +224,17 @@ export default function ParentFund() {
                         <div className={styles.childFundStatusFrame}>
                             <p>투자 종목 : {fund.content}</p>
                             <div style={{ textAlign: 'right' }}>
-                            {!selectReservationFund ? 
-                                <button onClick={() => setFundUpdateModalOpen(true)}>투자종목 수정하기</button>
-                                : <></>
-                            }
-                            &nbsp;&nbsp;
-                            {!selectReservationFund || (fundReservation && fundReservation.state) ?
-                            <button onClick={handleFundDelete}>투자종목 종료하기</button>
-                            :<></>
-                            }
+                                {!selectReservationFund ? (
+                                    <button onClick={() => setFundUpdateModalOpen(true)}>투자종목 수정하기</button>
+                                ) : (
+                                    <></>
+                                )}
+                                &nbsp;&nbsp;
+                                {!selectReservationFund || (fundReservation && fundReservation.state) ? (
+                                    <button onClick={handleFundDelete}>투자종목 종료하기</button>
+                                ) : (
+                                    <></>
+                                )}
                             </div>
                             <Modal
                                 appElement={document.getElementById('root')}
@@ -184,7 +259,12 @@ export default function ParentFund() {
                                     <p>투자 수정</p>
                                     <form className={styles.fundForm}>
                                         <div className={styles.fundInputContainer}>
-                                            <input type="text" value={fundContent} onChange={handelInputFundContent} placeholder="투자 항목을 입력하세요" />
+                                            <input
+                                                type="text"
+                                                value={fundContent}
+                                                onChange={handelInputFundContent}
+                                                placeholder="투자 항목을 입력하세요"
+                                            />
                                         </div>
 
                                         <button onClick={handleFundReservationRegist}>투자 수정하기</button>
@@ -195,12 +275,13 @@ export default function ParentFund() {
                     ) : (
                         <div className={styles.childNoFundStatusFrame}>
                             <p style={{ color: 'red' }}>현재 등록된 투자항목이 없습니다.</p>
-                            {selectReservationFund? <></> 
-                            :
-                            <div>
-                                <button onClick={() => setFundCreateModalOpen(true)}>투자 등록하기</button>
-                            </div>
-                            }
+                            {selectReservationFund ? (
+                                <></>
+                            ) : (
+                                <div>
+                                    <button onClick={() => setFundCreateModalOpen(true)}>투자 등록하기</button>
+                                </div>
+                            )}
                             <Modal
                                 appElement={document.getElementById('root')}
                                 isOpen={fundCreateModalOpen}
@@ -224,7 +305,12 @@ export default function ParentFund() {
                                     <p>투자 등록</p>
                                     <form className={styles.fundForm}>
                                         <div className={styles.fundInputContainer}>
-                                            <input type="text" value={fundContent} onChange={handelInputFundContent} placeholder="투자 항목을 입력하세요" />
+                                            <input
+                                                type="text"
+                                                value={fundContent}
+                                                onChange={handelInputFundContent}
+                                                placeholder="투자 항목을 입력하세요"
+                                            />
                                         </div>
                                         <button onClick={handleFundRegist}>투자 등록하기</button>
                                     </form>
@@ -268,7 +354,12 @@ export default function ParentFund() {
                                     <p>예약 투자 수정</p>
                                     <form className={styles.fundForm}>
                                         <div className={styles.fundInputContainer}>
-                                            <input type="text" value={fundContent} onChange={handelInputFundContent} placeholder={fundReservation.content} />
+                                            <input
+                                                type="text"
+                                                value={fundContent}
+                                                onChange={handelInputFundContent}
+                                                placeholder={fundReservation.content}
+                                            />
                                         </div>
                                         <button onClick={handleFundReservationUpdate}>예약 투자 수정하기</button>
                                     </form>
@@ -278,14 +369,15 @@ export default function ParentFund() {
                     ) : (
                         <div className={styles.childNoReservationFundStatusFrame}>
                             <p style={{ color: 'red' }}>현재 예약된 투자항목이 없습니다.</p>
-                                {selectFund?
-                                    <div>
+                            {selectFund ? (
+                                <div>
                                     <button onClick={() => setReservationFundCreateModalOpen(true)}>
                                         예약 투자 등록하기
                                     </button>
                                 </div>
-                                :<></>
-                                }
+                            ) : (
+                                <></>
+                            )}
                             <Modal
                                 appElement={document.getElementById('root')}
                                 isOpen={reservationFundCreateModalOpen}
@@ -309,7 +401,12 @@ export default function ParentFund() {
                                     <p>예약 투자 등록</p>
                                     <form className={styles.fundForm}>
                                         <div className={styles.fundInputContainer}>
-                                            <input type="text" value={fundContent} onChange={handelInputFundContent} placeholder="예약 투자 항목을 입력하세요" />
+                                            <input
+                                                type="text"
+                                                value={fundContent}
+                                                onChange={handelInputFundContent}
+                                                placeholder="예약 투자 항목을 입력하세요"
+                                            />
                                         </div>
 
                                         <button onClick={handleFundReservationRegist}>예약 투자 등록하기</button>
@@ -320,14 +417,17 @@ export default function ParentFund() {
                     )}
                 </div>
                 <div className={styles.todayFundNews}>
-                    <p>오늘의 투자 뉴스 등록하기</p>
-                    <div className={styles.todayFundNewsFrame}>
-                        <p>
-                            오늘의 투자 뉴스 : &nbsp;&nbsp;
-                            <input type="text" />
-                        </p>
+                    <p>오늘의 투자 뉴스</p>
 
-                        <button onClick={() => setFundNewsCreateModalOpen(true)}>투자 뉴스 등록하기</button>
+                    <div className={styles.todayFundNewsFrame}>
+                        {fundNews !== undefined && fundNews ? (
+                            <p>오늘의 투자 뉴스 : {fundNews}</p>
+                        ) : (
+                            <>
+                                <p>오늘의 투자 뉴스가 없습니다</p>
+                                <button onClick={() => setFundNewsCreateModalOpen(true)}>투자 뉴스 등록하기</button>
+                            </>
+                        )}
                     </div>
                     <Modal
                         appElement={document.getElementById('root')}
@@ -350,12 +450,41 @@ export default function ParentFund() {
                     >
                         <div className={styles.fundModal}>
                             <p>투자 뉴스 등록</p>
-                            <form className={styles.fundForm}>
+                            <form className={styles.fundForm} onSubmit={handleFundNewsCreate}>
                                 <div className={styles.fundInputContainer}>
-                                    <input type="text" placeholder="오늘의 투자 뉴스를 입력하세요" />
+                                    <input
+                                        type="text"
+                                        name="content"
+                                        value={fundNews}
+                                        onChange={handleFundNewsChange}
+                                        placeholder="오늘의 투자 뉴스(베팅 힌트)"
+                                    />
+                                </div>
+                                <div className={styles.fundInputRadioContainer}>
+                                    <label htmlFor="true">
+                                        성공&nbsp;
+                                        <input
+                                            type="radio"
+                                            name="answer"
+                                            value="true"
+                                            onChange={handleFundAnswerChange}
+                                            placeholder="오늘의 투자 뉴스 정답(베팅 정답)"
+                                        />
+                                    </label>
+                                    &nbsp;&nbsp;
+                                    <label htmlFor="false">
+                                        실패&nbsp;
+                                        <input
+                                            type="radio"
+                                            name="answer"
+                                            value="false"
+                                            onChange={handleFundAnswerChange}
+                                            placeholder="오늘의 투자 뉴스 정답(베팅 정답)"
+                                        />
+                                    </label>
                                 </div>
 
-                                <button>투자 뉴스 등록하기</button>
+                                <button type="submit">투자 뉴스 등록하기</button>
                             </form>
                         </div>
                     </Modal>

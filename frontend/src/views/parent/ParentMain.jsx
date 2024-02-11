@@ -115,15 +115,18 @@ export default function ParentMain() {
     }, [statementdata]);
 
     const handleFundClose = () => {
-        deleteFund(
-            childId,
-            () => {
-                setIsModalOpen(true);
-            },
-            (fail) => {
-                console.log(fail);
-            }
-        );
+        const beforeDelete = confirm('정말 투자를 종료하시겠습니까?');
+        if (beforeDelete) {
+            deleteFund(
+                childId,
+                () => {
+                    setIsModalOpen(true);
+                },
+                (fail) => {
+                    console.log(fail);
+                }
+            );
+        }
     };
 
     const handleCloseModal = () => {

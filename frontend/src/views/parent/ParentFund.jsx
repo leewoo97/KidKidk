@@ -139,31 +139,36 @@ export default function ParentFund() {
 
     // 예약 투자 삭제
     const handleFundReservationDelete = () => {
-        deleteFundReservation(
-            childId,
-            () => {
-                setSelectReservationFund(false);
-            },
-            (fail) => {
-                console.log(fail);
-            }
-        );
+        const beforeDelete = confirm('정말 예약 투자를 종료하시겠습니까?');
+        if (beforeDelete) {
+            deleteFundReservation(
+                childId,
+                () => {
+                    setSelectReservationFund(false);
+                },
+                (fail) => {
+                    console.log(fail);
+                }
+            );
+        }
     };
 
     // 투자 삭제
     const handleFundDelete = () => {
-        deleteFund(
-            childId,
-            () => {
-                setSelectReservationFund(true);
-                setFundReservation({
-                    content: '삭제 예약 되었습니다',
-                });
-            },
-            (fail) => {
-                console.log(fail);
-            }
-        );
+        const beforeDelete = confirm('정말 투자를 종료하시겠습니까?');
+        if (beforeDelete) {
+            deleteFund(
+                childId,
+                () => {
+                    alert('예약 투자 내역에 삭제 예약 되었습니다');
+                    setSelectReservationFund(true);
+                    setFundReservation({ ...fund, state: 0 });
+                },
+                (fail) => {
+                    console.log(fail);
+                }
+            );
+        }
     };
 
     const handelInputFundContent = (e) => {
@@ -325,6 +330,9 @@ export default function ParentFund() {
                         <div className={styles.childReservationFundStatusFrame}>
                             <p>투자 종목 : {fundReservation.content}</p>
                             <div style={{ textAlign: 'right' }}>
+                                {fundReservation.state == 0 ? (
+                                    <span style={{ color: 'red' }}>삭제 예정&nbsp;&nbsp;</span>
+                                ) : null}
                                 <button onClick={() => setReservationFundUpdateModalOpen(true)}>
                                     예약 투자종목 수정하기
                                 </button>

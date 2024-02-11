@@ -76,7 +76,6 @@
   flex-direction: column;
   gap: 2vh;
   /* overflow: auto; */
-  color: #8e4865;
 }
 .card {
   display: flex;
@@ -84,6 +83,18 @@
   align-items: center;
 
   border: 2px solid #8e4865;
+  color: #8e4865;
+  border-radius: 10px;
+  padding: 3%;
+}
+
+.cardRead{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 2px solid #C1B8AD;
+  color: #C1B8AD;
   border-radius: 10px;
   padding: 3%;
 }

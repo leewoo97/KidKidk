@@ -1,18 +1,17 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { addDays, format } from 'date-fns';
 import styles from './ParentSaving.module.css';
 import { getChild } from '@api/child.js';
 import { getSaving, getSavingHistory } from '@api/saving.js';
 
 export default function ParentSaving() {
-
     const childId = 2;
     const [child, setChild] = useState([]);
     const [saving, setSaving] = useState([]);
     const [savingHistory, setSavingHistory] = useState([]);
     const [payHistory, setPayHistory] = useState([]);
     const [remainPayment, setRemainPayment] = useState(0);
-    const [endSavingDate, setEndSavingDate] = useState("");
+    const [endSavingDate, setEndSavingDate] = useState('');
 
     useEffect(() => {
         getChild(
@@ -40,7 +39,7 @@ export default function ParentSaving() {
                 const endDate = format(calcDate, 'yyyy-MM-dd');
                 const remain = tmpSaving.payment * tmpSaving.count;
                 const today = format(new Date(), 'yyyy-MM-dd');
-                
+
                 setRemainPayment(remain);
                 setEndSavingDate(endDate);
             },
@@ -61,13 +60,12 @@ export default function ParentSaving() {
                 let tempSavingHistories = success.data.SavingHistories;
                 let size = tempSavingHistories.length;
                 let eachSavingHistories = [1, 2, 3, 4];
-                const tempPayHistory = 
-                    eachSavingHistories.map((index) => {
-                        const history = index <= size ? tempSavingHistories[index-1] : false;
-                        
-                        const amount = history ? history.amount : 0;
-                        return {id: index, amount: amount};
-                    });
+                const tempPayHistory = eachSavingHistories.map((index) => {
+                    const history = index <= size ? tempSavingHistories[index - 1] : false;
+
+                    const amount = history ? history.amount : 0;
+                    return { id: index, amount: amount };
+                });
                 setPayHistory(tempPayHistory);
             },
             (fail) => {
@@ -83,55 +81,52 @@ export default function ParentSaving() {
         <>
             <div className={styles.childSavingStatus}>
                 <p>신짱아 어린이의 적금 내역</p>
-                {saving ? 
-                <div className={styles.childSavingStatusFrame}>
-                    <div className={styles.childSavingStatusFrame_balance}>
-                        <p>적금 잔액</p>
-                        <p>{remainPayment} 도토리</p>
-                    </div>
-                    <div className={styles.childSavingStatusFrame_weeklyPayment}>
-                        <p>주 납입 금액(회분)</p> <p>{saving.payment} 도토리</p>
-                    </div>
-                    <div className={styles.childSavingStatusFrame_expirationDate}>
-                        <p>적금 만기 일</p> <p>{endSavingDate}</p>
-                    </div>
-                    <div className={styles.childSavingStatusFrame_paymentTimes}>
-                        <p>적금 납부 횟수</p>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>1주차</th>
-                                    <th>2주차</th>
-                                    <th>3주차</th>
-                                    <th>4주차</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    {
-                                        payHistory.map((data, index) => {
+                {saving ? (
+                    <div className={styles.childSavingStatusFrame}>
+                        <div className={styles.childSavingStatusFrame_balance}>
+                            <p>적금 잔액</p>
+                            <p>{remainPayment} 도토리</p>
+                        </div>
+                        <div className={styles.childSavingStatusFrame_weeklyPayment}>
+                            <p>주 납입 금액(회분)</p> <p>{saving.payment} 도토리</p>
+                        </div>
+                        <div className={styles.childSavingStatusFrame_expirationDate}>
+                            <p>적금 만기 일</p> <p>{endSavingDate}</p>
+                        </div>
+                        <div className={styles.childSavingStatusFrame_paymentTimes}>
+                            <p>적금 납부 횟수</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>1주차</th>
+                                        <th>2주차</th>
+                                        <th>3주차</th>
+                                        <th>4주차</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {payHistory.map((data, index) => {
                                             return (
                                                 <td
-                                                key = {index}
-                                                style={{
+                                                    key={index}
+                                                    style={{
                                                         // backgroundColor: 'lightgreen'
-                                                        backgroundColor:
-                                                        data.amount > 0 ?'#90ee90' : '#d3d3d3'
-                                                }}
+                                                        backgroundColor: data.amount > 0 ? '#90ee90' : '#d3d3d3',
+                                                    }}
                                                 >
-                                                {data.id}
+                                                    {data.id}
                                                 </td>
-                                            )    
-                                        })
-                                    }
-                                </tr>
-                            </tbody>
-                        </table>
+                                            );
+                                        })}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                :
-                <div className={styles.childSavingStatusFram_none}>적금  계좌가 없습니다.</div>
-                }
+                ) : (
+                    <div className={styles.childSavingStatusFram_none}>적금 계좌가 없습니다.</div>
+                )}
             </div>
         </>
     );

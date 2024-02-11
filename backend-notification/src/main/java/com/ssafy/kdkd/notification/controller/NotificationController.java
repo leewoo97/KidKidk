@@ -19,13 +19,13 @@ public class NotificationController {
     private final NotificationService notificationService;
     public static final Long DEFAULT_TIMEOUT = 3600L * 1000;
 
-    @GetMapping(value = "/kafka/subscribe/{userId}", produces = "text/event-stream")
+    @GetMapping(value = "/subscribe/{userId}", produces = "text/event-stream")
     public SseEmitter subscribe(@PathVariable String userId, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) throws IOException {
         System.out.println(lastEventId);
         return notificationService.subscribe(userId, lastEventId);
     }
 
-    @PostMapping(value = "/kafka/publish")
+    @PostMapping(value = "/publish")
     public ResponseEntity<?> publish(@RequestBody NotificationMessageDto msg){
         notificationService.publish(msg.getSubId(), msg.getPubName(), msg.getTitle(), msg.getContent(), msg.getRequire());
         return new ResponseEntity<>(HttpStatus.OK);

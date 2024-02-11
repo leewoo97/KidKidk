@@ -22,7 +22,7 @@ export default function ParentAlarm() {
     const [selected, setSelected] = useState("전체");
 
     const kafkaSub = () => {
-        setSse(new EventSource(`http://localhost:8081/kafka/subscribe/${profileId}`, {
+        setSse(new EventSource(`http://localhost:8081/subscribe/${profileId}`, {
             headers: {
                 "Last-Event-ID" : lastEventId,
             },

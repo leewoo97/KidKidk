@@ -14,7 +14,7 @@ function ChildAlarm() {
     
     const [profileId, setProfileId] = useState(2);
     const kafkaSub = () => {
-        setSse(new EventSource(`http://localhost:8081/kafka/subscribe/${profileId}`, {
+        setSse(new EventSource(`http://localhost:8081/subscribe/${profileId}`, {
             headers: {
                 "Last-Event-ID" : lastEventId,
             },

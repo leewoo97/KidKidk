@@ -2,6 +2,7 @@ package com.ssafy.kdkd.notification.service;
 
 import com.ssafy.kdkd.notification.entity.NotificationMessage;
 import com.ssafy.kdkd.notification.repository.EmitterRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -51,9 +52,10 @@ public class NotificationService {
                 .forEach(entry -> sendToClient(emitter, entry.getKey(), emitterId, entry.getValue()));
     }
 
-    public SseEmitter subscribe(String userId, String lastEventId) {
+    public SseEmitter subscribe(String userId, String lastEventId, HttpServletResponse response) {
         String emitterId = makeTimeIncludeId(userId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
+        response.setHeader("X-Accel-Buffering", "no");
         log.info("emitterId : {} 사용자 emitter 연결 ", emitterId);
 
         emitter.onCompletion(() -> {

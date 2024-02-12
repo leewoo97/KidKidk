@@ -22,7 +22,7 @@ export default function ParentAlarm() {
     const [selected, setSelected] = useState("전체");
 
     const kafkaSub = () => {
-        setSse(new EventSource(`notification.silvstone.xyz/subscribe/${profileId}`, {
+        setSse(new EventSource(`https://notification.silvstone.xyz/subscribe/${profileId}`, {
             headers: {
                 "Last-Event-ID" : lastEventId,
             },

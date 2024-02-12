@@ -12,10 +12,17 @@ import ChildAlarm from './ChildAlarm.jsx';
 import { getChild, updateChild } from '@api/child.js';
 import { profileSelectAll } from '@api/profile.js';
 import { getJob } from '@api/job.js';
+import { useRecoilValue } from 'recoil';
+import { profileInfoState } from '../store/profileInfoAtom.js';
+import { userInfoState } from '../store/userInfoAtom.js';
 
 function ChildNav() {
-    const userId = 1;
-    const childId = 2;
+    const profileInfo = useRecoilValue(profileInfoState);
+    const userInfo = useRecoilValue(userInfoState);
+    console.log('프로필정보', profileInfo);
+
+    const userId = userInfo.userId;
+    const childId = profileInfo.profileId;
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);

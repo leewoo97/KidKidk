@@ -1,7 +1,7 @@
 import styles from './ProfileNav.module.css';
 import parentImg from '@images/parentImg.jpg';
 
-export default function ProfileNav() {
+export default function ProfileNav({ profileName }) {
     return (
         <>
             <div className={styles.profileNavContainer}>
@@ -9,7 +9,7 @@ export default function ProfileNav() {
                     <div className={styles.profileImageContainer}>
                         <img src={parentImg} alt="부모 프로필" />
                     </div>
-                    <span>봉미선</span>
+                    <span>{profileName}</span>
                 </div>
             </div>
         </>

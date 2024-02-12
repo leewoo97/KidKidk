@@ -5,9 +5,10 @@ import Modal from 'react-modal';
 import { createRef, useEffect, useState, useRef } from 'react';
 import ParentAlarm from './ParentAlarm';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { profileInfoState } from '../store/profileInfoAtom.js';
+import { userInfoState } from '../store/userInfoAtom.js';
 
 import { getChildIds, childIdAtom } from '@store/childIdsAtom.js';
-import { userInfoState } from '@store/userInfoAtom.js';
 import { getChildList } from '@api/profile.js';
 
 import styles from './ParentNav.module.css';
@@ -16,6 +17,8 @@ import bell from '@images/bell.png';
 import kidImg from '@images/kidImg.jpg';
 
 function ParentNav() {
+    const profileInfo = useRecoilValue(profileInfoState);
+
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
@@ -108,7 +111,7 @@ function ParentNav() {
                 <Outlet />
             </div>
             <div className={styles.profile}>
-                <ProfileNav />
+                <ProfileNav profileName={profileInfo.nickname} />
                 {/* 아이 탭 */}
                 <div className={styles.parentChildTab}>
                     {childIdsData.map((data, index) => {

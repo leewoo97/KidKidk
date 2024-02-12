@@ -26,8 +26,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	@Query("UPDATE Profile p SET p.nickname = :nickname, p.pin = :pin, p.profileImage = :profileImage WHERE p.id = :profile_id")
 	void profileUpdate(@Param("profile_id") Long profile_id, @Param("nickname") String nickname, @Param("pin") int pin, @Param("profileImage") String profileImage);
 
-	@Query("SELECT new com.ssafy.kdkd.domain.dto.account.GetChildListDto(:user_id,p.id,p.nickname,p.profileImage) FROM Profile p WHERE p.user.id = :user_id AND p.type = :type")
-	List<GetChildListDto> getChildList(@Param("user_id") Long userId, @Param("type") boolean type);
+	@Query("SELECT new com.ssafy.kdkd.domain.dto.account.GetChildListDto(p.id,p.nickname) FROM Profile p WHERE p.user.id = :user_id AND p.type = false")
+	List<GetChildListDto> getChildList(@Param("user_id") Long userId);
 
 //	@Modifying
 //	@Query("DELETE FROM Profile p WHERE p.id = :profile_id")

@@ -281,7 +281,8 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>나의 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        {child.coin} 도토리
+                        {child.length > 0 ? <>{child.coin} 도토리</> : <>0 도토리</>}
+
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={() => navigate('/child/refund')}>
@@ -293,7 +294,7 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>투자 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        {child.fundMoney} 도토리
+                        {child.length > 0 ? <>{child.fundMoney} 도토리</> : <>0 도토리</>}
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={openChargeModal}>

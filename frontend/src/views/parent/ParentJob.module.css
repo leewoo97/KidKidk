@@ -114,11 +114,13 @@
     display: flex;
     flex-direction: column;
     background-color: var(--component-background);
+    justify-content: center;
     align-items: center;
     padding: 5px;
     margin-top: 10px;
     border: 3px solid var(--component-border);
     border-radius: 15px;
+    height: 50px;
 }
 
 .jobProgressStatusFrame > ul {
@@ -137,9 +139,9 @@
 }
 .progress::-webkit-progress-value {
     border-radius: 10px;
-    background: #1d976c;
-    background: -webkit-linear-gradient(to right, #93f9b9, #1d976c);
-    background: linear-gradient(to right, #93f9b9, #1d976c);
+    background: #35b356;
+    /* background: -webkit-linear-gradient(to right, #93f9b9, #1d976c);
+    background: linear-gradient(to right, #93f9b9, #1d976c); */
 }
 
 /* 직업 예약 현황 */

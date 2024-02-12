@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getJob } from '@api/job.js';
 import { getFund } from '@api/fund.js';
-import { getSavingHistory } from '@api/saving.js';
+import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -57,12 +57,13 @@ export default function ManagementContent() {
     }, []);
 
     useEffect(() => {
-        getSavingHistory(
+        getSaving(
             childId,
             (success) => {
-                let saving = success.data.Saving;
-                setSavingMoney((4 - saving.count) * saving.payment);
-                console.log(success.data.Saving);
+                if (success.status === 200) {
+                    let saving = success.data.Saving;
+                    setSavingMoney((4 - saving.count) * saving.payment);
+                }
             },
             (fail) => {
                 console.log(fail);

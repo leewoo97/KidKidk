@@ -1,5 +1,8 @@
 import styles from "./ChildSaving.module.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { addDays, format } from 'date-fns';
+import { getChild } from '@api/child.js';
+import { getSaving, getSavingHistory } from '@api/saving.js';
 import acornImg from "@images/acorn.png";
 import tuto1 from "@images/tuto1.png";
 import tuto2 from "@images/tuto2.png";
@@ -10,6 +13,8 @@ import ChildSavingTable from "./ChildSavingTable.jsx";
 import Modal from "react-modal";
 
 export default function ChildSaving() {
+
+  const childId = 2;
   const [isSavingStart, setIsSavingStart] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentTutorialIndex, setCurrentTutorialIndex] = useState(0);
@@ -20,6 +25,76 @@ export default function ChildSaving() {
     "Tutorial 4",
     "Tutorial 5",
   ]);
+  const [child, setChild] = useState([]);
+  const [saving, setSaving] = useState([]);
+  const [savingHistory, setSavingHistory] = useState([]);
+  const [payHistory, setPayHistory] = useState([]);
+  const [countPayment, setCountPayment] = useState(0);
+  const [endSavingDate, setEndSavingDate] = useState('');
+
+  useEffect(() => {
+    getChild(
+        childId,
+        (success) => {
+            setChild(success.data);
+        },
+        (fail) => {
+            console.log(fail);
+        }
+    );
+    return () => {
+        console.log('ChildManagement userEffect return');
+    };
+}, []);
+
+useEffect(() => {
+    getSaving(
+        childId,
+        (success) => {
+            setSaving(success.data.Saving);
+            let tmpSaving = success.data.Saving;
+            const savingStartDate = new Date(tmpSaving.startDate);
+            const calcDate = addDays(savingStartDate, 22);
+            const endDate = format(calcDate, 'yyyy-MM-dd');
+            const calcCountPaymet = tmpSaving.payment * (4-tmpSaving.count);
+            const today = format(new Date(), 'yyyy-MM-dd');
+
+            setCountPayment(calcCountPaymet);
+            setEndSavingDate(endDate);
+        },
+        (fail) => {
+            console.log(fail);
+        }
+    );
+    return () => {
+        console.log('ChildManagement userEffect return');
+    };
+}, []);
+
+useEffect(() => {
+    getSavingHistory(
+        childId,
+        (success) => {
+            setSavingHistory(success.data.SavingHistories);
+            let tempSavingHistories = success.data.SavingHistories;
+            let size = tempSavingHistories.length;
+            let eachSavingHistories = [1, 2, 3, 4];
+            const tempPayHistory = eachSavingHistories.map((index) => {
+                const history = index <= size ? tempSavingHistories[index - 1] : false;
+
+                const amount = history ? history.amount : 0;
+                return { id: index, amount: amount };
+            });
+            setPayHistory(tempPayHistory);
+        },
+        (fail) => {
+            console.log(fail);
+        }
+    );
+    return () => {
+        console.log('ChildManagement userEffect return');
+    };
+}, []);
 
   // 모달 열기
   const openModal = () => {
@@ -41,55 +116,45 @@ export default function ChildSaving() {
   const changeModalContent = (index) => {
     setCurrentTutorialIndex(index);
   };
-
-  const statementdata = [
-    {
-      id: 1,
-      date: "2024.01.16 오전 10:39",
-      type: "적금 납입",
-      coin: "20300 도토리",
-    },
-    {
-      id: 2,
-      date: "2024.01.16 오전 10:38",
-      type: "적금 납입",
-      coin: "20300 도토리",
-    },
-    {
-      id: 3,
-      date: "2024.01.16 오전 09:23",
-      type: "적금 납입",
-      coin: "20300 도토리",
-    },
-    {
-      id: 4,
-      date: "2024.01.16 오전 09:23",
-      type: "적금 납입",
-      coin: "20300 도토리",
-    },
-  ];
+  
   return (
     <div className={styles.savingCon}>
-      {statementdata.length > 0 ? (
+      {payHistory.length > 0 ? (
         <div className={styles.savingContainer}>
           <div className={styles.Container1}>
             <div className={styles.Container1Title}>적금 납부 횟수</div>
             <div className={styles.bars}>
               <div className={styles.bar}>
                 <div className={styles.barWeek}>1주차</div>
-                <div className={styles.bar1}></div>
+                <div className={styles.bar1}
+                  style={{
+                    backgroundColor: payHistory[0].amount > 0 ? '#90ee90' : '#d3d3d3',
+                  }}>
+                </div>
               </div>
               <div className={styles.bar}>
                 <div className={styles.barWeek}>2주차</div>
-                <div className={styles.bar2}></div>
+                <div className={styles.bar1}
+                  style={{
+                    backgroundColor: payHistory[1].amount > 0 ? '#90ee90' : '#d3d3d3',
+                  }}>
+                </div>
               </div>
               <div className={styles.bar}>
                 <div className={styles.barWeek}>3주차</div>
-                <div className={styles.bar3}></div>
+                <div className={styles.bar1}
+                  style={{
+                    backgroundColor: payHistory[2].amount > 0 ? '#90ee90' : '#d3d3d3',
+                  }}>
+                </div>
               </div>
               <div className={styles.bar}>
                 <div className={styles.barWeek}>4주차</div>
-                <div className={styles.bar4}></div>
+                <div className={styles.bar1}
+                  style={{
+                    backgroundColor: payHistory[3].amount > 0 ? '#90ee90' : '#d3d3d3',
+                  }}>
+                </div>
               </div>
             </div>
           </div>
@@ -101,12 +166,12 @@ export default function ChildSaving() {
                 <div>
                   <img src={acornImg} style={{ width: "3vw" }} />
                 </div>
-                <div className={styles.card1Text}>81200 도토리</div>
+                <div className={styles.card1Text}>{countPayment} 도토리</div>
               </div>
             </div>
             <div className={styles.card2}>
               <div className={styles.card1Title}>적금 만기 일</div>
-              <div className={styles.card2Text}>2024년 1월 16일</div>
+              <div className={styles.card2Text}>{endSavingDate}</div>
             </div>
           </div>
 
@@ -114,7 +179,7 @@ export default function ChildSaving() {
             <div className={styles.Container3Title}>나의 적금 내역</div>
             <div className={styles.scrollContainer}>
               <div className={styles.scrollContent}>
-                <ChildSavingTable data={statementdata} />
+                <ChildSavingTable data={savingHistory} />
               </div>
             </div>
           </div>

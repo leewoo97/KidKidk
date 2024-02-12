@@ -3,7 +3,7 @@ import acornImg from '@images/acorn.png';
 import { Bar } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { getFund, getFundHistory, getRoi, getStatus } from '@api/fund.js';
+import { getFund, getFundHistory, getRoi, getStatus, getFundNews } from '@api/fund.js';
 import { getChild } from '@api/child.js';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { differenceInDays, format } from 'date-fns';
@@ -35,6 +35,7 @@ export default function ChildFundManagement() {
     const [currentFundCoin, setCurrentFundCoin] = useState(10000); // 현재 투자금
     const [myChoice, setMyChoice] = useState(0); // 오늘 나의 선택
     const [showDiv, setShowDiv] = useState(false); // 거래할 수 있는 시간이면 true
+    const [fundNewsList, setFundNewsList] = useState([]); // 투자 뉴스 리스트
 
     // 투자를 거래할 수 있는 시간인지 확인
     useEffect(() => {
@@ -145,6 +146,29 @@ export default function ChildFundManagement() {
         return () => {
             console.log('ChildManagement userEffect return');
         };
+    }, []);
+
+    // 투자 뉴스 조회
+    useEffect(() => {
+        getFundNews(
+            childId,
+            (success) => {
+                if (success.status === 200) {
+                    let getList = success.data.FundNews;
+                    let size = getList.length;
+                    let list = [];
+                    if (size > 0) {
+                        getList.map((row) => {
+                            list.push(row);
+                        })
+                    }
+                    setFundNewsList(list);
+                }
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
     }, []);
 
     const handleReset = () => {
@@ -584,12 +608,13 @@ export default function ChildFundManagement() {
                         <div className={styles.card9}>
                             <div className={styles.content2Title}>투자뉴스</div>
                             <div className={styles.content3News}>
-                                <div>오늘 엄마는 회식이 있다</div>
-                                <div>오늘 엄마는 회식이 있다</div>
-                                <div>오늘 엄마는 회식이 있다</div>
-                                <div>오늘 엄마는 회식이 있다</div>
-                                <div>오늘 엄마는 회식이 있다</div>
-                            </div>
+                            {fundNewsList && 
+                                fundNewsList.map((row, index) => {
+                                return (
+                                    <div key={index}>{row.content}</div>
+                                );
+                                })
+                            }</div>
                         </div>
                     </div>
                 </div>

@@ -66,11 +66,9 @@ public class ProfileService {
 	}
 
 	public ProfileLoginDto profileLogin(ProfileLoginDto profileLoginDto){
-		System.out.println("Service 들어감");
 		Long profile_id = profileLoginDto.getProfileId();
 		int pin  = profileLoginDto.getPin();
 		ProfileLoginDto returnDto = profileRepository.profileLoginDto(profile_id, pin);
-		System.out.println("Service 나옴");
 		return returnDto;
 	}
 
@@ -98,7 +96,7 @@ public class ProfileService {
 		if(updateNickname != null){
 			nickname = updateNickname;
 		}
-		if(updatePin == 0){
+		if(updatePin != 0){
 			pin = updatePin;
 		}
 		if(updateProfileImage != null){

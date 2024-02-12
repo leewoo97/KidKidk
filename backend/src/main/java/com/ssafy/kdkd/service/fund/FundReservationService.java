@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FundReservationService {
 
+    private final FundService fundService;
     private final FundRepository fundRepository;
     private final FundReservationRepository fundReservationRepository;
     private final ChildService childService;
@@ -55,6 +56,10 @@ public class FundReservationService {
         FundReservation fundReservation = FundReservation.createFundReservation(fundReservationDto);
         fundReservation.setChild(child);
         fundReservationRepository.save(fundReservation);
+        if (type) {
+            // 투자 처음 생성 -> 바로 생성
+            fundService.updateFund(fundReservation);
+        }
         return fundReservationDto;
     }
 

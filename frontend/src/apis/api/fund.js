@@ -49,8 +49,8 @@ async function deleteFundReservation(childId, success, fail) {
 }
 
 // 투자 뉴스 조회
-async function getFundNews(success, fail) {
-    await server.get(`${url}/confirm/news`).then(success).catch(fail);
+async function getFundNews(childId, success, fail) {
+    await server.get(`${url}/news/${childId}`).then(success).catch(fail);
 }
 
 // 투자 뉴스 : 투자 베팅에 대한 힌트 등록

@@ -78,8 +78,20 @@ export default function ParentFund() {
     // 투자 뉴스 조회
     useEffect(() => {
         getFundNews(
+            childId,
             (success) => {
-                // setFundNews(success.data.FundNews);
+                if (success.status === 200) {
+                    let fundNewsList = success.data.FundNews;
+                    let size = fundNewsList.length;
+                    if (size > 0) {
+                        let lastestFundNews = fundNewsList[size - 1];
+                        const lastestDataLog = format(new Date(lastestFundNews.dataLog), 'yyyy.MM.dd');
+                        const today = format(new Date(), 'yyyy.MM.dd');
+                        if (lastestDataLog === today) {
+                            setFundNews(lastestFundNews.content);
+                        }
+                    }
+                }
             },
             (fail) => {
                 console.log(fail);
@@ -191,13 +203,10 @@ export default function ParentFund() {
         setFundNews();
         setFundAnswer();
 
-        const now = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        const localDateTime = now.toLocaleString(); // 날짜와 시간을 함께 얻기
-
         createFundNews(
-            { dataLog: localDateTime, content: fundNews, childId: childId },
+            { content: fundNews, childId: childId },
             (success) => {
-                console.log('투자 뉴스 등록 성공', success);
+                console.log('투자 뉴스 등록 성공', success.data.fundNews);
                 setFundNews(fundNews);
             },
             (fail) => {

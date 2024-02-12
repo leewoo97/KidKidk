@@ -52,10 +52,10 @@ public class NotificationService {
                 .forEach(entry -> sendToClient(emitter, entry.getKey(), emitterId, entry.getValue()));
     }
 
-    public SseEmitter subscribe(String userId, String lastEventId, HttpServletResponse response) {
+    public SseEmitter subscribe(String userId, String lastEventId) {
         String emitterId = makeTimeIncludeId(userId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
-        response.setHeader("X-Accel-Buffering", "no");
+//        response.setHeader("X-Accel-Buffering", "no");
         log.info("emitterId : {} 사용자 emitter 연결 ", emitterId);
 
         emitter.onCompletion(() -> {

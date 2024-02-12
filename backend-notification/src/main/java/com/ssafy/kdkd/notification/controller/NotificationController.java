@@ -21,9 +21,9 @@ public class NotificationController {
     public static final Long DEFAULT_TIMEOUT = 3600L * 1000;
 
     @GetMapping(value = "/subscribe/{userId}", produces = "text/event-stream")
-    public SseEmitter subscribe(@PathVariable String userId, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId, HttpServletResponse response) throws IOException {
+    public SseEmitter subscribe(@PathVariable String userId, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) throws IOException {
         System.out.println(lastEventId);
-        return notificationService.subscribe(userId, lastEventId, response);
+        return notificationService.subscribe(userId, lastEventId);
     }
 
     @PostMapping(value = "/publish")

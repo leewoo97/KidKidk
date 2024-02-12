@@ -7,8 +7,13 @@ import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO 
 import { getFund, getFundHistory, deleteFund } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
+import { profileInfoState } from '../../store/profileInfoAtom.js';
+import { useRecoilValue } from 'recoil';
 
 export default function ParentMain() {
+    const profileInfo = useRecoilValue(profileInfoState);
+    console.log('프로필정보', profileInfo);
+
     const childId = 2;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fund, setFund] = useState([]);

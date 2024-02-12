@@ -9,8 +9,8 @@ async function profileCreate(user, success, fail) {
     await server.post(`${url}/create`, user).then(success).catch(fail);
 }
 
-async function profileLogin(success, fail) {
-    await server.post(`${url}/login`).then(success).catch(fail);
+async function profileLogin(loginProfile, success, fail) {
+    await server.post(`${url}/login`, loginProfile).then(success).catch(fail);
 }
 
 async function profileSelectAll(userId, success, fail) {
@@ -33,4 +33,8 @@ async function transferToFundMoney(coinIn, success, fail) {
     await server.post(`${url}/transfer`, coinIn).then(success).catch(fail);
 }
 
-export { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete, transferToFundMoney };
+async function getChild(profile, success, fail) {
+    await server.get(`${url}/getchild/${profile.profileId}`).then(success).catch(fail);
+}
+
+export { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete, transferToFundMoney, getChild };

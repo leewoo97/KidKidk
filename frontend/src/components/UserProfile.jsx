@@ -1,7 +1,7 @@
 //실험
 import { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from '/src/apis/api/profile.js';
 //실험
-
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import { CgProfile } from 'react-icons/cg';
@@ -10,8 +10,12 @@ import ProfileModal from '../../src/components/ProfileModal.jsx';
 
 import styles from './UserProfile.module.css';
 import kidImg from '@images/kidImg.jpg';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { profileInfoState } from '../store/profileInfoAtom';
+import { getChild } from '../apis/api/profile.js';
 
-export default function UserProfile({ profileId, nickname, profile_image }) {
+export default function UserProfile({ profileId, nickname, profile_image, userType }) {
+    const navigate = useNavigate();
     //onChange
     //업데이트 API에 쓰이는 onChange
     const onChangeUpdateNickname = (e) => {
@@ -128,6 +132,55 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
     }, [updateButtonClicked]);
 
     //수정 실험 2024/02/07
+
+    // 로그인처리
+    const [profileInfo, setProfileInfo] = useRecoilState(profileInfoState);
+
+    const [loginUser, setLoginUser] = useState({
+        profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
+        nickname: nickname,
+        pin: '',
+        type: userType,
+        profileImage: profile_image,
+    });
+
+    const onChangeLoginPin = (e) => {
+        setLoginUser({
+            ...loginUser,
+            pin: e.target.value,
+        });
+        // console.log('타켓 벨류 : ' + e.target.value);
+        // console.log('바뀐 핀 : ' + loginUser.pin);
+    };
+
+    const loginClick = (e) => {
+        e.preventDefault();
+        profileLogin(
+            loginUser,
+            async (Data) => {
+                console.log('로그인 성공', Data.data);
+                await setProfileInfo(Data.data);
+                if (Data.data.type) {
+                    navigate('/parent');
+                } else {
+                    getChild(
+                        loginUser,
+                        (val) => {
+                            setProfileInfo((prevProfileInfo) => ({ ...prevProfileInfo, ...val.data }));
+                            navigate('/child');
+                        },
+                        (fail) => {
+                            console.log(fail);
+                        }
+                    );
+                }
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+    };
+
     return (
         <>
             <div className={styles.userProfileContainer}>
@@ -155,17 +208,9 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
                 >
                     <div className={styles.profileLoginModal}>
                         <p>프로필 로그인</p>
-                        <form className={styles.profileLoginForm}>
-                            {/* <div className={styles.profileInputContainer}>
-                                <input type="text" placeholder="아이디" />
-
-                                <div className={styles.iconContainer}>
-                                    <CgProfile />
-                                </div>
-                            </div> */}
-
+                        <form onSubmit={loginClick} className={styles.profileLoginForm}>
                             <div className={styles.profileInputContainer}>
-                                <input type="text" placeholder="비밀번호" />
+                                <input type="password" onChange={onChangeLoginPin} />
 
                                 <div className={styles.iconContainer}>
                                     <RiLockPasswordFill />
@@ -207,18 +252,6 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
                                             <input type="text" />
                                         </div>
                                     </li>
-                                    {/* <li>
-                                        <div className={styles.profileUpdateFormInputContainer}>
-                                            <span>프로필 이미지</span>
-                                            <img
-                                                src={kidImg}
-                                                alt="프로필 이미지"
-                                                width="100px"
-                                                height="100px"
-                                                style={{ objectFit: 'contain', marginTop: '10px' }}
-                                            />
-                                        </div>
-                                    </li> */}
                                 </ul>
                             </div>
                             <button /*onClick={updateClick}은 실험*/ onClick={updateClick}>프로필 수정</button>{' '}

@@ -9,10 +9,14 @@ import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
 import { useRecoilValue } from 'recoil';
 import { childIdAtom } from '@store/childIdsAtom.js';
+import { profileInfoState } from '../../store/profileInfoAtom.js';
 
 export default function ParentMain() {
     const childId = useRecoilValue(childIdAtom);
     console.log('ParentMain childId', childId);
+
+    const profileInfo = useRecoilValue(profileInfoState);
+    console.log('프로필정보', profileInfo);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fund, setFund] = useState([]);

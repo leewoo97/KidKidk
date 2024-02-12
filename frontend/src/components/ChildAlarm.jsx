@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { sendAlarm } from '../apis/api/alarm';
 
 function ChildAlarm() {
     const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -32,6 +33,10 @@ function ChildAlarm() {
 
     const deleteReadNotifications = () => {
         setNotifications(notifications.filter(noti => !noti.read));
+    }
+
+    const handleSendAlarm = () => {
+        sendAlarm("2","짱아","출금 요청 01", "+50000 코인", "job")
     }
 
     
@@ -71,6 +76,7 @@ function ChildAlarm() {
     return (
         <div className={styles.alarmContainer}>
             <button onClick={kafkaSub}>카프카 연결 테스트</button>
+            <button onClick={handleSendAlarm}>알림 보내기 테스트</button>
             <div className={styles.title}>알림 현황</div>
             <div className={styles.content}>
                 <div className={styles.cardHead}>

@@ -64,7 +64,11 @@ public class ProfileController {
 	@Operation(summary = "프로필 로그인")
 	public ResponseEntity<?> profileLogin(ProfileLoginDto profileLoginDto){
 		ProfileLoginDto returnDto = profileService.profileLogin(profileLoginDto);
-		return new ResponseEntity<ProfileLoginDto>(returnDto,HttpStatus.OK);
+		if(returnDto!=null) {
+			return new ResponseEntity<ProfileLoginDto>(returnDto, HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping("/profile/create")

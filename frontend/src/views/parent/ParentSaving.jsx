@@ -4,11 +4,13 @@ import styles from './ParentSaving.module.css';
 import { getChild } from '@api/child.js';
 import { getSaving, getSavingHistory } from '@api/saving.js';
 import { useRecoilValue } from 'recoil';
-import { childIdAtom } from '@store/childIdsAtom.js';
+import { childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 
 export default function ParentSaving() {
     const childId = useRecoilValue(childIdAtom);
     console.log('ParentSaving childId', childId);
+    const childNickName = useRecoilValue(childNickNameAtom);
+    console.log('ParentMain childNickName', childNickName);
 
     const [child, setChild] = useState([]);
     const [saving, setSaving] = useState([]);
@@ -84,7 +86,7 @@ export default function ParentSaving() {
     return (
         <>
             <div className={styles.childSavingStatus}>
-                <p>신짱아 어린이의 적금 내역</p>
+                <p>{childNickName} 어린이의 적금 내역</p>
                 {saving ? (
                     <div className={styles.childSavingStatusFrame}>
                         <div className={styles.childSavingStatusFrame_balance}>

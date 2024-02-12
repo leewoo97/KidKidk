@@ -95,6 +95,20 @@
     position: relative;
 }
 
+.profileInputRadioContainer {
+    position: relative;
+    margin-top: 10px;
+    background-color: var(--component-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 3px solid var(--component-border);
+    border-radius: 15px;
+    width: 400px;
+    height: 30px;
+}
+
 .iconContainer {
     position: absolute;
     top: 75%;

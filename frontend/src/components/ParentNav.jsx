@@ -8,7 +8,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { profileInfoState } from '../store/profileInfoAtom.js';
 import { userInfoState } from '../store/userInfoAtom.js';
 
-import { getChildIds, childIdAtom } from '@store/childIdsAtom.js';
+import { getChildIds, childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
+import { userInfoState } from '@store/userInfoAtom.js';
 import { getChildList } from '@api/profile.js';
 
 import styles from './ParentNav.module.css';
@@ -68,10 +69,12 @@ function ParentNav() {
     //console.log(childIdsData);
 
     const [parentChildId, setParentChildId] = useRecoilState(childIdAtom);
+    const [parentChildNickName, setParentChildNickName] = useRecoilState(childNickNameAtom);
     const childIdRefs = useRef([]);
-    const handleTabClick = (childId) => {
+    const handleTabClick = (childId, childNickName) => {
         console.log('Clicked childId:', childId);
         setParentChildId(childId);
+        setParentChildNickName(childNickName);
         window.location.reload();
     };
 
@@ -90,6 +93,11 @@ function ParentNav() {
         );
     }
 
+    const handleLogout = () => {
+        console.log('Enter handleLogout');
+        console.log(document.cookie);
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.nav}>
@@ -98,6 +106,9 @@ function ParentNav() {
                     <Component num={0} title={'메인'} />
                     <Component num={1} title={'직업'} />
                     <Component num={2} title={'투자/적금'} />
+                    <div className={styles.logout} onClick={handleLogout}>
+                        로그아웃
+                    </div>
                 </div>
                 <div className={styles.light} style={{ top: a[top] }}>
                     <div className={styles.rectangleRow}></div>
@@ -125,7 +136,7 @@ function ParentNav() {
                                 key={data.nickname}
                                 className={styles.parentChildTabContainer}
                                 name={data.childId}
-                                onClick={() => handleTabClick(data.childId)}
+                                onClick={() => handleTabClick(data.childId, data.nickname)}
                                 ref={childIdRef}
                             >
                                 <div>{data.nickname}</div>

@@ -15,7 +15,7 @@ import {
     createFundAnswer,
 } from '@api/fund.js';
 import { useRecoilValue } from 'recoil';
-import { childIdAtom } from '@store/childIdsAtom.js';
+import { childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 import { format } from 'date-fns';
 
 import styles from './ParentFund.module.css';
@@ -23,6 +23,9 @@ import styles from './ParentFund.module.css';
 export default function ParentFund() {
     const childId = useRecoilValue(childIdAtom);
     console.log('ParentFund childId', childId);
+    const childNickName = useRecoilValue(childNickNameAtom);
+    console.log('ParentMain childNickName', childNickName);
+
     const [selectFund, setSelectedFund] = useState(false);
     const [selectReservationFund, setSelectReservationFund] = useState(false);
     const [fundCreateModalOpen, setFundCreateModalOpen] = useState(false);
@@ -236,7 +239,7 @@ export default function ParentFund() {
                     <ParentFundProfitGraph />
                 </div>
                 <div className={styles.childFundStatus}>
-                    <p>신짱아 어린이의 투자 내역</p>
+                    <p>{childNickName} 어린이의 투자 내역</p>
                     {selectFund ? (
                         <div className={styles.childFundStatusFrame}>
                             <p>투자 종목 : {fund.content}</p>
@@ -337,7 +340,7 @@ export default function ParentFund() {
                     )}
                 </div>
                 <div className={styles.childReservationFundStatus}>
-                    <p>신짱아 어린이의 예약 투자 내역</p>
+                    <p>{childNickName} 어린이의 예약 투자 내역</p>
                     {selectReservationFund ? (
                         <div className={styles.childReservationFundStatusFrame}>
                             <p>투자 종목 : {fundReservation.content}</p>

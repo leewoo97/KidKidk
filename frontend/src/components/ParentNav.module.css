@@ -143,3 +143,14 @@
     right: 0;
     cursor: pointer;
 }
+
+/* 로그아웃 */
+.logout {
+    font-size: smaller;
+    margin-top: 30vh;
+    color: var(--nav-text-logo);
+}
+
+.logout:hover {
+    color: rgba(255, 0, 0, 0.897);
+}

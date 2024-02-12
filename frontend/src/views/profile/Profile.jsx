@@ -253,8 +253,16 @@ export default function Profile() {
                                     </div>
                                 </div>
 
-                                <div className={styles.profileInputContainer}>
-                                    <input type="text" onChange={onChangeCreateType} placeholder="회원유형" />
+                                <div className={styles.profileInputRadioContainer}>
+                                    <label htmlFor="true">
+                                        부모&nbsp;
+                                        <input type="radio" name="answer" value="true" onChange={onChangeCreateType} />
+                                    </label>
+                                    &nbsp;&nbsp;
+                                    <label htmlFor="false">
+                                        자식&nbsp;
+                                        <input type="radio" name="answer" value="false" onChange={onChangeCreateType} />
+                                    </label>
                                     <div className={styles.iconContainer}>
                                         <RiParentLine />
                                     </div>

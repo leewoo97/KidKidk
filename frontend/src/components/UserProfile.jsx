@@ -221,7 +221,13 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
                                     </li> */}
                                 </ul>
                             </div>
-                            <button /*onClick={updateClick}은 실험*/ onClick={updateClick}>프로필 수정</button>{' '}
+                            <button
+                                style={{ marginLeft: 85 + 'px' }}
+                                /*onClick={updateClick}은 실험*/ onClick={updateClick}
+                            >
+                                프로필 수정
+                            </button>
+                            &nbsp;&nbsp;
                             <button /*onClick={handleClick}은 실험*/ onClick={handleClick}>프로필 삭제</button>
                         </form>
                     </div>

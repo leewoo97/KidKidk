@@ -14,3 +14,9 @@ export const childIdAtom = atom({
     default: {},
     effects_UNSTABLE: [persistAtom],
 });
+
+export const childNickNameAtom = atom({
+    key: 'parentChildNickName',
+    default: {},
+    effects_UNSTABLE: [persistAtom],
+});

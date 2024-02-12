@@ -8,11 +8,13 @@ import { getFund, getFundHistory, deleteFund } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
 import { useRecoilValue } from 'recoil';
-import { childIdAtom } from '@store/childIdsAtom.js';
+import { childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 
 export default function ParentMain() {
     const childId = useRecoilValue(childIdAtom);
-    console.log('ParentMain childId', childId);
+    //console.log('ParentMain childId', childId);
+    const childNickName = useRecoilValue(childNickNameAtom);
+    console.log('ParentMain childNickName', childNickName);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fund, setFund] = useState([]);
@@ -142,7 +144,7 @@ export default function ParentMain() {
             <div className={styles.parentMainContainer}>
                 <div className={styles.parentMainContainerStart}>
                     <div className={styles.childAssetProgress}>
-                        <p>짱아 어린이의 자산 현황</p>
+                        <p>{childNickName} 어린이의 자산 현황</p>
                         <div className={styles.circularProgressContainer}>
                             <div className={styles.circularProgressBox}>
                                 <div
@@ -198,7 +200,7 @@ export default function ParentMain() {
                         </div>
                     </div>
                     <div className={styles.childInvestProgress}>
-                        <p>짱아 어린이의 투자 현황</p>
+                        <p>{childNickName} 어린이의 투자 현황</p>
                         <div className={styles.childInvestProgressFrame}>
                             <div className={styles.childInvestProgressInfo}>
                                 <ul>

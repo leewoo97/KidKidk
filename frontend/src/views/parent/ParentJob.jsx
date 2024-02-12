@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { useRecoilState } from 'recoil';
 import { useRecoilValue } from 'recoil';
-import { childIdAtom } from '@store/childIdsAtom.js';
+import { childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 
 import {
     getJob,
@@ -22,6 +22,9 @@ export default function ParentJob() {
     // const childId = 2;
     const childId = useRecoilValue(childIdAtom);
     console.log('ParentJob childId', childId);
+    const childNickName = useRecoilValue(childNickNameAtom);
+    console.log('ParentMain childNickName', childNickName);
+
     const [jobCreateModalOpen, setJobCreateModalOpen] = useState(false);
     const [reservationJobCreateModalOpen, setReservationJobCreateModalOpen] = useState(false);
     const [jobUpdateModalOpen, setJobUpdateModalOpen] = useState(false);
@@ -225,7 +228,7 @@ export default function ParentJob() {
         <div className={styles.parentJobContainer}>
             <div className={styles.parentJobContainerStart}>
                 <div className={styles.childProfile}>
-                    <p>짱아 어린이의 프로필</p>
+                    <p>{childNickName} 어린이의 프로필</p>
                     {jobData !== undefined && jobData ? (
                         <div className={styles.childProfileFrame}>
                             <div>

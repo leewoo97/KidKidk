@@ -7,8 +7,13 @@ import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import ChildAlarm from './ChildAlarm.jsx';
+import { getChild, updateChild } from '@api/child.js';
+import { profileSelectAll } from '@api/profile.js';
+import { getJob } from '@api/job.js';
 
 function ChildNav() {
+    const userId = 1;
+    const childId = 2;
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
@@ -17,8 +22,107 @@ function ChildNav() {
     const [currentIndex, setCurrentIndex] = useState(0); // 입/출금 모달 페이지
     const [chargeCoinIn, setChargeCoinIn] = useState(''); // 입금 input 모달 페이지
     const [chargeCoinOut, setChargeCoinOut] = useState(''); // 출금 input 모달 페이지
-    const [chargeBtnActive, setChargeBtnActive] = useState(false); // 입/출금 모달 버튼 활성화 여부
+    const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
+    const [childProfile, setChildProfile] = useState([]); // 아이 프로필
+    const [parentProfile, setParentProfile] = useState([]); // 부모 프로필
+    const [childJob, setChildJob] = useState([]); // 아이 직업
+
     const a = ['5.5%', '18%', '29.5%', '41.5%'];
+
+    // 아이 직업 테이블 조회
+    useEffect(() => {
+        getJob(
+            childId,
+            (success) => {
+                setChildJob(success.data.Job);
+                console.log(childJob.length);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            // console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    // 프로필 모두 가져오기
+    useEffect(() => {
+        profileSelectAll(
+            userId,
+            (success) => {
+                // console.log(success.data);
+                const matchingProfile = success.data.find((profile) => profile.profileId === childId);
+                // 일치하는 객체가 있으면 해당 객체를 setProfile에 저장합니다.
+                if (matchingProfile) {
+                    setChildProfile(matchingProfile);
+                }
+
+                const matchingProfile1 = success.data.find((profile) => profile.type === true);
+                // 일치하는 객체가 있으면 해당 객체를 setProfile에 저장합니다.
+                if (matchingProfile1) {
+                    setParentProfile(matchingProfile1);
+                }
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            // console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    // child 테이블 수정
+    const handleUpdateChild = () => {
+        // coin은 currentIndex가 0이면 투자 주머니로 입금
+        const coin = currentIndex === 0 ? child.coin - chargeCoinIn : child.coin + parseInt(chargeCoinOut);
+
+        // fundMoney
+        const fundMoney =
+            currentIndex === 0 ? child.fundMoney + parseInt(chargeCoinIn) : child.fundMoney - chargeCoinOut;
+
+        const updateChildMoney = {
+            coin: coin,
+            fundMoney: fundMoney,
+            childId: childId,
+        };
+
+        // 성공 콜백 함수
+        const successCallback = () => {
+            // 성공 시 실행할 코드
+            // console.log('아이테이블이 성공적으로 수정되었습니다.');
+            // 업데이트 된 값으로 변경
+            setChild(updateChildMoney);
+            // 모달을 닫고 데이터를 다시 가져오기
+            setChargeModalIsOpen(false);
+        };
+
+        // 실패 콜백 함수
+        const errorCallback = (error) => {
+            // 실패 시 실행할 코드
+            console.error('수정 중 오류가 발생했습니다:', error);
+        };
+
+        updateChild(updateChildMoney, successCallback, errorCallback);
+    };
+
+    useEffect(() => {
+        // 자식 테이블 조회
+        getChild(
+            childId,
+            (success) => {
+                // console.log(success.data);
+                setChild(success.data);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            // console.log('ChildManagement userEffect return');
+        };
+    }, []);
 
     useEffect(() => {
         // 페이지가 로드될 때 현재 URL을 확인하여 알맞은 탭을 활성화
@@ -101,15 +205,15 @@ function ChildNav() {
                 <div className={styles.imgContainer}>
                     <img src={kidImg} />
                 </div>
-                <div>신짱아</div>
-                <div>직업 : 펫시터</div>
-                <div>엄마 : 봉미선</div>
+                <div>{childProfile.nickname}</div>
+                {childJob !== undefined && <div>직업 : {childJob.name}</div>}
+                <div>부모 : {parentProfile.nickname}</div>
             </div>
             <div className={styles.pocket1}>
                 <div className={styles.pocketTitle}>나의 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        12700 도토리
+                        {child.coin} 도토리
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={() => navigate('/child/refund')}>
@@ -121,7 +225,7 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>투자 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        12700 도토리
+                        {child.fundMoney} 도토리
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={openChargeModal}>
@@ -177,7 +281,7 @@ function ChildNav() {
                                 <div className={styles.chargeModalContent}>
                                     <div className={styles.chargeModalText}>최대 입금 가능</div>
                                     <div className={styles.chargeModalContent2}>
-                                        <div className={styles.chargeModalText}>2700 도토리</div>
+                                        <div className={styles.chargeModalText}>{child.coin} 도토리</div>
                                         <img src={acornImg} style={{ width: '1.5vw' }} />
                                     </div>
                                 </div>
@@ -191,7 +295,14 @@ function ChildNav() {
                                     />
                                     <div className={styles.modalMax}>개 도토리 입금하기</div>
                                 </div>
-                                <div className={styles.chargeModalBtn1}>입금하기</div>
+                                <div
+                                    className={styles.chargeModalBtn1}
+                                    onClick={() => {
+                                        handleUpdateChild();
+                                    }}
+                                >
+                                    입금하기
+                                </div>
                             </div>
                         )}
                         {currentIndex === 1 && (
@@ -200,7 +311,7 @@ function ChildNav() {
                                 <div className={styles.chargeModalContent}>
                                     <div className={styles.chargeModalText}>최대 출금 가능</div>
                                     <div className={styles.chargeModalContent2}>
-                                        <div className={styles.chargeModalText}>2700 도토리</div>
+                                        <div className={styles.chargeModalText}>{child.fundMoney} 도토리</div>
                                         <img src={acornImg} style={{ width: '1.5vw' }} />
                                     </div>
                                 </div>
@@ -214,7 +325,15 @@ function ChildNav() {
                                     />
                                     <div className={styles.modalMax}>개 도토리 출금하기</div>
                                 </div>
-                                <div className={styles.chargeModalBtn2}>출금하기</div>
+                                <div
+                                    className={styles.chargeModalBtn2}
+                                    onClick={() => {
+                                        handleUpdateChild();
+                                        // closeChargeModal();
+                                    }}
+                                >
+                                    출금하기
+                                </div>
                             </div>
                         )}
                     </div>

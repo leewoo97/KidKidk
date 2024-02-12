@@ -4,6 +4,11 @@ const server = serverAxios();
 
 const url = '/fund';
 
+// 투자 항목 아이 선택
+async function createSubmit(fundSubmit, success, fail) {
+    await server.post(`${url}/child/submit`, fundSubmit).then(success).catch(fail);
+}
+
 async function createFund(fundResrvation, success, fail) {
     await server.post(`${url}/create`, fundResrvation).then(success).catch(fail);
 }
@@ -59,4 +64,5 @@ export {
     getFundReservation,
     getRoi,
     getStatus,
+    createSubmit,
 };

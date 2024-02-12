@@ -3,8 +3,8 @@ import acornImg from '@images/acorn.png';
 import { Bar } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { getFund, getFundHistory, getRoi, getStatus } from '@api/fund.js';
-import { getChild } from '@api/child.js';
+import { getFund, getFundHistory, getRoi, getStatus, createSubmit } from '@api/fund.js';
+import { getChild, updateChild } from '@api/child.js';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { differenceInDays, format } from 'date-fns';
 
@@ -16,7 +16,8 @@ export default function ChildFundManagement() {
     const [isFundItem, setIsFundItem] = useState(false); // 투자항목이 있으면 true
     const [currentIndex, setCurrentIndex] = useState(0); // 모달 페이지
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [buyCoin, setBuyCoin] = useState('');
+    const [success, setSuccess] = useState(0); // 성공 베팅 코인
+    const [fail, setFail] = useState(0); // 실패 베팅 코인
     const [fund, setFund] = useState([]); // 투자 항목 테이블
     const [fundStatus, setFundStatus] = useState([]); // 투자 상태 테이블
     const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
@@ -28,13 +29,54 @@ export default function ChildFundManagement() {
     const [avgFundMoney, setAvgFundMoney] = useState(0); // 평균 투자 금액
     const [choice, setChoice] = useState(''); // 아이의 베팅 선택
     const [pnlRate, setPnlRate] = useState(0); // 이익률
-    const [sellCoin, setSellCoin] = useState(''); // 판매할 도토리
-    const [isBuyBtnActive, setIsBuyBtnActive] = useState(false);
-    const [isSellBtnActive, setIsSellBtnActive] = useState(false);
-    const [currentHaveCoin, setCurrentHaveCoin] = useState(30000); // 현재 보유금
-    const [currentFundCoin, setCurrentFundCoin] = useState(10000); // 현재 투자금
+    const [isSuccessBtnActive, setIsSuccessBtnActive] = useState(false); // 성공 투자 버튼 활성화
+    const [isFailBtnActive, setIsFailBtnActive] = useState(false); // 실패 투자 버튼 활성화
     const [myChoice, setMyChoice] = useState(0); // 오늘 나의 선택
     const [showDiv, setShowDiv] = useState(false); // 거래할 수 있는 시간이면 true
+
+    // 투자항목 아이선택(ChildStatus, Child 수정)
+    const handleCreateSubmit = async () => {
+        // amount는 success와 fail 중에서 값이 입력된 것을 사용
+        // submit은 currentIndex가 0이면 true를, 1이면 false
+        const amount = success || fail;
+        const submit = currentIndex === 0;
+        const fundSubmit = {
+            amount: amount,
+            submit: submit,
+            childId: childId,
+        };
+
+        const fundMoney =
+            currentIndex === 0
+                ? child.fundMoney + fundStatus.amount - parseInt(success)
+                : child.fundMoney + fundStatus.amount - parseInt(fail);
+        const updateChildMoney = {
+            coin: child.coin,
+            fundMoney: fundMoney,
+            childId: childId,
+        };
+
+        try {
+            // 첫 번째 API 요청 보내기
+            await createSubmit(fundSubmit);
+
+            // 첫 번째 API 요청 성공 후 두 번째 API 요청 보내기
+            await updateChild(updateChildMoney);
+
+            // 모든 요청이 성공했을 때 실행할 코드
+            console.log('투자 및 Child 업데이트가 성공적으로 완료되었습니다.');
+
+            // 투자 상태 테이블 새로 렌더링
+            setFundStatus(fundSubmit);
+            // 모달을 닫고 데이터를 다시 가져오기
+            // setModalIsOpen(false);
+            // 강제로 화면 새로고침
+            window.location.reload();
+        } catch (error) {
+            // 요청 중에 오류가 발생했을 때 실행할 코드
+            console.error('투자 제출 또는 Child 업데이트 중 오류가 발생했습니다:', error);
+        }
+    };
 
     // 투자를 거래할 수 있는 시간인지 확인
     useEffect(() => {
@@ -42,8 +84,8 @@ export default function ChildFundManagement() {
         const currentHour = currentTime.getHours();
 
         // 현재 시간이 9시에서 17시 사이인지 확인
-        const isBetween9to5 = currentHour >= 8 && currentHour <= 19;
-
+        // const isBetween9to5 = currentHour >= 9 && currentHour <= 16;
+        const isBetween9to5 = true;
         // 현재 시간이 9시에서 17시 사이이면 showDiv 상태를 true로 설정
         setShowDiv(isBetween9to5);
     }, []);
@@ -149,26 +191,26 @@ export default function ChildFundManagement() {
 
     const handleReset = () => {
         // buyCoin 상태 초기화
-        setBuyCoin('');
-        setSellCoin('');
+        setSuccess('');
+        setFail('');
     };
 
-    const handleInputBuyChange = (e) => {
+    const handleInputSuccessChange = (e) => {
         const value = e.target.value;
-        setBuyCoin(value);
-        setIsBuyBtnActive(value > 0 && value <= child.fundMoney);
+        setSuccess(value);
+        setIsSuccessBtnActive(value > 0 && value <= child.fundMoney);
     };
 
-    const handleInputSellChange = (e) => {
+    const handleInputFailChange = (e) => {
         const value = e.target.value;
-        setSellCoin(value);
-        setIsSellBtnActive(value > 0 && value <= currentFundCoin);
+        setFail(value);
+        setIsFailBtnActive(value > 0 && value <= child.fundMoney);
     };
 
     // 모달 열기
     const openModal = () => {
-        setBuyCoin('');
-        setSellCoin('');
+        setSuccess('');
+        setFail('');
         setCurrentIndex(0); // 모달이 열릴 때마다 현재 페이지 초기화
         setModalIsOpen(true);
     };
@@ -302,7 +344,7 @@ export default function ChildFundManagement() {
                                     <span style={{ color: '#C1B8AD' }}>오늘은 쉴래</span>
                                 ) : (
                                     <>
-                                        {choice === '성공' ? (
+                                        {choice === '실패' ? (
                                             <span style={{ color: '#5E82CD' }}>{choice}</span>
                                         ) : (
                                             <span style={{ color: '#E26459' }}>{choice}</span>
@@ -351,7 +393,7 @@ export default function ChildFundManagement() {
                                     }`}
                                     onClick={() => changeModalContent(0)}
                                 >
-                                    사기
+                                    성공
                                 </div>
                                 <div
                                     className={`${styles.modalHead2} ${
@@ -359,67 +401,68 @@ export default function ChildFundManagement() {
                                     }`}
                                     onClick={() => changeModalContent(1)}
                                 >
-                                    팔기
-                                </div>
-                                <div
-                                    className={`${styles.modalHead3} ${
-                                        currentIndex === 2 ? styles.greenColor : styles.grayColor
-                                    }`}
-                                    onClick={() => changeModalContent(2)}
-                                >
-                                    베팅
+                                    실패
                                 </div>
                             </div>
                             {currentIndex === 0 && (
                                 <div className={styles.modalBody}>
                                     <div className={styles.modalBodyContainer}>
                                         <div className={styles.modalBody1}>
-                                            <div className={styles.modalBody1Content}>
-                                                <div className={styles.modalMax}>최대 구매 가능</div>
-                                                <div className={styles.modalCoinBox}>
-                                                    <div className={styles.modalCoin}>{child.fundMoney} 도토리</div>
-                                                    <img src={acornImg} style={{ width: '2vw' }} />
-                                                </div>
-                                            </div>
-                                            <div className={styles.modalBody1Line} />
+                                            <div className={styles.successBody1Title}>성공에 투자하기</div>
                                         </div>
 
                                         <div className={styles.modalBody2}>
                                             <input
                                                 type="number"
                                                 placeholder="도토리 개수 입력"
-                                                value={buyCoin}
-                                                onChange={handleInputBuyChange}
+                                                value={success}
+                                                onChange={handleInputSuccessChange}
                                                 className={styles.input}
                                             />
-                                            <div className={styles.modalMax}>개 도토리 사기</div>
+                                            <div className={styles.modalMax}>개 도토리 구매하기</div>
                                         </div>
 
                                         <div className={styles.modalBody3}>
-                                            <div className={styles.modalMax}>구매 후 투자계좌에 남은 도토리</div>
-                                            <div className={styles.modalCoinBox1}>
-                                                <div className={styles.modalCoin1}>
-                                                    {child.fundMoney - buyCoin >= 0
-                                                        ? `${child.fundMoney - buyCoin} 도토리`
-                                                        : '구매할 수 없습니다.'}
+                                            <div className={styles.modalBody3Line} />
+                                            <div className={styles.Body3Title}>
+                                                <div>이익률</div>
+                                                <div>투자 성공 시</div>
+                                                <div>최대 투자 가능</div>
+                                            </div>
+                                            <div className={styles.Body3Contents}>
+                                                <div>{fund.yield}%</div>
+                                                <div>
+                                                    {success > child.fundMoney ? (
+                                                        <div>투자할 수 없습니다.</div>
+                                                    ) : (
+                                                        <div>
+                                                            +{Math.floor(fund.yield * 0.01 * success)} 도토리
+                                                            <img src={acornImg} style={{ width: '1.5vw' }} />
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <img src={acornImg} style={{ width: '2vw' }} />
+                                                <div>
+                                                    {child.fundMoney} 도토리
+                                                    <img src={acornImg} style={{ width: '1.5vw' }} />
+                                                </div>
                                             </div>
                                         </div>
+
                                         <div className={styles.modalBodyBtns}>
                                             <div className={styles.modalReset} onClick={handleReset}>
                                                 초기화
                                             </div>
                                             <div
                                                 className={`${styles.modalChoBtn} ${
-                                                    isBuyBtnActive && currentIndex === 0
+                                                    isSuccessBtnActive && currentIndex === 0
                                                         ? styles.modalBuy
-                                                        : !isBuyBtnActive && currentIndex === 0
+                                                        : !isSuccessBtnActive && currentIndex === 0
                                                         ? styles.modalBeforeBuy
                                                         : ''
                                                 }`}
+                                                onClick={handleCreateSubmit}
                                             >
-                                                구매하기
+                                                투자하기
                                             </div>
                                         </div>
                                     </div>
@@ -430,106 +473,61 @@ export default function ChildFundManagement() {
                                 <div className={styles.modalBody}>
                                     <div className={styles.modalBodyContainer}>
                                         <div className={styles.modalBody1}>
-                                            <div className={styles.modalBody1Content}>
-                                                <div className={styles.modalMax}>최대 판매 가능</div>
-                                                <div className={styles.modalCoinBox}>
-                                                    <div className={styles.modalCoin}>{currentFundCoin} 도토리</div>
-                                                    <img src={acornImg} style={{ width: '2vw' }} />
-                                                </div>
-                                            </div>
-                                            <div className={styles.modalBody1Line} />
+                                            <div className={styles.failBody1Title}>실패에 투자하기</div>
                                         </div>
 
                                         <div className={styles.modalBody2}>
                                             <input
                                                 type="number"
                                                 placeholder="도토리 개수 입력"
-                                                value={sellCoin}
-                                                onChange={handleInputSellChange}
+                                                value={fail}
+                                                onChange={handleInputFailChange}
                                                 className={styles.input}
                                             />
-                                            <div className={styles.modalMax}>개 도토리 팔기</div>
+                                            <div className={styles.modalMax}>개 도토리 구매하기</div>
                                         </div>
 
                                         <div className={styles.modalBody3}>
-                                            <div className={styles.modalMax}>판매 후 투자계좌에 남은 도토리</div>
-                                            <div className={styles.modalCoinBox1}>
-                                                <div className={styles.modalCoin1}>
-                                                    {currentFundCoin - sellCoin >= 0
-                                                        ? `${currentFundCoin - sellCoin} 도토리`
-                                                        : '판매할 수 없습니다.'}
+                                            <div className={styles.modalBody3Line} />
+                                            <div className={styles.Body3Title}>
+                                                <div>이익률</div>
+                                                <div>투자 성공 시</div>
+                                                <div>최대 투자 가능</div>
+                                            </div>
+                                            <div className={styles.Body3Contents}>
+                                                <div>{fund.yield}%</div>
+                                                <div>
+                                                    {fail > child.fundMoney ? (
+                                                        <div>투자할 수 없습니다.</div>
+                                                    ) : (
+                                                        <div>
+                                                            +{Math.floor(fund.yield * 0.01 * fail)} 도토리
+                                                            <img src={acornImg} style={{ width: '1.5vw' }} />
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <img src={acornImg} style={{ width: '2vw' }} />
+                                                <div>
+                                                    {child.fundMoney} 도토리
+                                                    <img src={acornImg} style={{ width: '1.5vw' }} />
+                                                </div>
                                             </div>
                                         </div>
+
                                         <div className={styles.modalBodyBtns}>
                                             <div className={styles.modalReset} onClick={handleReset}>
                                                 초기화
                                             </div>
                                             <div
                                                 className={`${styles.modalChoBtn} ${
-                                                    isSellBtnActive && currentIndex === 1
+                                                    isFailBtnActive && currentIndex === 1
                                                         ? styles.modalSell
-                                                        : !isSellBtnActive && currentIndex === 1
+                                                        : !isFailBtnActive && currentIndex === 1
                                                         ? styles.modalBeforeSell
                                                         : ''
                                                 }`}
+                                                onClick={handleCreateSubmit}
                                             >
-                                                판매하기
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                            {currentIndex === 2 && (
-                                <div className={styles.modalBody}>
-                                    <div className={styles.betContainer}>
-                                        <div className={styles.betBody1}>
-                                            <div className={styles.betBody1Title}>투자 항목</div>
-                                            <div className={styles.betBody1Content}>
-                                                내일 엄마의 몸무게는 증가할 것이다.
-                                            </div>
-                                        </div>
-
-                                        <div className={styles.betBody2}>
-                                            <div className={styles.modalBody2Line} />
-                                            <div className={styles.betBody2Title}>
-                                                <div>이익률</div>
-                                                <div>투자 성공 시</div>
-                                                <div>투자 실패 시</div>
-                                            </div>
-                                            <div className={styles.betBody2Contents}>
-                                                <div>6%</div>
-                                                <div>
-                                                    +500 도토리
-                                                    <img src={acornImg} style={{ width: '1.5vw' }} />
-                                                </div>
-                                                <div>
-                                                    -500 도토리
-                                                    <img src={acornImg} style={{ width: '1.5vw' }} />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className={styles.modalBodyBtns}>
-                                            <div className={styles.modalReset} onClick={() => setMyChoice(0)}>
-                                                초기화
-                                            </div>
-                                            <div
-                                                className={`${styles.modalChoBtn} ${
-                                                    currentIndex === 2 ? styles.modalSell : ''
-                                                }`}
-                                                onClick={() => setMyChoice(1)}
-                                            >
-                                                성공
-                                            </div>
-                                            <div
-                                                className={`${styles.modalChoBtn} ${
-                                                    currentIndex === 2 ? styles.modalBuy : ''
-                                                }`}
-                                                onClick={() => setMyChoice(2)}
-                                            >
-                                                실패
+                                                투자하기
                                             </div>
                                         </div>
                                     </div>
@@ -547,7 +545,7 @@ export default function ChildFundManagement() {
                                     <div>
                                         <img src={acornImg} style={{ width: '2vw' }} />
                                     </div>
-                                    <div className={styles.card3Text1}>{child.fundMoney} 도토리</div>
+                                    <div className={styles.card3Text1}>{fundStatus.amount} 도토리</div>
                                 </div>
                             </div>
                             <div className={styles.card3}>

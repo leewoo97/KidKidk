@@ -203,10 +203,11 @@
 
 .jobModal > p {
     font-size: 50px;
+    color: var(--nav-background);
 }
 
 .jobModal button {
-    background-color: black;
+    background-color: var(--nav-background);
     color: white;
     font-size: 15px;
     border-radius: 15px;
@@ -224,13 +225,13 @@
 }
 
 .jobForm > .jobInputContainer > input {
-    margin-top: 10px;
+    margin-top: 20px;
     background-color: var(--component-background);
     text-align: center;
     border: 3px solid var(--component-border);
     border-radius: 15px;
     width: 400px;
-    height: 30px;
+    height: 50px;
 }
 
 .jobForm input::placeholder {

@@ -23,6 +23,8 @@ function ChildNav() {
 
     const userId = userInfo.userId;
     const childId = profileInfo.profileId;
+    // const userId = 1;
+    // const childId = 2;
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
@@ -281,8 +283,7 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>나의 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        {child.length > 0 ? <>{child.coin} 도토리</> : <>0 도토리</>}
-
+                        {child.coin !== undefined ? <>{child.coin} 도토리</> : <>0 도토리</>}
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={() => navigate('/child/refund')}>
@@ -294,7 +295,7 @@ function ChildNav() {
                 <div className={styles.pocketTitle}>투자 주머니</div>
                 <div className={styles.pocketContainer}>
                     <div className={styles.pocketCoin}>
-                        {child.length > 0 ? <>{child.fundMoney} 도토리</> : <>0 도토리</>}
+                        {child.fundMoney !== undefined ? <>{child.fundMoney} 도토리</> : <>0 도토리</>}
                         <img src={acornImg} style={{ width: '1.5vw' }} />
                     </div>
                     <div className={styles.refundBtn} onClick={openChargeModal}>
@@ -367,6 +368,10 @@ function ChildNav() {
                                 <div
                                     className={styles.chargeModalBtn1}
                                     onClick={() => {
+                                        if (chargeCoinIn > child.coin) {
+                                            alert('입금할 도토리 개수가 최대 입금 가능 도토리 개수보다 많습니다.');
+                                            return; // 입금할 수 없으므로 함수 종료
+                                        }
                                         handleUpdateChild();
                                     }}
                                 >
@@ -397,8 +402,11 @@ function ChildNav() {
                                 <div
                                     className={styles.chargeModalBtn2}
                                     onClick={() => {
+                                        if (chargeCoinOut > child.fundMoney) {
+                                            alert('출금할 도토리 개수가 최대 출금 가능 도토리 개수보다 많습니다.');
+                                            return;
+                                        }
                                         handleUpdateChild();
-                                        // closeChargeModal();
                                     }}
                                 >
                                     출금하기

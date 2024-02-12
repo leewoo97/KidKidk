@@ -156,7 +156,13 @@ export default function ChildRefund() {
                 {isRefundBtnSubmit ? null : (
                     <div
                         className={`${isRefundBtnActive ? styles.quizBtnActive : styles.quizBtn}`}
-                        onClick={handleStartQClick}
+                        onClick={() => {
+                            if (refundCoin > child.coin) {
+                                alert('환전할 도토리 개수가 현재 보유한 도토리 개수보다 많습니다.');
+                                return;
+                            }
+                            handleStartQClick();
+                        }}
                     >
                         퀴즈풀러 가기
                     </div>

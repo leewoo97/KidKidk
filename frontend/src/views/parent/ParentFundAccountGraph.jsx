@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO } from 'date-fns';
 import { getFundHistory } from '@api/fund';
 import { getChild } from '@api/child.js';
+import { useRecoilValue } from 'recoil';
+import { childIdAtom } from '@store/childIdsAtom.js';
 
 import {
     Chart as ChartJS,
@@ -18,7 +20,8 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function ParentFundAccountGraph() {
-    const childId = 2;
+    const childId = useRecoilValue(childIdAtom);
+    console.log('ParentFundAccountGraph childId', childId);
     const [child, setChild] = useState([]);
     const [statementdata, setStatementdata] = useState([]);
     const [thisWeekInvestments, setThisWeekInvestments] = useState([]);

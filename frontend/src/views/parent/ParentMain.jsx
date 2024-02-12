@@ -7,9 +7,13 @@ import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO 
 import { getFund, getFundHistory, deleteFund } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
+import { useRecoilValue } from 'recoil';
+import { childIdAtom } from '@store/childIdsAtom.js';
 
 export default function ParentMain() {
-    const childId = 2;
+    const childId = useRecoilValue(childIdAtom);
+    console.log('ParentMain childId', childId);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fund, setFund] = useState([]);
     const [savingMoney, setSavingMoney] = useState(0);

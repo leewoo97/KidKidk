@@ -3,9 +3,13 @@ import { addDays, format } from 'date-fns';
 import styles from './ParentSaving.module.css';
 import { getChild } from '@api/child.js';
 import { getSaving, getSavingHistory } from '@api/saving.js';
+import { useRecoilValue } from 'recoil';
+import { childIdAtom } from '@store/childIdsAtom.js';
 
 export default function ParentSaving() {
-    const childId = 2;
+    const childId = useRecoilValue(childIdAtom);
+    console.log('ParentSaving childId', childId);
+
     const [child, setChild] = useState([]);
     const [saving, setSaving] = useState([]);
     const [savingHistory, setSavingHistory] = useState([]);

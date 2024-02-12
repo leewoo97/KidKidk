@@ -14,12 +14,15 @@ import {
     createFundNews,
     createFundAnswer,
 } from '@api/fund.js';
+import { useRecoilValue } from 'recoil';
+import { childIdAtom } from '@store/childIdsAtom.js';
 import { format } from 'date-fns';
 
 import styles from './ParentFund.module.css';
 
 export default function ParentFund() {
-    const childId = 2;
+    const childId = useRecoilValue(childIdAtom);
+    console.log('ParentFund childId', childId);
     const [selectFund, setSelectedFund] = useState(false);
     const [selectReservationFund, setSelectReservationFund] = useState(false);
     const [fundCreateModalOpen, setFundCreateModalOpen] = useState(false);

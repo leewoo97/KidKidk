@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import { childIdAtom } from '@store/childIdsAtom.js';
 
 import {
     getJob,
@@ -17,6 +19,9 @@ import styles from './ParentJob.module.css';
 import kidImg from '@images/kidImg.jpg';
 
 export default function ParentJob() {
+    // const childId = 2;
+    const childId = useRecoilValue(childIdAtom);
+    console.log('ParentJob childId', childId);
     const [jobCreateModalOpen, setJobCreateModalOpen] = useState(false);
     const [reservationJobCreateModalOpen, setReservationJobCreateModalOpen] = useState(false);
     const [jobUpdateModalOpen, setJobUpdateModalOpen] = useState(false);
@@ -50,7 +55,7 @@ export default function ParentJob() {
         console.log('Enter getJobDataAxios useEffect');
         getJob(
             // 부모가 탭에서 선택한 아이 아이디
-            2,
+            childId,
             (success) => {
                 setJobData(success.data.Job);
                 console.log(success);
@@ -69,7 +74,7 @@ export default function ParentJob() {
         console.log('Enter getReservationJobDataAxios useEffect');
         getJobReservation(
             // 부모가 탭에서 선택한 아이 아이디 (전역 상태값)
-            2,
+            childId,
             (success) => {
                 setJobReservationData(success.data.JobReservation);
                 console.log(success);
@@ -89,7 +94,7 @@ export default function ParentJob() {
         // 사용자가 확인을 입력한 경우에만 삭제 진행
         if (userConfirmation) {
             deleteJob(
-                2,
+                childId,
                 (success) => {
                     console.log('직업 삭제 성공', success);
                     alert('직업 예약 현황에 삭제 예약 되었습니다');
@@ -110,7 +115,7 @@ export default function ParentJob() {
         // 사용자가 확인을 입력한 경우에만 삭제 진행
         if (userConfirmation) {
             deleteJobReservation(
-                2,
+                childId,
                 (success) => {
                     console.log('예약 직업 삭제 성공', success);
                     setJobReservationData();
@@ -131,7 +136,7 @@ export default function ParentJob() {
         setcreateJobData({
             ...createJobData,
             [name]: name === 'name' || name === 'task' ? value : +value,
-            childId: 2,
+            childId: childId,
         });
     };
 
@@ -162,7 +167,7 @@ export default function ParentJob() {
         setcreateJobReservationData({
             ...createJobReservationData,
             [name]: name === 'name' || name === 'task' ? value : +value,
-            childId: 2,
+            childId: childId,
         });
     };
 
@@ -192,7 +197,7 @@ export default function ParentJob() {
         setmodifyJobReservationData({
             ...modifyJobReservationData,
             [name]: name === 'name' || name === 'task' ? value : +value,
-            childId: 2,
+            childId: childId,
             state: 1,
         });
     };

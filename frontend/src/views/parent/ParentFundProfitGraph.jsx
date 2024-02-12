@@ -3,11 +3,15 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { Bar } from 'react-chartjs-2';
 import { getFundHistory } from '@api/fund';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO } from 'date-fns';
+import { useRecoilValue } from 'recoil';
+import { childIdAtom } from '@store/childIdsAtom.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function ParentFundProfitGraph() {
-    const childId = 2;
+    const childId = useRecoilValue(childIdAtom);
+    console.log('ParentFundProfitGraph childId', childId);
+
     const [statementdata, setStatementdata] = useState([]);
     const [rateList, setRateList] = useState([]);
 

@@ -14,7 +14,7 @@ function ChildAlarm() {
     
     const [profileId, setProfileId] = useState(2);
     const kafkaSub = () => {
-        setSse(new EventSource(`notification.silvstone.xyz/subscribe/${profileId}`, {
+        setSse(new EventSource(`https://notification.silvstone.xyz/subscribe/${profileId}`, {
             headers: {
                 "Last-Event-ID" : lastEventId,
             },

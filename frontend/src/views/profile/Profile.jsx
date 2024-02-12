@@ -213,6 +213,7 @@ export default function Profile() {
                             //실험
                             nickname={profile.nickname}
                             profile_image={profile.profileImage}
+                            userType={profile.type}
                         />
                     ))}
                     <div>

@@ -1,10 +1,14 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import styles from './ParentNav.module.css';
-import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
+
 import ProfileNav from './ProfileNav';
 import Modal from 'react-modal';
 import { useState } from 'react';
 import ParentAlarm from './ParentAlarm';
+
+import { getChildList } from '@store/profile.js';
+
+import styles from './ParentNav.module.css';
+import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import bell from '@images/bell.png';
 import kidImg from '@images/kidImg.jpg';
 

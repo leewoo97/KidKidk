@@ -18,7 +18,6 @@ async function profileSelectAll(userId, success, fail) {
     await server.get(`${url}/selectAll/${userId}`).then(success).catch(fail);
 }
 
-//여기 고쳐야함
 async function profileUpdate(updateUser, success, fail) {
     // console.log(updateUser)
     await server.put(`${url}/update`, updateUser).then(success).catch(fail);

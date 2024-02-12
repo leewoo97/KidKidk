@@ -104,9 +104,8 @@
     background-color: #f7f5f1;
     border-radius: 15px;
     font-size: 20px;
-
+    padding: 0 2vw;
     display: flex;
-    justify-content: space-around;
     align-items: center;
 }
 .card2_2 {
@@ -120,20 +119,41 @@
     align-items: center;
     justify-content: center;
 }
-
-/* progress tag */
-
-.progress {
-    appearance: none;
+.card2Content {
+    display: flex;
+    align-items: center;
 }
-.progress::-webkit-progress-bar {
-    background: #f0f0f0;
-    border-radius: 10px;
-    box-shadow: inset 3px 3px 10px #ccc;
+.jobTask {
+    width: 25vw;
+    display: flex;
 }
-.progress::-webkit-progress-value {
+.barChartBack {
+    position: relative;
+    background-color: #c1b8ad;
+    width: 20vw;
+    height: 3vh;
+    margin-right: 1vw;
+    /* z-index: 3; */
+}
+.barChart {
+    position: absolute;
+    background-color: #5fb776;
+    left: 27vw;
+    width: 10vw;
+    height: 3vh;
+}
+.barChartCnt {
+    margin-right: 2vw;
+}
+.jobTaskBtn {
+    background-color: #4d4637;
+    width: 5vw;
+    height: 4vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
     border-radius: 10px;
-    background: #1d976c;
-    background: -webkit-linear-gradient(to right, #93f9b9, #1d976c);
-    background: linear-gradient(to right, #93f9b9, #1d976c);
+    font-size: 15px;
+    cursor: pointer;
 }

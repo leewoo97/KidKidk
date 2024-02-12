@@ -8,6 +8,7 @@ import { getJob } from '@api/job.js';
 import { getFund } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
+// import Chart from 'chart.js/auto';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -18,10 +19,7 @@ export default function ManagementContent() {
     const [job, setJob] = useState([]);
     const [fund, setFund] = useState([]);
     const [savingMoney, setSavingMoney] = useState(0);
-    const [child, setChild] = useState([{
-        coin : 0,
-        fundMoney : 0
-    }]);
+    const [child, setChild] = useState([]);
     const [ratioPercentage, setRatioPercentage] = useState([]);
 
     useEffect(() => {
@@ -173,17 +171,18 @@ export default function ManagementContent() {
                 <div className={styles.title}> 이번주 할 일</div>
                 <div className={styles.card2_1}>
                     {job ? (
-                        <>
-                            <div> {job.task} </div>
-                            <div>
-                                <progress className={styles.progress} id="workProgress" max="100" value="40"></progress>
+                        <div className={styles.card2Content}>
+                            <div className={styles.jobTask}> {job.task} </div>
+                            <div className={styles.barChartBack}></div>
+                            <div
+                                className={styles.barChart}
+                                style={{ width: `${(job.doneCount / job.taskAmount) * 20}vw` }}
+                            ></div>
+                            <div className={styles.barChartCnt}>
+                                {job.doneCount}/{job.taskAmount}
                             </div>
-                            <div>
-                                {' '}
-                                {job.doneCount}/{job.taskAmount}{' '}
-                            </div>
-                            <div> 완료 </div>
-                        </>
+                            <div className={styles.jobTaskBtn}> 완료 </div>
+                        </div>
                     ) : (
                         '이번주 할 일이 없습니다.'
                     )}

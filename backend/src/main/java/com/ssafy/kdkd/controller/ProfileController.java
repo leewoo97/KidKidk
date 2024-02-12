@@ -94,6 +94,15 @@ public class ProfileController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@GetMapping("/profile/childlist/{userId}")
+	@Operation(summary = "내 자식 목록가져오기")
+	public ResponseEntity<?> getChildList(@PathVariable Long userId){
+		GetChildListDto getChildListDto = new GetChildListDto();
+		getChildListDto.setUserId(userId);
+		List<GetChildListDto> returnDto = profileService.getChildList(getChildListDto);
+		return new ResponseEntity<>(returnDto,HttpStatus.OK);
+	}
+
 	@GetMapping("/profile/getchild/{childId}")
 	@Operation(summary = "내 자식 접근")
 	public ResponseEntity<?> getChild(@PathVariable Long childId){

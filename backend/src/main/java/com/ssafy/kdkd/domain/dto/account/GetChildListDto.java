@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class GetChildListDto {
-	private Long parentId;
+	private Long userId;
 
 	private Long childId;
 
@@ -12,8 +12,17 @@ public class GetChildListDto {
 
 	private String profileImage;
 
-	public GetChildListDto(Long parentId, Long childId, String nickname, String profileImage) {
-		this.parentId = parentId;
+	public GetChildListDto(){
+
+	}
+
+	public GetChildListDto(Long childId, String nickname) {
+		this.childId = childId;
+		this.nickname = nickname;
+	}
+
+	public GetChildListDto(Long userId, Long childId, String nickname, String profileImage) {
+		this.userId = userId;
 		this.childId = childId;
 		this.nickname = nickname;
 		this.profileImage = profileImage;

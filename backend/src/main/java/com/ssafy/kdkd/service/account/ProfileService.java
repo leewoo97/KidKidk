@@ -122,15 +122,9 @@ public class ProfileService {
 	}
 
 	public List<GetChildListDto> getChildList(GetChildListDto getChildListDto){
-		Long parentId = getChildListDto.getParentId();
-		Optional<Profile> profile = profileRepository.findById(parentId);
-		if(profile.isPresent()){
-			Long userId = profile.get().getUser().getId();
-			boolean type = false;
-			List<GetChildListDto> childProfile = profileRepository.getChildList(userId,type);
-			return childProfile;
-		}
-		return null;
+		Long userId = getChildListDto.getUserId();
+		List<GetChildListDto> returnDto = profileRepository.getChildList(userId);
+		return returnDto;
 	}
 
 	public ChildDto getChild(Long childId){

@@ -1,25 +1,30 @@
 package com.ssafy.kdkd.controller;
 
 import com.ssafy.kdkd.domain.dto.fund.FundDto;
+import com.ssafy.kdkd.domain.dto.fund.FundNewsDto;
 import com.ssafy.kdkd.domain.dto.fund.FundReservationDto;
 import com.ssafy.kdkd.domain.dto.fund.FundStatusDto;
 import com.ssafy.kdkd.domain.dto.fund.RoiDto;
 import com.ssafy.kdkd.domain.dto.fund.TransferDto;
 import com.ssafy.kdkd.domain.entity.fund.Fund;
 import com.ssafy.kdkd.domain.entity.fund.FundHistory;
+import com.ssafy.kdkd.domain.entity.fund.FundNews;
 import com.ssafy.kdkd.domain.entity.fund.FundReservation;
 import com.ssafy.kdkd.domain.entity.fund.FundStatus;
 import com.ssafy.kdkd.domain.entity.fund.Roi;
 import com.ssafy.kdkd.repository.fund.FundHistoryRepository;
+import com.ssafy.kdkd.repository.fund.FundNewsRepository;
 import com.ssafy.kdkd.repository.fund.FundRepository;
 import com.ssafy.kdkd.repository.fund.FundReservationRepository;
 import com.ssafy.kdkd.repository.fund.FundStatusRepository;
 import com.ssafy.kdkd.repository.fund.RoiRepository;
+import com.ssafy.kdkd.service.fund.FundNewsService;
 import com.ssafy.kdkd.service.fund.FundReservationService;
 import com.ssafy.kdkd.service.fund.FundService;
 import com.ssafy.kdkd.service.fund.FundStatusService;
 
 import static com.ssafy.kdkd.domain.dto.fund.FundHistoryDto.mappingFundHistoryDto;
+import static com.ssafy.kdkd.domain.dto.fund.FundNewsDto.mappingFundNewsDto;
 import static com.ssafy.kdkd.domain.dto.fund.FundStatusDto.mappingFundStatus;
 
 import java.util.HashMap;
@@ -59,6 +64,8 @@ public class FundController {
     private final FundStatusRepository fundStatusRepository;
     private final RoiRepository roiRepository;
     private final FundHistoryRepository fundHistoryRepository;
+    private final FundNewsService fundNewsService;
+    private final FundNewsRepository fundNewsRepository;
 
     @PostMapping("/transfer")
     @Operation(summary = "코인계좌로 이체")
@@ -399,6 +406,61 @@ public class FundController {
                     status = HttpStatus.NO_CONTENT;
                 } else {
                     resultMap.put("FundHistory", mappingFundHistoryDto(fundHistories));
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @GetMapping("/news/{childId}")
+    @Operation(summary = "투자 뉴스 조회")
+    public ResponseEntity<?> confirmFundNews(@PathVariable("childId") Long childId, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            log.info("fund controller: confirmFundNews() Enter");
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                List<FundNews> fundNewsList = fundNewsRepository.findFundNewsByChildId(childId);
+
+                if (fundNewsList.isEmpty()) {
+                    status = HttpStatus.NO_CONTENT;
+                } else {
+                    resultMap.put("FundNews", mappingFundNewsDto(fundNewsList));
+                }
+            }
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @PostMapping("/news")
+    @Operation(summary = "투자 뉴스 등록")
+    public ResponseEntity<?> createFundNews(@RequestBody FundNewsDto fundNewsDto, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.CREATED;
+        try {
+            log.info("fund controller: createFundNews() Enter");
+            Long childId = fundNewsDto.getChildId();
+            // 현재 childId에 대한 권한 확인
+            boolean isValid = false;
+
+            if (isValid) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else {
+                FundNewsDto result = fundNewsService.insertFundNews(fundNewsDto);
+
+                if (result == null) {
+                    status = HttpStatus.CONFLICT;
+                } else {
+                    resultMap.put("FundNews", result);
                 }
             }
         } catch (Exception e) {

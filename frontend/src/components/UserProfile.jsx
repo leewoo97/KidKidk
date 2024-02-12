@@ -1,8 +1,8 @@
 //실험
-import {profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from "/src/apis/api/profile.js";
+import { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from '/src/apis/api/profile.js';
 //실험
 
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import { CgProfile } from 'react-icons/cg';
 import { RiLockPasswordFill } from 'react-icons/ri';
@@ -13,30 +13,30 @@ import kidImg from '@images/kidImg.jpg';
 
 export default function UserProfile({ profileId, nickname, profile_image }) {
     //onChange
-        //업데이트 API에 쓰이는 onChange
+    //업데이트 API에 쓰이는 onChange
     const onChangeUpdateNickname = (e) => {
         setUpdateUser({
-          ...updateUser,
-          nickname: e.target.value,
+            ...updateUser,
+            nickname: e.target.value,
         });
-        console.log('타켓 벨류 : ' + e.target.value)
-        console.log('바뀐 닉네임 : ' + updateUser.nickname)
-      };
-      const onChangeUpdatePin = (e) => {
+        console.log('타켓 벨류 : ' + e.target.value);
+        console.log('바뀐 닉네임 : ' + updateUser.nickname);
+    };
+    const onChangeUpdatePin = (e) => {
         setUpdateUser({
-          ...updateUser,
-          pin: e.target.value,
+            ...updateUser,
+            pin: e.target.value,
         });
-        console.log('타켓 벨류 : ' + e.target.value)
-        console.log('바뀐 핀 : ' + updateUser.pin)
-      };
-        //업데이트 API에 쓰이는 onChange
-      //onChange
-
+        // console.log('타켓 벨류 : ' + e.target.value)
+        // console.log('바뀐 핀 : ' + updateUser.pin)
+    };
+    //업데이트 API에 쓰이는 onChange
+    //onChange
 
     //실험
-    console.log(profileId);
-    console.log(nickname);
+    // console.log(profileId);
+    // console.log(nickname);
+    // console.log(profile_image);
     //실험
     const [modalLoginOpen, setModalLoginOpen] = useState(false);
     const [modalUpdateOpen, setModalUpdateOpen] = useState(false);
@@ -54,82 +54,80 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
     const handleClick = (e) => {
         // e.preventDefault();
         setIsButtonClicked(true);
-      };
+    };
     //버튼누르면 프로필 삭제
 
     const [deleteData, setDeleteData] = useState([{}]);
 
-    
     const [profile, serProfile] = useState({
         profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
-        nickname: "string", 
-        profileImage: "string",
+        nickname: 'string',
+        profileImage: profile_image,
         type: true,
-        userId: 1
-      });
+        userId: 1,
+    });
 
-      useEffect(() => {
+    useEffect(() => {
         if (isButtonClicked) {
-      console.log('Profile Delete Enter');
-      profileDelete(profile,
-        (deleteData) => {
-          setDeleteData(deleteData.data);
-          console.log(deleteData.data);
-        },
-        (fail) => {
-          console.log(fail);
+            //   console.log('Profile Delete Enter');
+            profileDelete(
+                profile,
+                (deleteData) => {
+                    setDeleteData(deleteData.data);
+                    //   console.log(deleteData.data);
+                },
+                (fail) => {
+                    console.log(fail);
+                }
+            );
         }
-      );
-    }
-      return () => {
-        <div>
-        console.log('Profile Delete return');
-        </div>  
-      };
+        return () => {
+            <div>{/* console.log('Profile Delete return'); */}</div>;
+        };
     }, [isButtonClicked]);
     //삭제 실험
 
-     // 수정 실험 2024/02/07
-     const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
+    // 수정 실험 2024/02/07
+    const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
 
     const updateClick = (e) => {
         // e.preventDefault();
         setUpdateButtonClicked(true);
-      };
-     const [updateData, setUpdateData] = useState([{}]);
+    };
+    const [updateData, setUpdateData] = useState([{}]);
 
-     const [updateUser, setUpdateUser] = useState({
-       profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
-       nickname: "",
-       pin: 0,
-       profileImage: "",
-     });
-     
-     console.log(updateUser.profileId);
-     console.log(updateUser.nickname);
-     useEffect(() => {
+    const [updateUser, setUpdateUser] = useState({
+        profileId: profileId, //오른쪽은 유저 각각의 프로필 아이디
+        nickname: '',
+        pin: 0,
+        profileImage: profile_image,
+    });
+
+    //  console.log(updateUser.profileId);
+    //  console.log(updateUser.nickname);
+    useEffect(() => {
         if (updateButtonClicked) {
-            console.log('Profile Update Enter');
+            // console.log('Profile Update Enter');
             // console.log(updateUser.profileId);
-       profileUpdate(updateUser,
-         (updateData) => {
-            console.log(updateData.data);
-           setUpdateData(updateData.data);
-           console.log(updateUser.profileId);
-         },
-         (fail) => {
-           console.log(fail);
-         }
-       );
-       console.log('Profile Update mid');
+            profileUpdate(
+                updateUser,
+                (updateData) => {
+                    // console.log(updateData.data);
+                    setUpdateData(updateData.data);
+                    //    console.log(updateUser.profileId);
+                },
+                (fail) => {
+                    console.log(fail);
+                }
+            );
+            //    console.log('Profile Update mid');
         }
-       return () => {
-         console.log('Profile Update return');
-       };
-     }, [updateButtonClicked]);
- 
-     //수정 실험 2024/02/07
- 
+        return () => {
+            //  console.log('Profile Update return');
+        };
+    }, [updateButtonClicked]);
+
+    //수정 실험 2024/02/07
     return (
         <>
             <div className={styles.userProfileContainer}>
@@ -158,13 +156,13 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
                     <div className={styles.profileLoginModal}>
                         <p>프로필 로그인</p>
                         <form className={styles.profileLoginForm}>
-                            <div className={styles.profileInputContainer}>
+                            {/* <div className={styles.profileInputContainer}>
                                 <input type="text" placeholder="아이디" />
 
                                 <div className={styles.iconContainer}>
                                     <CgProfile />
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className={styles.profileInputContainer}>
                                 <input type="text" placeholder="비밀번호" />
@@ -209,7 +207,7 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
                                             <input type="text" />
                                         </div>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <div className={styles.profileUpdateFormInputContainer}>
                                             <span>프로필 이미지</span>
                                             <img
@@ -220,10 +218,11 @@ export default function UserProfile({ profileId, nickname, profile_image }) {
                                                 style={{ objectFit: 'contain', marginTop: '10px' }}
                                             />
                                         </div>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
-                            <button /*onClick={updateClick}은 실험*/onClick={updateClick}>프로필 수정</button> <button /*onClick={handleClick}은 실험*/onClick={handleClick}>프로필 삭제</button>
+                            <button /*onClick={updateClick}은 실험*/ onClick={updateClick}>프로필 수정</button>{' '}
+                            <button /*onClick={handleClick}은 실험*/ onClick={handleClick}>프로필 삭제</button>
                         </form>
                     </div>
                 </ProfileModal>

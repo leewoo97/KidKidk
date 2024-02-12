@@ -1,5 +1,5 @@
-import {profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from "/src/apis/api/profile.js";
-import React, {useState, useEffect} from "react";
+import { profileCreate, profileLogin, profileSelectAll, profileUpdate, profileDelete } from '/src/apis/api/profile.js';
+import React, { useState, useEffect } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { RiParentLine } from 'react-icons/ri';
@@ -22,40 +22,40 @@ export default function Profile() {
      * 리코일userinfo 상태 불러오기
      */
     const userInfo = useRecoilValue(userInfoState);
-    console.log(userInfo);
-  
+    console.log('userinfo : ', userInfo);
+
     //onChange
     const onChangeCreateNickname = (e) => {
-      setCreateUser({
-        ...createUser,
-        nickname: e.target.value,
-      });
-      console.log('타켓 벨류 : ' + e.target.value)
-      console.log('바뀐 닉네임 : ' + createUser.nickname)
+        setCreateUser({
+            ...createUser,
+            nickname: e.target.value,
+        });
+        // console.log('타켓 벨류 : ' + e.target.value);
+        // console.log('바뀐 닉네임 : ' + createUser.nickname);
     };
     const onChangeCreatePin = (e) => {
-      setCreateUser({
-        ...createUser,
-        pin: e.target.value,
-      });
-      console.log('타켓 벨류 : ' + e.target.value)
-      console.log('바뀐 핀 : ' + createUser.pin)
+        setCreateUser({
+            ...createUser,
+            pin: e.target.value,
+        });
+        // console.log('타켓 벨류 : ' + e.target.value);
+        // console.log('바뀐 핀 : ' + createUser.pin);
     };
 
     const onChangeCreateType = (e) => {
-      if(e.target.value==('부모')){
-        setCreateUser({
-          ...createUser,
-          type: true,
-        });
-      }else if(e.target.value==('자식')){
-        setCreateUser({
-          ...createUser,
-          type: false,
-        });
-      }
-      console.log('타켓 벨류 : ' + e.target.value)
-      console.log('바뀐 타입 : ' + createUser.type)
+        if (e.target.value == '부모') {
+            setCreateUser({
+                ...createUser,
+                type: true,
+            });
+        } else if (e.target.value == '자식') {
+            setCreateUser({
+                ...createUser,
+                type: false,
+            });
+        }
+        // console.log('타켓 벨류 : ' + e.target.value);
+        // console.log('바뀐 타입 : ' + createUser.type);
     };
     //onChange
 
@@ -63,67 +63,71 @@ export default function Profile() {
     const [isButtonClicked, setIsButtonClicked] = useState(false);
 
     const handleClick = () => {
-      setIsButtonClicked(true);
+        setIsButtonClicked(true);
     };
 
     //profileCreate API데이터 받아오기
     const [createData, setCreateData] = useState([{}]);
-    
+
     const [createUser, setCreateUser] = useState({
-      nickname: "",
-      pin: 0,
-      profileImage: "",
-      type: true,
-      userId: 1
-    }); 
-  
-    useEffect(() => {
-      if (isButtonClicked) {
-      console.log('Profile Create Enter');
-      console.log('createUser 닉네임은 :' + createUser.nickname);
-      profileCreate(createUser,
-        (createData) => {
-          setCreateData(createData.data);
-          console.log(createData.data);
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
-      }
-      return () => {
-        console.log('Profile Create return'); 
-      };
-    }, [isButtonClicked]);
-
-
-    //profileSelectAll API데이터 받아오기
-    const [SelectAllData, setSelectAllData] = useState([{}]);
-  
-    const [user, setUser] = useState({
-      profileId: 0,
-      nickname: "string",
-      profileImage: "string",
-      type: true,
-      userId: 1
+        nickname: '',
+        pin: 0,
+        profileImage: '',
+        type: true,
+        userId: 1,
     });
 
     useEffect(() => {
-      console.log('Profile SelectAll Enter');
-      profileSelectAll(user,
-        (SelectAllData) => {
-          setSelectAllData(SelectAllData.data);
-          console.log(SelectAllData.data);
-        },
-        (fail) => {
-          console.log(fail);
+        if (isButtonClicked) {
+            // console.log('Profile Create Enter');
+            // console.log('createUser 닉네임은 :' + createUser.nickname);
+            if (createUser.type) {
+                createUser.profileImage = '/src/assets/images/parentImg.jpg';
+            } else {
+                createUser.profileImage = '/src/assets/images/kidImg.jpg';
+            }
+            profileCreate(
+                createUser,
+                (createData) => {
+                    setCreateData(createData.data);
+                    // console.log(createData.data);
+                },
+                (fail) => {
+                    // console.log(fail);
+                }
+            );
         }
-      );
-      return () => {
-        <div>
-        console.log('Profile SelectAll return');
-        </div>  
-      };
+        return () => {
+            // console.log('Profile Create return');
+        };
+    }, [isButtonClicked]);
+
+    //profileSelectAll API데이터 받아오기
+    const [SelectAllData, setSelectAllData] = useState([{}]);
+
+    const [user, setUser] = useState({
+        profileId: 0,
+        nickname: 'string',
+        profileImage: 'string',
+        type: true,
+        userId: 1,
+    });
+
+    useEffect(() => {
+        // console.log('Profile SelectAll Enter');
+        profileSelectAll(
+            userInfo.userId,
+            (SelectAllData) => {
+                setSelectAllData(SelectAllData.data);
+                // console.log(SelectAllData.data);
+            },
+            (fail) => {
+                // console.log(fail);
+            }
+        );
+        return () => {
+            // <div>console.log('Profile SelectAll return');</div>;
+        };
     }, []);
 
     // profileUpdate API 데이터 받아오기 실험중 2024/02/07
@@ -150,20 +154,18 @@ export default function Profile() {
     //   return () => {
     //     <div>
     //     console.log('Profile Update return');
-    //     </div>  
+    //     </div>
     //   };
     // }, []);
 
     //실험 2024/02/07
 
-  
     // profileDelete API데이터 받아오기(쓰지않는 코드)
     // const [deleteData, setDeleteData] = useState([{}]);
 
-    
     // const [profile, serProfile] = useState({
     //     profileId: 1,
-    //     nickname: "string", 
+    //     nickname: "string",
     //     profileImage: "string",
     //     type: true,
     //     userId: 1
@@ -182,11 +184,9 @@ export default function Profile() {
     //   return () => {
     //     <div>
     //     console.log('Profile Delete return');
-    //     </div>  
+    //     </div>
     //   };
     // }, []);
-
-
 
     // 가상의 프로필 데이터 배열
     // const profiles = [
@@ -195,7 +195,6 @@ export default function Profile() {
     //     // 추가적인 프로필 데이터...
     // ];
 
-    
     const [modalCreateOpen, setModalCreateOpen] = useState(false);
 
     const openModalCreate = () => setModalCreateOpen(true);
@@ -226,58 +225,56 @@ export default function Profile() {
                     </div>
                 </div>
 
-                  <p className={styles.profileptag}>프로필을 선택해주세요</p>
-                  {modalCreateOpen ? (
-                      <ProfileModal
-                          modalIsOpen={!!openModalCreate}
-                          closeModal={closeModalCreate}
-                          title="프로필 생성 모달"
-                          content="이것은 프로필 생성 모달입니다."
-                      >
-                          <div className={styles.profileCreateModal}>
-                              <p>프로필 등록</p>
-                              <form className={styles.profileCreateForm}>
-                                  <div className={styles.profileInputContainer}>
-                                      <input type="text" onChange={onChangeCreateNickname} placeholder="아이디" />
+                <p className={styles.profileptag}>프로필을 선택해주세요</p>
+                {modalCreateOpen ? (
+                    <ProfileModal
+                        modalIsOpen={!!openModalCreate}
+                        closeModal={closeModalCreate}
+                        title="프로필 생성 모달"
+                        content="이것은 프로필 생성 모달입니다."
+                    >
+                        <div className={styles.profileCreateModal}>
+                            <p>프로필 등록</p>
+                            <form className={styles.profileCreateForm}>
+                                <div className={styles.profileInputContainer}>
+                                    <input type="text" onChange={onChangeCreateNickname} placeholder="닉네임" />
 
-                                      <div className={styles.iconContainer}>
-                                          <CgProfile />
-                                      </div>
-                                  </div>
+                                    <div className={styles.iconContainer}>
+                                        <CgProfile />
+                                    </div>
+                                </div>
 
-                                  <div className={styles.profileInputContainer}>
-                                      <input type="text" onChange={onChangeCreatePin} placeholder="비밀번호" />
+                                <div className={styles.profileInputContainer}>
+                                    <input type="text" onChange={onChangeCreatePin} placeholder="비밀번호" />
 
-                                      <div className={styles.iconContainer}>
-                                          <RiLockPasswordFill />
-                                      </div>
-                                  </div>
+                                    <div className={styles.iconContainer}>
+                                        <RiLockPasswordFill />
+                                    </div>
+                                </div>
 
-                                  <div className={styles.profileInputContainer}>
-                                      <input type="text" onChange={onChangeCreateType} placeholder="회원유형" />
+                                <div className={styles.profileInputContainer}>
+                                    <input type="text" onChange={onChangeCreateType} placeholder="회원유형" />
+                                    <div className={styles.iconContainer}>
+                                        <RiParentLine />
+                                    </div>
+                                </div>
 
-                                      <div className={styles.iconContainer}>
-                                          <RiParentLine />
-                                      </div>
-                                  </div>
+                                {/* <div className={styles.profileInputContainer}>
+                                    <label htmlFor={styles.fileButton}>
+                                        <div className={styles.profileDiv}>프로필 이미지</div>
+                                    </label>
+                                    <input type="file" id={styles.fileButton} />
+                                    <div className={styles.iconContainer}>
+                                        <FaRegImage />
+                                    </div>
+                                </div> */}
 
-                                  <div className={styles.profileInputContainer}>
-                                      <label htmlFor={styles.fileButton}>
-                                          <div className={styles.profileDiv}>프로필 이미지</div>
-                                      </label>
-                                      <input type="file" id={styles.fileButton} />
-                                      <div className={styles.iconContainer}>
-                                          <FaRegImage />
-                                      </div>
-                                  </div>
-
-                                  <button onClick={handleClick}>프로필 등록</button>
-                                  
-                              </form>
-                          </div>
-                      </ProfileModal>
-                  ) : null}
-              </div>
-          </>
-      );
+                                <button onClick={handleClick}>프로필 등록</button>
+                            </form>
+                        </div>
+                    </ProfileModal>
+                ) : null}
+            </div>
+        </>
+    );
 }

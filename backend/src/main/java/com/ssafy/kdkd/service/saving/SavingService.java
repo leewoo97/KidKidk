@@ -80,7 +80,7 @@ public class SavingService {
             LocalDateTime currentDate = LocalDateTime.now();
             long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate) - 1;
 
-            if (daysBetween % 7 <= 0) {
+            if (daysBetween % 7 == 0) {
                 Long childId = saving.getId();
                 Optional<Child> findChild = childService.findChild(childId);
 
@@ -93,7 +93,7 @@ public class SavingService {
                 int requiredCount = 4;
                 int payment = saving.getPayment();
                 int coin = child.getCoin();
-                int leftChance = requiredCount - ((int)daysBetween / 7 + 1);
+                int leftChance = requiredCount - ((int)daysBetween / 7);
                 int isPaymentCompleted = coin < payment ? 0 : 1;
                 int count = saving.getCount();
                 int updateCount = count - isPaymentCompleted;

@@ -11,12 +11,12 @@ export const getChildIds = atom({
 
 export const childIdAtom = atom({
     key: 'parentChildId',
-    default: {},
+    default: null,
     effects_UNSTABLE: [persistAtom],
 });
 
 export const childNickNameAtom = atom({
     key: 'parentChildNickName',
-    default: {},
+    default: null,
     effects_UNSTABLE: [persistAtom],
 });

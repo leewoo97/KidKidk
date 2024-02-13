@@ -11,9 +11,12 @@ import tuto4 from '@images/tuto4.png';
 import tuto5 from '@images/tuto5.png';
 import ChildSavingTable from './ChildSavingTable.jsx';
 import Modal from 'react-modal';
+import { useRecoilValue } from 'recoil';
+import { profileInfoState } from '../../store/profileInfoAtom.js';
 
 export default function ChildSaving() {
-    const childId = 2;
+    const profileInfo = useRecoilValue(profileInfoState);
+    const childId = profileInfo.profileId;
     const [isSavingStart, setIsSavingStart] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [currentTutorialIndex, setCurrentTutorialIndex] = useState(0);

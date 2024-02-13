@@ -8,6 +8,8 @@ import { getJob } from '@api/job.js';
 import { getFund } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
+import { useRecoilValue } from 'recoil';
+import { profileInfoState } from '../../store/profileInfoAtom.js';
 // import Chart from 'chart.js/auto';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -15,7 +17,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export default function ManagementContent() {
     const navigate = useNavigate();
 
-    const childId = 2;
+    const profileInfo = useRecoilValue(profileInfoState);
+    const childId = profileInfo.profileId;
     const [job, setJob] = useState([]);
     const [fund, setFund] = useState([]);
     const [savingMoney, setSavingMoney] = useState(0);
@@ -122,13 +125,26 @@ export default function ManagementContent() {
         },
     };
 
-    const ChartComponent = () => <Doughnut data={Data} options={Options} />;
+    // const ChartComponent = () => <Doughnut data={Data} options={Options} />;
+    const ChartComponent = () => {
+        // Data가 비어있는지 확인
+        return (
+            <>
+                {ratioPercentage.every((value) => value === 0) ? (
+                    <div>현재 가진 도토리가 없습니다.</div>
+                ) : (
+                    <Doughnut data={Data} options={Options} />
+                )}
+            </>
+        );
+    };
+    console.log(ratioPercentage);
 
     return (
         <div className={styles.manageContainer}>
             <div className={styles.card1}>
                 <div className={styles.card1_1}>
-                    <div className={styles.title}> 현재 짱아의 주머니 </div>
+                    <div className={styles.title}> 현재 {profileInfo.nickname} 어린이의 주머니 </div>
                     <div className={styles.iconContainer1}>
                         <div>
                             <img src={acornImg} style={{ width: '6vw' }} />
@@ -145,9 +161,13 @@ export default function ManagementContent() {
                     </div>
                 </div>
                 <div className={styles.card1_2}>
-                    <div className={styles.title}> 짱아가 가지고 있는 모든 도토리 </div>
+                    <div className={styles.title}>
+                        <div>{profileInfo.nickname} 어린이가 가지고 있는 모든 도토리</div>
+                        <div className={styles.title_info}>i</div>
+                    </div>
+
                     <div className={styles.iconContainer2}>
-                        <div style={{ width: '140px' }}>
+                        <div className={styles.doughnutContainer} style={{ width: '140px' }}>
                             <ChartComponent />
                         </div>
                         <div className={styles.infoContainer2}>

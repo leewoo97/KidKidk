@@ -13,18 +13,16 @@ import { getChild, updateChild } from '@api/child.js';
 import { profileSelectAll } from '@api/profile.js';
 import { getJob } from '@api/job.js';
 import { useRecoilValue } from 'recoil';
-import { profileInfoState } from '../store/profileInfoAtom.js';
 import { userInfoState } from '../store/userInfoAtom.js';
+import { profileInfoState } from '../store/profileInfoAtom.js';
 
 function ChildNav() {
-    const profileInfo = useRecoilValue(profileInfoState);
     const userInfo = useRecoilValue(userInfoState);
-    console.log('프로필정보', profileInfo);
+    const profileInfo = useRecoilValue(profileInfoState);
+    // console.log('프로필정보', profileInfo);
 
     const userId = userInfo.userId;
     const childId = profileInfo.profileId;
-    // const userId = 1;
-    // const childId = 2;
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
@@ -83,13 +81,13 @@ function ChildNav() {
             (success) => {
                 // console.log(success.data);
                 const matchingProfile = success.data.find((profile) => profile.profileId === childId);
-                // 일치하는 객체가 있으면 해당 객체를 setProfile에 저장합니다.
+                // 일치하는 객체가 있으면 해당 객체를 setProfile에 저장
                 if (matchingProfile) {
                     setChildProfile(matchingProfile);
                 }
 
                 const matchingProfile1 = success.data.find((profile) => profile.type === true);
-                // 일치하는 객체가 있으면 해당 객체를 setProfile에 저장합니다.
+                // 일치하는 객체가 있으면 해당 객체를 setProfile에 저장
                 if (matchingProfile1) {
                     setParentProfile(matchingProfile1);
                 }

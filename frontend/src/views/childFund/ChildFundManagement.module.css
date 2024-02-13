@@ -299,42 +299,6 @@
     gap: 2vh;
 }
 
-/*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*/
-
 .modalBody1Content {
     width: 100%;
     display: flex;
@@ -427,4 +391,7 @@
 }
 .betBody2 {
     display: flex;
+}
+.noBarChart {
+    background-color: #f8f3e7;
 }

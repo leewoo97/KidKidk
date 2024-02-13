@@ -95,6 +95,10 @@ function ParentNav() {
     const handleLogout = () => {
         console.log('Enter handleLogout');
         console.log(document.cookie);
+        const confirmLogout = confirm('정말 로그아웃 하시겠습니까?');
+        if (confirmLogout) {
+            navigate('/welcome');
+        }
     };
 
     return (
@@ -105,9 +109,6 @@ function ParentNav() {
                     <Component num={0} title={'메인'} />
                     <Component num={1} title={'직업'} />
                     <Component num={2} title={'투자/적금'} />
-                    <div className={styles.logout} onClick={handleLogout}>
-                        로그아웃
-                    </div>
                 </div>
                 <div className={styles.light} style={{ top: a[top] }}>
                     <div className={styles.rectangleRow}></div>
@@ -115,6 +116,9 @@ function ParentNav() {
                         <div className={styles.rectangleMin1}></div>
                         <div className={styles.rectangleMin2}></div>
                     </div>
+                </div>
+                <div className={styles.logout} onClick={handleLogout}>
+                    로그아웃
                 </div>
             </div>
             <div className={styles.contents}>

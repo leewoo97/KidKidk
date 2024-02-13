@@ -7,21 +7,20 @@ import { getFund, getFundHistory, getRoi, getStatus, createSubmit, getFundNews }
 import { getChild, updateChild } from '@api/child.js';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { differenceInDays, format } from 'date-fns';
+import { useRecoilValue } from 'recoil';
+import { profileInfoState } from '../../store/profileInfoAtom.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function ChildFundManagement() {
-    const childId = 2;
+    const profileInfo = useRecoilValue(profileInfoState);
+    const childId = profileInfo.profileId;
     const [isFundStart, setIsFundStart] = useState(true); // 부모가 투자 시작안했으면 false
     const [isFundItem, setIsFundItem] = useState(false); // 투자항목이 있으면 true
     const [currentIndex, setCurrentIndex] = useState(0); // 모달 페이지
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [success, setSuccess] = useState(0); // 성공 베팅 코인
     const [fail, setFail] = useState(0); // 실패 베팅 코인
-    const [fund, setFund] = useState([]); // 투자 항목 테이블
-    const [fundStatus, setFundStatus] = useState([]); // 투자 상태 테이블
-    const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
-    const [fundHistory, setFundHistory] = useState([]); // 투자 내역 테이블
     const [labels, setLabels] = useState([]); // 그래프 라벨
     const [rates, setRates] = useState([]); // 이익률
     const [roi, setRoi] = useState([]); // 투자 성공률 테이블
@@ -34,6 +33,29 @@ export default function ChildFundManagement() {
     const [myChoice, setMyChoice] = useState(0); // 오늘 나의 선택
     const [showDiv, setShowDiv] = useState(false); // 거래할 수 있는 시간이면 true
     const [fundNewsList, setFundNewsList] = useState([]); // 투자 뉴스 리스트
+    const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
+    const [fund, setFund] = useState([
+        {
+            name: null,
+            content: null,
+            yield: 0,
+        },
+    ]); // 투자 항목 테이블
+    const [fundStatus, setFundStatus] = useState([
+        {
+            amount: 0,
+            submit: null,
+            answer: null,
+        },
+    ]); // 투자 상태 테이블
+    const [fundHistory, setFundHistory] = useState([
+        {
+            dataLog: null,
+            seedMoney: 0,
+            yield: 0,
+            pnl: 0,
+        },
+    ]); // 투자 내역 테이블
 
     // 투자항목 아이선택(ChildStatus, Child 수정)
     const handleCreateSubmit = async () => {
@@ -96,9 +118,11 @@ export default function ChildFundManagement() {
         getFund(
             childId,
             (success) => {
-                setFund(success.data.Fund);
                 if (success.data.Fund) {
+                    setFund(success.data.Fund);
                     setIsFundItem(true);
+                } else {
+                    // console.log('No fund data available.');
                 }
             },
             (fail) => {
@@ -106,7 +130,7 @@ export default function ChildFundManagement() {
             }
         );
         return () => {
-            console.log('ChildManagement userEffect return');
+            // console.log('ChildManagement userEffect return');
         };
     }, []);
 
@@ -122,7 +146,7 @@ export default function ChildFundManagement() {
             }
         );
         return () => {
-            console.log('ChildManagement userEffect return');
+            // console.log('ChildManagement userEffect return');
         };
     }, []);
 
@@ -132,29 +156,33 @@ export default function ChildFundManagement() {
         getFundHistory(
             childId,
             (success) => {
-                setFundHistory(success.data.FundHistory);
-                labels.length = 0;
-                rates.length = 0;
-                let dateTime = format(new Date(), 'yyyy.MM.dd');
-                let labelList = [];
-                let rateList = [];
-                success.data.FundHistory.map((row) => {
-                    let dataLog = new Date(row.dataLog);
-                    let fDataLog = format(dataLog, 'yyyy.MM.dd');
-                    if (differenceInDays(new Date(dateTime), new Date(fDataLog)) <= 7) {
-                        labelList.push(fDataLog);
-                        rateList.push((row.pnl < row.seedMoney ? -1 : 1) * row.yield);
-                    }
-                });
-                setLabels(labelList);
-                setRates(rateList);
+                if (success.data.FundHistory) {
+                    setFundHistory(success.data.FundHistory);
+                    labels.length = 0;
+                    rates.length = 0;
+                    let dateTime = format(new Date(), 'yyyy.MM.dd');
+                    let labelList = [];
+                    let rateList = [];
+                    success.data.FundHistory.map((row) => {
+                        let dataLog = new Date(row.dataLog);
+                        let fDataLog = format(dataLog, 'yyyy.MM.dd');
+                        if (differenceInDays(new Date(dateTime), new Date(fDataLog)) <= 7) {
+                            labelList.push(fDataLog);
+                            rateList.push((row.pnl < row.seedMoney ? -1 : 1) * row.yield);
+                        }
+                    });
+                    setLabels(labelList);
+                    setRates(rateList);
+                } else {
+                    // console.log('No fund history data available.');
+                }
             },
             (fail) => {
                 console.log(fail);
             }
         );
         return () => {
-            console.log('ChildManagement userEffect return');
+            // console.log('ChildManagement userEffect return');
         };
     }, []);
 
@@ -170,7 +198,7 @@ export default function ChildFundManagement() {
             }
         );
         return () => {
-            console.log('ChildManagement userEffect return');
+            // console.log('ChildManagement userEffect return');
         };
     }, []);
 
@@ -179,14 +207,18 @@ export default function ChildFundManagement() {
         getStatus(
             childId,
             (success) => {
-                setFundStatus(success.data.FundStatus);
+                if (success.data.FundStatus) {
+                    setFundStatus(success.data.FundStatus);
+                } else {
+                    // console.log('No fund status data available.');
+                }
             },
             (fail) => {
                 console.log(fail);
             }
         );
         return () => {
-            console.log('ChildManagement userEffect return');
+            // console.log('ChildManagement userEffect return');
         };
     }, []);
 
@@ -291,13 +323,15 @@ export default function ChildFundManagement() {
             },
         ],
     };
+    console.log(data.datasets[0].data[0]);
 
     // 아이의 투자 상태를 setChoice에 저장
     // fundStatus 객체가 변경될 때마다 useEffect 콜백 함수를 실행
     // setChoice 함수를 호출하여 choice 상태를 업데이트
     useEffect(() => {
-        if (fundStatus && fundStatus.amount != 0) {
+        if (fundStatus && typeof fundStatus.amount !== 'undefined' && fundStatus.amount != 0) {
             setChoice(fundStatus.submit ? '성공' : '실패');
+            console.log(fundStatus.amount);
         } else {
             setChoice('선택 안함');
         }
@@ -328,9 +362,10 @@ export default function ChildFundManagement() {
             });
 
             count = count == 0 ? 1 : count;
-            sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;
-
+            sumSeedMoney = sumSeedMoney == 0 ? 0 : sumSeedMoney;
             let avg = sumSeedMoney / count; // 평균 투자금액
+
+            sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;
             let pRate = (sumPnl / sumSeedMoney) * 100; // 이익률
 
             setAvgFundMoney(avg);
@@ -357,7 +392,7 @@ export default function ChildFundManagement() {
                                 ) : null}
                             </div>
                             <div className={styles.card1_text1}>
-                                {fund ? (
+                                {fund.name === null ? (
                                     <> {fund.content} </>
                                 ) : (
                                     <span style={{ color: '#C1B8AD' }}>오늘은 투자 항목이 없어요 ㅠㅠ </span>
@@ -368,7 +403,7 @@ export default function ChildFundManagement() {
                         <div className={styles.card2}>
                             <div className={styles.title1}>오늘 나의 선택</div>
                             <div className={styles.card2_text1}>
-                                {choice === '선택 안함' ? (
+                                {choice === '선택 안함' || choice === '' ? (
                                     <span style={{ color: '#C1B8AD' }}>오늘은 쉴래</span>
                                 ) : (
                                     <>
@@ -573,7 +608,13 @@ export default function ChildFundManagement() {
                                     <div>
                                         <img src={acornImg} style={{ width: '2vw' }} />
                                     </div>
-                                    <div className={styles.card3Text1}>{fundStatus.amount} 도토리</div>
+                                    <div className={styles.card3Text1}>
+                                        {typeof fundStatus.amount === 'undefined' ? (
+                                            <>0 도토리</>
+                                        ) : (
+                                            <>{fundStatus.amount} 도토리</>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.card3}>
@@ -599,7 +640,11 @@ export default function ChildFundManagement() {
                         <div className={styles.card7}>
                             <div className={styles.content2Title}>최근 일주일 투자 현황</div>
                             <div className={styles.graph}>
-                                <Bar style={{ width: '460px', height: '60px' }} options={options} data={data} />
+                                {typeof data.datasets[0].data[0] === 'undefined' ? (
+                                    <div className={styles.noBarChart}>최근 일주일 투자 현황이 없습니다.</div>
+                                ) : (
+                                    <Bar style={{ width: '460px', height: '60px' }} options={options} data={data} />
+                                )}
                             </div>
                         </div>
                         <div className={styles.card8}></div>
@@ -611,7 +656,7 @@ export default function ChildFundManagement() {
                                         return <div key={index}>{row.content}</div>;
                                     })
                                 ) : (
-                                    <div>투자뉴스가 없습니다</div>
+                                    <div>투자뉴스가 없습니다.</div>
                                 )}
                             </div>
                         </div>

@@ -74,7 +74,7 @@ export default function Profile() {
         pin: 0,
         profileImage: '',
         type: true,
-        userId: 1,
+        userId: userInfo.userId,
     });
 
     useEffect(() => {
@@ -256,12 +256,12 @@ export default function Profile() {
                                 <div className={styles.profileInputRadioContainer}>
                                     <label htmlFor="true">
                                         부모&nbsp;
-                                        <input type="radio" name="answer" value="true" onChange={onChangeCreateType} />
+                                        <input type="radio" name="answer" value="부모" onChange={onChangeCreateType} />
                                     </label>
                                     &nbsp;&nbsp;
                                     <label htmlFor="false">
                                         자식&nbsp;
-                                        <input type="radio" name="answer" value="false" onChange={onChangeCreateType} />
+                                        <input type="radio" name="answer" value="자식" onChange={onChangeCreateType} />
                                     </label>
                                     <div className={styles.iconContainer}>
                                         <RiParentLine />

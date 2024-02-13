@@ -6,7 +6,6 @@ import { createRef, useEffect, useState, useRef } from 'react';
 import ParentAlarm from './ParentAlarm';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { profileInfoState } from '../store/profileInfoAtom.js';
-import { userInfoState } from '../store/userInfoAtom.js';
 
 import { getChildIds, childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 import { userInfoState } from '@store/userInfoAtom.js';

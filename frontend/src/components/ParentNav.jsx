@@ -95,9 +95,9 @@ function ParentNav() {
     const handleLogout = () => {
         console.log('Enter handleLogout');
         console.log(document.cookie);
-        const confirmLogout = confirm('정말 로그아웃 하시겠습니까?');
+        const confirmLogout = confirm('프로필 전환 하시겠습니까?');
         if (confirmLogout) {
-            navigate('/welcome');
+            navigate('/profile');
         }
     };
 
@@ -118,7 +118,7 @@ function ParentNav() {
                     </div>
                 </div>
                 <div className={styles.logout} onClick={handleLogout}>
-                    로그아웃
+                    프로필 전환
                 </div>
             </div>
             <div className={styles.contents}>

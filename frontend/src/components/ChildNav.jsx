@@ -250,6 +250,15 @@ function ChildNav() {
         );
     }
 
+    const handleLogout = () => {
+        console.log('Enter handleLogout');
+        console.log(document.cookie);
+        const confirmLogout = confirm('프로필 전환 하시겠습니까?');
+        if (confirmLogout) {
+            navigate('/profile');
+        }
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.nav}>
@@ -267,7 +276,9 @@ function ChildNav() {
                         <div className={styles.rectangleMin2}></div>
                     </div>
                 </div>
-                <div className={styles.logout}>로그아웃</div>
+                <div className={styles.logout} onClick={handleLogout}>
+                    프로필 전환
+                </div>
             </div>
             <div className={styles.contents}>
                 <Outlet />

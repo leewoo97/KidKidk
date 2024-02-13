@@ -118,6 +118,13 @@
     transform: translateY(-50%);
 }
 
+.iconContainerFamily {
+    position: absolute;
+    top: 65%;
+    left: 10px; /* 필요에 따라 조절 */
+    transform: translateY(-50%);
+}
+
 .profileDiv {
     text-align: center;
     line-height: 30px;

@@ -6,11 +6,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AlarmDto {
+public class JobRequestDto {
 
-    private int type;
-    private String content;
-    private Long senderId;
-    private Long receiverId;
+    private Long childId;
 
 }

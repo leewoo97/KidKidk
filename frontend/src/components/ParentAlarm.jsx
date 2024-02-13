@@ -7,20 +7,35 @@ import styles from './ParentAlarm.module.css';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { notificationsState} from '../store/alarmAtom';
+import { getChildIds} from '@store/childIdsAtom.js';
 import { getChildList } from '../apis/api/profile';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
 
 export default function ParentAlarm() {
     const [notifications, setNotifications] = useRecoilState(notificationsState);
 
-    const [userData, setUserData] = useState(['짱구', '짱아']);
+    const [childIdsData, setChildIdsData] = useRecoilState(getChildIds);
 
     const [selected, setSelected] = useState("전체");
 
-    const handleClickJobDone = (key) => {
+    const handleClickJobDone = (key, childId) => {
+        jobDone(childId,
+            (success) => {
+                // 알림 발송
+            },
+            (fail) => {
+                console.log(fail);
+            })
         setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    }
 
-    const handleClickAcceptExchange = (key) => {
+    const handleClickAcceptExchange = (key, childId, amount) => {
+        acceptExchange(childId, amount,
+            (success) => {
+                // 알림 발송
+            },
+            (fail) => {
+                console.log(fail);
+            })
         setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    }
 
     const deleteReadNotifications = () => {
@@ -53,12 +68,12 @@ export default function ParentAlarm() {
                                 </div>
                                 {item.require === 'job' ? (
                                     <img src={alarmDoneStamp} 
-                                        onClick={() => handleClickJobDone(item.key)} 
+                                        onClick={() => handleClickJobDone(item.key, item.childId)} 
                                         style={{ width: '6vw', height: '2vw', cursor: 'pointer' }} />
                                 ) : (
                                     <img
                                         src={alarmAcceptExchange}
-                                        onClick={() => handleClickAcceptExchange(item.key)}
+                                        onClick={() => handleClickAcceptExchange(item.key, item.childId, item.amount)}
                                         style={{ width: '6vw', height: '2vw', cursor: 'pointer' }}
                                     />
                                 )}
@@ -92,8 +107,8 @@ export default function ParentAlarm() {
                 </div>
                 <div className={styles.parentAlarmButtons}>
                     <button value="전체" onClick={handleClickChild}>전체</button>
-                    {userData.map((child) => (
-                        <button key={child} value={child} onClick={handleClickChild}>{child}</button>
+                    {childIdsData.map((child) => (
+                        <button key={child.childId} value={child.nickname} onClick={handleClickChild}>{child.nickname}</button>
                     ))}
                 </div>
                 <div className={styles.parentAlarmInfo}>

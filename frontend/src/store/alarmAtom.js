@@ -14,3 +14,8 @@ export const notificationsState = atom({
     key : "notifications",
     default : []
 })
+
+export const childListState = atom({
+    key : "childList",
+    default : []
+})

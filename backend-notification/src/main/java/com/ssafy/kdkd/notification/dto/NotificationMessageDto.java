@@ -13,4 +13,7 @@ public class NotificationMessageDto {
     private String title;
     private String content;
     private String require;
+    private Long childId;
+    private int amount;
+
 }

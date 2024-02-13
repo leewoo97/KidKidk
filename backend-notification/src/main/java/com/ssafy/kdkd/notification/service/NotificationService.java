@@ -1,5 +1,6 @@
 package com.ssafy.kdkd.notification.service;
 
+import com.ssafy.kdkd.notification.dto.NotificationMessageDto;
 import com.ssafy.kdkd.notification.entity.NotificationMessage;
 import com.ssafy.kdkd.notification.repository.EmitterRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -106,11 +107,12 @@ public class NotificationService {
 
 
 
-    public void publish(String subId, String pubName, String title, String content, String require) {
+    public void publish(NotificationMessageDto msg) {
         NotificationMessage notificationMessage = NotificationMessage.builder()
-                .subId(subId).pubName(pubName).title(title).content(content).
-        key(makeTimeIncludeId(subId)).require(require).build();
-        log.info("알림 전송. userId : {}, message : {}, sub_message : {}",subId, title,content);
+                .subId(msg.getSubId()).pubName(msg.getPubName()).title(msg.getTitle()).content(msg.getContent())
+                .key(makeTimeIncludeId(msg.getSubId())).require(msg.getRequire())
+                .childId(msg.getChildId()).amount(msg.getAmount()).build();
+        log.info("알림 전송. userId : {}, message : {}, sub_message : {}",msg.getSubId(), msg.getTitle(), msg.getContent());
         kafkaTemplate.send("notification", notificationMessage);
     }
 

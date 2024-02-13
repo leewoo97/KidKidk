@@ -212,7 +212,7 @@ export default function ParentFund() {
     };
 
     const handleFundNewsChange = (event) => {
-        setFundNews(event.target.value.trim());
+        setFundContent(event.target.value.trim());
     };
 
     const handleFundAnswerChange = (event) => {
@@ -222,14 +222,13 @@ export default function ParentFund() {
 
     const handleFundNewsCreate = (event) => {
         event.preventDefault();
-        // setFundNews();
-        // setFundAnswer();
-        if (fundNews != null && fundNews != '') {
+
+        if (fundContent != null && fundContent != '') {
             createFundNews(
-                { content: fundNews, childId: childId },
+                { content: fundContent, childId: childId },
                 (success) => {
-                    console.log('투자 뉴스 등록 성공', success.data.fundNews);
-                    setFundNews(fundNews);
+                    console.log('투자 뉴스 등록 성공', success.data);
+                    setFundNews(success.data.FundNews.content);
                 },
                 (fail) => {
                     console.log('투자 뉴스 등록 실패', fail);
@@ -520,9 +519,9 @@ export default function ParentFund() {
                                     <input
                                         type="text"
                                         name="content"
-                                        value={fundNews}
+                                        value={fundContent}
                                         onChange={handleFundNewsChange}
-                                        placeholder="오늘의 투자 뉴스(베팅 힌트)"
+                                        placeholder="오늘의 투자 뉴스를 입력해주세요."
                                     />
                                 </div>
                                 <div className={styles.fundInputRadioContainer}>

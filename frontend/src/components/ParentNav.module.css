@@ -57,6 +57,7 @@
     gap: 7vh;
     position: relative;
     z-index: 999;
+    margin-bottom: 40vh;
 }
 .light {
     position: absolute;
@@ -146,11 +147,12 @@
 
 /* 로그아웃 */
 .logout {
-    font-size: smaller;
-    margin-top: 30vh;
-    color: var(--nav-text-logo);
+    /* font-size: smaller; */
+    /* margin-top: 30vh; */
+    color: #ffffff;
+    cursor: pointer;
 }
 
 .logout:hover {
-    color: rgba(255, 0, 0, 0.897);
+    color: #ffb700;
 }

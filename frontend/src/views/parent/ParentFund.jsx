@@ -13,12 +13,14 @@ import {
     getFundNews,
     createFundNews,
     createFundAnswer,
+    getStatus,
 } from '@api/fund.js';
 import { useRecoilValue } from 'recoil';
 import { childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 import { format } from 'date-fns';
 
 import styles from './ParentFund.module.css';
+import { useFetcher } from 'react-router-dom';
 
 export default function ParentFund() {
     const childId = useRecoilValue(childIdAtom);
@@ -39,6 +41,21 @@ export default function ParentFund() {
 
     const [fundNews, setFundNews] = useState();
     const [fundAnswer, setFundAnswer] = useState();
+
+    // 투자 상태 조회
+    useEffect(() => {
+        getStatus(
+            childId,
+            (success) => {
+                console.log(success.data.FundStatus);
+                setFundAnswer(success.data.FundStatus);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+    });
+    console.log(fundAnswer);
 
     // 투자 항목 조회
     useEffect(() => {
@@ -443,14 +460,33 @@ export default function ParentFund() {
                     <p>오늘의 투자 뉴스</p>
 
                     <div className={styles.todayFundNewsFrame}>
-                        {fundNews !== undefined && fundNews ? (
-                            <p>오늘의 투자 뉴스 : {fundNews}</p>
-                        ) : (
-                            <>
-                                <p>오늘의 투자 뉴스가 없습니다</p>
-                                <button onClick={() => setFundNewsCreateModalOpen(true)}>투자 뉴스 등록하기</button>
-                            </>
-                        )}
+                        <div>
+                            {fundAnswer !== undefined && fundAnswer ? (
+                                <p>
+                                    오늘의 투자 정답 :
+                                    {fundAnswer ? (
+                                        <span style={{ color: 'blue' }}>&nbsp;성공</span>
+                                    ) : (
+                                        <span style={{ color: 'red' }}>&nbsp;실패</span>
+                                    )}
+                                </p>
+                            ) : (
+                                <>
+                                    <p>오늘의 투자 정답을 투자 뉴스와 함께 등록해주세요</p>
+                                </>
+                            )}
+                        </div>
+                        <br />
+                        <div className={styles.todayFundNewsFrameNews}>
+                            {fundNews !== undefined && fundNews ? (
+                                <p>오늘의 투자 뉴스 : {fundNews}</p>
+                            ) : (
+                                <>
+                                    <p>오늘의 투자 뉴스가 없습니다</p>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button onClick={() => setFundNewsCreateModalOpen(true)}>투자 뉴스 등록하기</button>
+                                </>
+                            )}
+                        </div>
                     </div>
                     <Modal
                         appElement={document.getElementById('root')}

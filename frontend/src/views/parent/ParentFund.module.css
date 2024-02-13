@@ -81,6 +81,13 @@
     margin-left: 50px;
 }
 
+.todayFundNewsFrameNews {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 /* 투자 등록 모달 */
 .fundModal {
     text-align: center;

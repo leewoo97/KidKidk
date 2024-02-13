@@ -5,6 +5,7 @@
     width: 70vw;
     height: 90vh;
     border-radius: 15px;
+    padding: 10px;
 }
 
 .parentJobContainerStart {
@@ -44,6 +45,7 @@
     margin-top: 10px;
     border: 3px solid var(--component-border);
     border-radius: 15px;
+    padding: 10px;
 }
 
 .childProfileFrame {
@@ -56,6 +58,7 @@
     margin-top: 10px;
     border: 3px solid var(--component-border);
     border-radius: 15px;
+    padding: 10px;
 }
 
 .childProfileFrame > div:first-child {
@@ -116,7 +119,7 @@
     background-color: var(--component-background);
     justify-content: center;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
     margin-top: 10px;
     border: 3px solid var(--component-border);
     border-radius: 15px;
@@ -161,7 +164,7 @@
     background-color: var(--component-background);
     justify-content: space-around;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
     margin-top: 10px;
     border: 3px solid var(--component-border);
     border-radius: 15px;

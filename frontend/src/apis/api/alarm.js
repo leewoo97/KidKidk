@@ -17,4 +17,12 @@ async function sendAlarm(subId, pubName, title, content, require) {
         });
 }
 
-export { sendAlarm };
+async function jobDone() {
+
+}
+
+async function acceptExchange(){
+
+}
+
+export { sendAlarm, jobDone, acceptExchange};

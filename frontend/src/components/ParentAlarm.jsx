@@ -6,40 +6,22 @@ import styles from './ParentAlarm.module.css';
 
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { notificationsState} from '../store/alarmAtom';
+import { getChildList } from '../apis/api/profile';
+import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
 
 export default function ParentAlarm() {
-    const EventSource = EventSourcePolyfill || NativeEventSource;
-    const [sse, setSse] = useRecoilState(sseState);
-    const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
     const [notifications, setNotifications] = useRecoilState(notificationsState);
-
-    const [profileId, setProfileId] = useState(2);
 
     const [userData, setUserData] = useState(['짱구', '짱아']);
 
     const [selected, setSelected] = useState("전체");
 
-    const kafkaSub = () => {
-        setSse(new EventSource(`https://notification.silvstone.xyz/subscribe/${profileId}`, {
-            headers: {
-                "Last-Event-ID" : lastEventId,
-            },
-            heartbeatTimeout: 5*60*1000,
-        }).onmessage = (event) =>    {
-            console.log(event);
-            if(event.data !== "connected!"){
-                const jsonData = JSON.parse(event.data);
-                setNotifications(prev => [...prev, jsonData]);
-            }
-            setLastEventId(event.lastEventId);
-        });
-    }
+    const handleClickJobDone = (key) => {
+        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    }
 
-    const handleClickRead = (key) => {
-        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));
-    }
+    const handleClickAcceptExchange = (key) => {
+        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    }
 
     const deleteReadNotifications = () => {
         setNotifications(notifications.filter(noti => !noti.read));
@@ -71,12 +53,12 @@ export default function ParentAlarm() {
                                 </div>
                                 {item.require === 'job' ? (
                                     <img src={alarmDoneStamp} 
-                                        onClick={() => handleClickRead(item.key)} 
+                                        onClick={() => handleClickJobDone(item.key)} 
                                         style={{ width: '6vw', height: '2vw', cursor: 'pointer' }} />
                                 ) : (
                                     <img
                                         src={alarmAcceptExchange}
-                                        onClick={() => handleClickRead(item.key)}
+                                        onClick={() => handleClickAcceptExchange(item.key)}
                                         style={{ width: '6vw', height: '2vw', cursor: 'pointer' }}
                                     />
                                 )}
@@ -105,7 +87,6 @@ export default function ParentAlarm() {
     return (
         <>
             <div className={styles.parentAlarmContainer}>
-                <button onClick={kafkaSub}>카프카 연결 테스트</button>
                 <div className={styles.parentAlarmTitle}>
                     <p>알림 현황</p>
                 </div>

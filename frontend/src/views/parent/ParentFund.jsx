@@ -24,9 +24,9 @@ import { useFetcher } from 'react-router-dom';
 
 export default function ParentFund() {
     const childId = useRecoilValue(childIdAtom);
-    console.log('ParentFund childId', childId);
+    //console.log('ParentFund childId', childId);
     const childNickName = useRecoilValue(childNickNameAtom);
-    console.log('ParentMain childNickName', childNickName);
+    //console.log('ParentMain childNickName', childNickName);
 
     const [selectFund, setSelectedFund] = useState(false);
     const [selectReservationFund, setSelectReservationFund] = useState(false);
@@ -41,21 +41,22 @@ export default function ParentFund() {
 
     const [fundNews, setFundNews] = useState();
     const [fundAnswer, setFundAnswer] = useState();
+    const [fundSubmitAnswer, setFundSubmitAnswer] = useState();
 
     // 투자 상태 조회
     useEffect(() => {
         getStatus(
             childId,
             (success) => {
-                console.log(success.data.FundStatus);
-                setFundAnswer(success.data.FundStatus);
+                // console.log(success.data.FundStatus);
+                setFundAnswer(success.data.FundStatus.answer);
             },
             (fail) => {
                 console.log(fail);
             }
         );
     });
-    console.log(fundAnswer);
+    //console.log('새로 렌더링 된 이후', fundAnswer);
 
     // 투자 항목 조회
     useEffect(() => {
@@ -211,30 +212,33 @@ export default function ParentFund() {
     };
 
     const handleFundNewsChange = (event) => {
-        setFundNews(event.target.value);
+        setFundNews(event.target.value.trim());
     };
 
     const handleFundAnswerChange = (event) => {
-        setFundAnswer(event.target.value);
+        console.log('투자 정답 변화 확인', event.target.value);
+        setFundSubmitAnswer(event.target.value);
     };
 
     const handleFundNewsCreate = (event) => {
         event.preventDefault();
-        setFundNews();
-        setFundAnswer();
+        // setFundNews();
+        // setFundAnswer();
+        if (fundNews != null && fundNews != '') {
+            createFundNews(
+                { content: fundNews, childId: childId },
+                (success) => {
+                    console.log('투자 뉴스 등록 성공', success.data.fundNews);
+                    setFundNews(fundNews);
+                },
+                (fail) => {
+                    console.log('투자 뉴스 등록 실패', fail);
+                }
+            );
+        }
 
-        createFundNews(
-            { content: fundNews, childId: childId },
-            (success) => {
-                console.log('투자 뉴스 등록 성공', success.data.fundNews);
-                setFundNews(fundNews);
-            },
-            (fail) => {
-                console.log('투자 뉴스 등록 실패', fail);
-            }
-        );
         createFundAnswer(
-            { answer: fundAnswer, childId: childId },
+            { answer: fundSubmitAnswer, childId: childId },
             (success) => {
                 console.log('투자 정답 등록 성공', success);
                 setFundAnswer(fundAnswer);
@@ -244,6 +248,7 @@ export default function ParentFund() {
             }
         );
         setFundNewsCreateModalOpen(false);
+        window.location.reload();
     };
 
     return (
@@ -461,7 +466,7 @@ export default function ParentFund() {
 
                     <div className={styles.todayFundNewsFrame}>
                         <div>
-                            {fundAnswer !== undefined && fundAnswer ? (
+                            {fundAnswer !== undefined ? (
                                 <p>
                                     오늘의 투자 정답 :
                                     {fundAnswer ? (
@@ -472,20 +477,21 @@ export default function ParentFund() {
                                 </p>
                             ) : (
                                 <>
-                                    <p>오늘의 투자 정답을 투자 뉴스와 함께 등록해주세요</p>
+                                    <p>오늘의 투자 정답이 아직 없습니다</p>
                                 </>
                             )}
                         </div>
                         <br />
                         <div className={styles.todayFundNewsFrameNews}>
-                            {fundNews !== undefined && fundNews ? (
+                            {fundNews !== undefined && fundNews !== null && fundNews !== '' ? (
                                 <p>오늘의 투자 뉴스 : {fundNews}</p>
                             ) : (
                                 <>
-                                    <p>오늘의 투자 뉴스가 없습니다</p>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button onClick={() => setFundNewsCreateModalOpen(true)}>투자 뉴스 등록하기</button>
+                                    <p>오늘의 투자 뉴스가 없습니다</p>
                                 </>
                             )}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button onClick={() => setFundNewsCreateModalOpen(true)}>투자 뉴스 등록하기</button>
                         </div>
                     </div>
                     <Modal

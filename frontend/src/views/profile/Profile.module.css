@@ -57,7 +57,8 @@
 }
 
 .profileCreateModal > p {
-    font-size: 50px;
+    font-size: 35px;
+    margin-bottom: 10px;
 }
 
 .profileCreateModal button {
@@ -65,11 +66,12 @@
     color: white;
     font-size: 15px;
     border-radius: 15px;
-    width: 50%;
+
     margin-top: 20px;
     padding: 5px 20px 5px 20px;
     border: none;
     outline: none;
+    cursor: pointer;
 }
 
 .profileCreateForm {
@@ -79,12 +81,12 @@
 }
 
 .profileCreateForm > .profileInputContainer > input {
-    margin-top: 10px;
+    margin-top: 20px;
     background-color: var(--component-background);
     text-align: center;
     border: 3px solid var(--component-border);
     border-radius: 15px;
-    width: 400px;
+    width: 200px;
     height: 30px;
 }
 
@@ -97,7 +99,7 @@
 
 .profileInputRadioContainer {
     position: relative;
-    margin-top: 10px;
+    margin-top: 20px;
     background-color: var(--component-background);
     display: flex;
     justify-content: center;
@@ -105,7 +107,7 @@
     text-align: center;
     border: 3px solid var(--component-border);
     border-radius: 15px;
-    width: 400px;
+    width: 200px;
     height: 30px;
 }
 

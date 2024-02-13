@@ -12,4 +12,8 @@ async function getSaving(childId, success, fail) {
     await server.get(`${url}/info/${childId}`).then(success).catch(fail);
 }
 
-export { getSaving, getSavingHistory };
+async function postSaving(Saving, success, fail) {
+    await server.post(`${url}/create`, Saving).then(success).catch(fail);
+}
+
+export { getSaving, getSavingHistory, postSaving };

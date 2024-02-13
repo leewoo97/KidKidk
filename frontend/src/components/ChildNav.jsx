@@ -267,6 +267,7 @@ function ChildNav() {
                         <div className={styles.rectangleMin2}></div>
                     </div>
                 </div>
+                <div className={styles.logout}>로그아웃</div>
             </div>
             <div className={styles.contents}>
                 <Outlet />

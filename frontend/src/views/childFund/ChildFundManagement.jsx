@@ -599,17 +599,20 @@ export default function ChildFundManagement() {
                         <div className={styles.card7}>
                             <div className={styles.content2Title}>최근 일주일 투자 현황</div>
                             <div className={styles.graph}>
-                                <Bar style={{ width: '500px', height: '60px' }} options={options} data={data} />
+                                <Bar style={{ width: '460px', height: '60px' }} options={options} data={data} />
                             </div>
                         </div>
                         <div className={styles.card8}></div>
                         <div className={styles.card9}>
                             <div className={styles.content2Title}>투자뉴스</div>
                             <div className={styles.content3News}>
-                                {fundNewsList &&
+                                {fundNewsList.length !== 0 ? (
                                     fundNewsList.map((row, index) => {
                                         return <div key={index}>{row.content}</div>;
-                                    })}
+                                    })
+                                ) : (
+                                    <div>투자뉴스가 없습니다</div>
+                                )}
                             </div>
                         </div>
                     </div>

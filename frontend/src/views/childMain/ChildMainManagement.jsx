@@ -135,7 +135,7 @@ export default function ManagementContent() {
                         </div>
                         <div className={styles.infoContainer1}>
                             <div> 도토리 </div>
-                            <div> {child.coin}개 </div>
+                            {child.length > 0 ? <div> {child.coin}개 </div> : <>0개</>}
                         </div>
                     </div>
                     <div className={styles.refundContainer}>
@@ -153,11 +153,19 @@ export default function ManagementContent() {
                         <div className={styles.infoContainer2}>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#5FB776' }}></div>
-                                <div>주머니 : {child.coin} 도토리</div>
+                                {child.length > 0 ? (
+                                    <div>주머니 : {child.coin} 도토리</div>
+                                ) : (
+                                    <div>주머니 : 0 도토리</div>
+                                )}
                             </div>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#F1554C' }}></div>
-                                <div>투자 : {child.fundMoney} 도토리</div>
+                                {child.length > 0 ? (
+                                    <div>투자 : {child.fundMoney} 도토리</div>
+                                ) : (
+                                    <div>투자 : 0 도토리</div>
+                                )}
                             </div>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#FFD000' }}></div>

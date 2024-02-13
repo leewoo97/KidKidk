@@ -68,6 +68,7 @@
     gap: 7vh;
     position: relative;
     z-index: 1;
+    margin-bottom: 30vh;
 }
 .light {
     position: absolute;
@@ -323,4 +324,13 @@
 }
 .chargeModalBtn2 {
     background-color: #90c354;
+}
+.logout {
+    color: #ffffff;
+    display: flex;
+    top: 60vh;
+    cursor: pointer;
+}
+.logout:hover {
+    color: #ffb700;
 }

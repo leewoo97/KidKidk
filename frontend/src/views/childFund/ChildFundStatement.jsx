@@ -1,37 +1,40 @@
-import styles from "./ChildFundStatement.module.css";
-import ChildFundStatementTable from "./ChildFundStatementTable.jsx";
-import React, { useState, useEffect } from "react";
-import { getFundHistory } from "@api/fund.js";
+import styles from './ChildFundStatement.module.css';
+import ChildFundStatementTable from './ChildFundStatementTable.jsx';
+import React, { useState, useEffect } from 'react';
+import { getFundHistory } from '@api/fund.js';
 
 export default function ChildFundStatement() {
+    const childId = 2;
+    const [statementdata, setStatementdata] = useState([]);
 
-  const childId = 2;
-  const [statementdata, setStatementdata] = useState([]);
+    useEffect(() => {
+        getFundHistory(
+            childId,
+            (success) => {
+                setStatementdata(success.data.FundHistory);
+                // console.log(success.data.FundHistory);
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            // console.log('ChildManagement userEffect return');
+        };
+    }, []);
 
-  useEffect(() => {
-    getFundHistory(
-      childId,
-      (success) => {
-        setStatementdata(success.data.FundHistory);
-        console.log(success.data.FundHistory);
-      },
-      (fail) => {
-        console.log(fail);
-      }
-    );
-    return () => {
-      console.log('ChildManagement userEffect return');
-    };
-  }, []);
-
-  return (
-    <div className={styles.stateContainer}>
-      <div className={styles.stateTitle}>나의 투자 내역</div>
-      <div className={styles.scrollContainer}>
-        <div className={styles.scrollContent}>
-          <ChildFundStatementTable data={statementdata} />
+    return (
+        <div className={styles.stateContainer}>
+            <div className={styles.stateTitle}>나의 투자 내역</div>
+            <div className={styles.scrollContainer}>
+                <div className={styles.scrollContent}>
+                    {statementdata.length > 0 ? (
+                        <ChildFundStatementTable data={statementdata} />
+                    ) : (
+                        <>투자 내역이 없습니다</>
+                    )}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

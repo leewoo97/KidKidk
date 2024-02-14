@@ -12,9 +12,10 @@ import ChildAlarm from './ChildAlarm.jsx';
 import { getChild, updateChild } from '@api/child.js';
 import { profileSelectAll } from '@api/profile.js';
 import { getJob } from '@api/job.js';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../store/userInfoAtom.js';
-import { profileInfoState } from '../store/profileInfoAtom.js';
+import { profileInfoState, parentProfileState } from '../store/profileInfoAtom.js';
+
 
 function ChildNav() {
     const userInfo = useRecoilValue(userInfoState);
@@ -33,7 +34,7 @@ function ChildNav() {
     const [chargeCoinOut, setChargeCoinOut] = useState(''); // 출금 input 모달 페이지
     const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
     const [childProfile, setChildProfile] = useState([]); // 아이 프로필
-    const [parentProfile, setParentProfile] = useState([]); // 부모 프로필
+    const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
     const [childJob, setChildJob] = useState([]); // 아이 직업
 
     const a = ['5.5%', '18%', '29.5%', '41.5%'];

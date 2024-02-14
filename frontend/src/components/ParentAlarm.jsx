@@ -21,22 +21,25 @@ export default function ParentAlarm() {
     const handleClickJobDone = (key, childId) => {
         jobDone(childId,
             (success) => {
-                // 알림 발송
+                sendAlarm(childId.toString(), "", "업무 완료 요청이 처리되었습니다!", "", "", 0, 0);
             },
             (fail) => {
                 console.log(fail);
             })
-        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    }
+        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    
+    }
 
     const handleClickAcceptExchange = (key, childId, amount) => {
-        acceptExchange(childId, amount,
-            (success) => {
-                // 알림 발송
-            },
-            (fail) => {
-                console.log(fail);
-            })
-        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    }
+        // acceptExchange(childId, amount,
+        //     (success) => {
+        //         sendAlarm(childId.toString(), "", "환전 요청이 처리되었습니다!", `${amount}도토리 출금`, "", 0, 0);
+        //     },
+        //     (fail) => {
+        //         console.log(fail);
+        //     })
+        sendAlarm(childId.toString(), "", "환전 요청이 처리되었습니다!", `${amount}도토리 출금`, "", 0, 0);
+        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    
+    }
 
     const deleteReadNotifications = () => {
         setNotifications(notifications.filter(noti => !noti.read));

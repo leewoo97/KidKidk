@@ -20,7 +20,6 @@ import { childIdAtom, childNickNameAtom } from '@store/childIdsAtom.js';
 import { format } from 'date-fns';
 
 import styles from './ParentFund.module.css';
-import { useFetcher } from 'react-router-dom';
 
 export default function ParentFund() {
     const childId = useRecoilValue(childIdAtom);

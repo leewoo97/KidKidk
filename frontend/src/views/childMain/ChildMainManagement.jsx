@@ -9,7 +9,9 @@ import { getFund, getStatus } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
 import { useRecoilValue } from 'recoil';
-import { profileInfoState } from '../../store/profileInfoAtom.js';
+import { profileInfoState, parentProfileState } from '../../store/profileInfoAtom.js';
+import { sendAlarm } from '../../apis/api/alarm.js';
+import { useRecoilState } from 'recoil';
 // import Chart from 'chart.js/auto';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -24,7 +26,12 @@ export default function ManagementContent() {
     const [savingMoney, setSavingMoney] = useState(0);
     const [child, setChild] = useState([]);
     const [ratioPercentage, setRatioPercentage] = useState([]);
+<<<<<<< HEAD
     const [fundStatus, setFundStatus] = useState([]);
+=======
+    const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
+
+>>>>>>> 96a55275d27125ffd7d6a52051993dd677214a7f
 
     useEffect(() => {
         getJob(
@@ -161,6 +168,11 @@ export default function ManagementContent() {
         );
     };
 
+
+    const handleClickJobDone = () => {
+        sendAlarm(`${parentProfile.profileId}`, `${profileInfo.nickname}`, `${profileInfo.nickname} 어린이가 미션을 완료하였습니다.`, `${job.task}`, "job", childId, 0);
+    }
+
     return (
         <div className={styles.manageContainer}>
             <div className={styles.card1}>
@@ -222,7 +234,7 @@ export default function ManagementContent() {
                             <div className={styles.barChartCnt}>
                                 {job.doneCount}/{job.taskAmount}
                             </div>
-                            <div className={styles.jobTaskBtn}> 완료 </div>
+                            <div className={styles.jobTaskBtn} onClick={handleClickJobDone}> 완료 </div>
                         </div>
                     ) : (
                         '이번주 할 일이 없습니다.'

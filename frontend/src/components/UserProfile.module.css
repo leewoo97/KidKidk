@@ -54,9 +54,11 @@
 .profileLoginModal button {
     background-color: black;
     color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 15px;
     border-radius: 15px;
-
     margin-top: 25px;
     padding: 5px 20px 5px 20px;
     border: none;
@@ -89,7 +91,7 @@
 
 .iconContainer {
     position: absolute;
-    top: 75%;
+    top: 80%;
     left: 10px; /* 필요에 따라 조절 */
     transform: translateY(-50%);
 }
@@ -148,7 +150,7 @@
 
 .profileUpdateFormInputContainer span {
     margin-right: 10px;
-    margin-top: 18px;
+    margin-top: 25px;
 }
 
 .profileUpdateFormButtonContainer {

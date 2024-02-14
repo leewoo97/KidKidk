@@ -3,9 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { getQuiz } from '@api/quiz.js';
 import { getChild, updateChild } from '@api/child.js';
+import { sendAlarm } from '../../apis/api/alarm';
+import { profileInfoState } from '../../store/profileInfoAtom';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { parentProfileState } from '../../store/profileInfoAtom';
 
 export default function ChildRefund() {
-    const childId = 2;
     const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
     const [refundCoin, setRefundCoin] = useState('');
     const [isRefundBtnActive, setIsRefundBtnActive] = useState(false);
@@ -15,6 +18,9 @@ export default function ChildRefund() {
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [finalRefundAmount, setFinalRefundAmount] = useState(0);
     const [quizData, setQuizData] = useState([]);
+    const profileInfo = useRecoilValue(profileInfoState);
+    const childId = profileInfo.profileId;
+    const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
 
     // 환전이 되었을때 아이 주머니 잔고 수정하기
     const handleUpdateChild = () => {
@@ -125,6 +131,15 @@ export default function ChildRefund() {
             const finalAmount = parseInt(refundCoin) + parseInt(refundCoin) * per[correctAnswersCount];
             console.log('최종 환전 금액 계산 : ', finalAmount);
             setFinalRefundAmount(finalAmount);
+            sendAlarm(
+                `${parentProfile.profileId}`,
+                `${profileInfo.nickname}`,
+                `${profileInfo.nickname} 어린이가 환전을 요청하였습니다.`,
+                `${finalAmount} 도토리 환전요청`,
+                'exchange',
+                profileInfo.profileId,
+                finalAmount
+            );
 
             // 4. 결과 모달 열기
             setIsModalOpen(true);

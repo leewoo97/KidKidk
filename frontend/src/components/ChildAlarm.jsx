@@ -3,29 +3,11 @@ import alarmCheck from '@images/alarmCheck.png';
 import alarmCheckRead from '@images/alarmCheckRead.png'
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
-import { sendAlarm } from '../apis/api/alarm';
+import { notificationsState} from '../store/alarmAtom';
 
 function ChildAlarm() {
-    const EventSource = EventSourcePolyfill || NativeEventSource;
-    const [sse, setSse] = useRecoilState(sseState);
-    const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
     const [notifications, setNotifications] = useRecoilState(notificationsState);
     
-    const [profileId, setProfileId] = useState(2);
-    const kafkaSub = () => {
-        setSse(new EventSource(`https://notification.silvstone.xyz/subscribe/${profileId}`, {
-            headers: {
-                "Last-Event-ID" : lastEventId,
-            },
-            heartbeatTimeout: 5*60*1000,
-        }).onmessage = (event) =>    {
-            console.log(event);
-            if(event.data !== "connected!"){setNotifications(prev => [...prev, JSON.parse(event.data)]);}
-            setLastEventId(event.lastEventId);
-        });
-    }
 
     const handleClickRead = (key) => {
         setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));
@@ -35,12 +17,6 @@ function ChildAlarm() {
         setNotifications(notifications.filter(noti => !noti.read));
     }
 
-    const handleSendAlarm = () => {
-        sendAlarm("2","짱아","출금 요청 01", "+50000 코인", "job")
-    }
-
-    
-    
 
     const Contents = ({ alarmData }) => {
         return (
@@ -75,8 +51,6 @@ function ChildAlarm() {
 
     return (
         <div className={styles.alarmContainer}>
-            <button onClick={kafkaSub}>카프카 연결 테스트</button>
-            <button onClick={handleSendAlarm}>알림 보내기 테스트</button>
             <div className={styles.title}>알림 현황</div>
             <div className={styles.content}>
                 <div className={styles.cardHead}>

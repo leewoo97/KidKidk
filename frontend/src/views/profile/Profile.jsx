@@ -263,7 +263,7 @@ export default function Profile() {
                                         자식&nbsp;
                                         <input type="radio" name="answer" value="자식" onChange={onChangeCreateType} />
                                     </label>
-                                    <div className={styles.iconContainer}>
+                                    <div className={styles.iconContainerFamily}>
                                         <RiParentLine />
                                     </div>
                                 </div>

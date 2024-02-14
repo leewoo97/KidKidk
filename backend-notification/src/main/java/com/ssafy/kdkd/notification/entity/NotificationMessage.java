@@ -12,6 +12,8 @@ public class NotificationMessage {
     private String title;
     private String content;
     private String require;
+    private Long childId;
+    private int amount;
 
     private String key;
     private boolean isRead;

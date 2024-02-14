@@ -28,7 +28,7 @@ public class NotificationController {
 
     @PostMapping(value = "/publish")
     public ResponseEntity<?> publish(@RequestBody NotificationMessageDto msg){
-        notificationService.publish(msg.getSubId(), msg.getPubName(), msg.getTitle(), msg.getContent(), msg.getRequire());
+        notificationService.publish(msg);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

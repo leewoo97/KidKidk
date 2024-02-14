@@ -42,6 +42,7 @@ export default function WelcomePageFirst() {
                     <button className={styles.kakaoButton}>
                         <img src={kakaoBtn} alt="카카오 로그인 버튼" onClick={kakaoLoginClick} height="45px"></img>
                     </button>
+                    <br />
                     <button className={styles.naverButton}>
                         <img src={naverBtn} alt="네이버 로그인 버튼" onClick={naverLoginClick} height="45px" />
                     </button>

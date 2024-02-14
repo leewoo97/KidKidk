@@ -72,6 +72,7 @@ function ParentNav() {
     const childIdRefs = useRef([]);
     const handleTabClick = (childId, childNickName) => {
         console.log('Clicked childId:', childId);
+
         setParentChildId(childId);
         setParentChildNickName(childNickName);
         window.location.reload();
@@ -141,6 +142,9 @@ function ParentNav() {
                                 name={data.childId}
                                 onClick={() => handleTabClick(data.childId, data.nickname)}
                                 ref={childIdRef}
+                                style={{
+                                    backgroundColor: parentChildId === data.childId ? '#35b356' : '#90c354',
+                                }}
                             >
                                 <div>{data.nickname}</div>
                             </div>

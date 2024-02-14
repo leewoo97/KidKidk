@@ -84,13 +84,14 @@
     background-color: var(--component-background);
     border-radius: 15px;
     border: 3px solid var(--component-border);
-    padding: 20px;
+    padding: 10px;
 }
 
 .childInvestProgressInfo > ul {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    padding-top: 15px;
 }
 
 .childInvestProgressInfo > ul > li {
@@ -104,7 +105,7 @@
 .investQuitButton {
     background-color: var(--component-title);
     color: white;
-    font-size: 15px;
+    font-size: 13px;
     border-radius: 15px;
     padding: 5px 20px 5px 20px;
     border: none;
@@ -115,14 +116,14 @@
 .childInvestProgressWeekTable {
     display: flex;
     justify-content: center;
-    padding: 10px;
+    padding: 20px 10px 0px 10px;
 }
 
 .childInvestProgressWeekTable > table {
     align-items: center;
     text-align: center;
     list-style: none;
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 400;
     line-height: normal;
     border-collapse: collapse;

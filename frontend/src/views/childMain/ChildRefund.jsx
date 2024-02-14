@@ -5,11 +5,10 @@ import { getQuiz } from '@api/quiz.js';
 import { getChild, updateChild } from '@api/child.js';
 import { sendAlarm } from '../../apis/api/alarm';
 import { profileInfoState } from '../../store/profileInfoAtom';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue ,useRecoilState } from 'recoil';
 import { parentProfileState } from '../../store/profileInfoAtom';
 
 export default function ChildRefund() {
-    const childId = 2;
     const [child, setChild] = useState([]); // 자식 테이블(코인, 투자자산)
     const [refundCoin, setRefundCoin] = useState('');
     const [isRefundBtnActive, setIsRefundBtnActive] = useState(false);
@@ -20,6 +19,7 @@ export default function ChildRefund() {
     const [finalRefundAmount, setFinalRefundAmount] = useState(0);
     const [quizData, setQuizData] = useState([]);
     const profileInfo = useRecoilValue(profileInfoState);
+    const childId = profileInfo.profileId;
     const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
 
 

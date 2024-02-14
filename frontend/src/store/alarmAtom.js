@@ -1,21 +1,28 @@
 import { atom } from "recoil";
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export const sseState = atom({
     key : "sse",
-    default: null
+    default: null,
+    effects_UNSTABLE: [persistAtom],
 })
 
 export const lastEventIdState = atom({
     key : "lastEventId",
-    default : null
+    default : null,
+    effects_UNSTABLE: [persistAtom],
 })
 
 export const notificationsState = atom({
     key : "notifications",
-    default : []
+    default : [],
+    effects_UNSTABLE: [persistAtom],
 })
 
 export const childListState = atom({
     key : "childList",
-    default : []
+    default : [],
+    effects_UNSTABLE: [persistAtom],
 })

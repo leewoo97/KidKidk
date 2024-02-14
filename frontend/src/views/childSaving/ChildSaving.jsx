@@ -33,15 +33,50 @@ export default function ChildSaving() {
     const [payHistory, setPayHistory] = useState([]);
     const [countPayment, setCountPayment] = useState(0);
     const [endSavingDate, setEndSavingDate] = useState('');
+    const [payment, setPayment] = useState('');
 
-    // useEffect(() => {
-    //     const Saving = {
-    //         payment: countPayment,
-    //         childId: childId,
-    //     };
+    // 현재 날짜 객체 생성
+    const currentDate = new Date();
 
-    //     postSaving(Saving, successCallback, errorCallback);
-    // }, []);
+    // 현재 날짜에 29일을 더함
+    const futureDate = new Date(currentDate);
+    futureDate.setDate(currentDate.getDate() + 29);
+
+    // 날짜와 월이 한 자리일 경우 앞에 0을 추가하기 위한 함수 정의
+    const addLeadingZero = (num) => (num < 10 ? '0' + num : num);
+
+    // 날짜 정보
+    const year = futureDate.getFullYear(); // 년도
+    const month = addLeadingZero(futureDate.getMonth() + 1); // 월 (+1을 해야 정상적인 월을 얻을 수 있음)
+    const day = addLeadingZero(futureDate.getDate()); // 일
+
+    // 요일을 얻기 위해 배열에 요일을 저장
+    const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
+    // 요일을 가져오기 위해 getDay() 사용
+    const futureDayOfWeek = daysOfWeek[futureDate.getDay()];
+
+    useEffect(() => {
+        if (payment !== '') {
+            // payment 값이 비어있지 않을 때만 요청을 보냄
+            // postSaving 함수를 호출하여 요청을 보냄
+            const savingData = {
+                payment: payment,
+                childId: childId,
+            };
+
+            const successCallback = () => {
+                console.log('요청 성공');
+            };
+
+            const errorCallback = () => {
+                console.error('요청 실패');
+                // 실패 시 실행할 작업
+            };
+
+            postSaving(savingData, successCallback, errorCallback);
+        }
+    }, [payment]);
 
     useEffect(() => {
         getChild(
@@ -126,6 +161,11 @@ export default function ChildSaving() {
         setCurrentTutorialIndex(index);
     };
 
+    const handleInputPaymentChange = (e) => {
+        const value = e.target.value;
+        setPayment(value);
+    };
+
     return (
         <div className={styles.savingCon}>
             {payHistory.length > 0 ? (
@@ -199,167 +239,211 @@ export default function ChildSaving() {
                 </div>
             ) : (
                 <div className={styles.savingContainer}>
-                    {isSavingStart ? (
-                        <div className={styles.nonBox}>
-                            <div className={styles.box1}>내일부터 적금 통장이 생길거예요!</div>
+                    <div className={styles.nonBox}>
+                        <div className={styles.box1}>현재 적금 계좌가 없어요!</div>
+                        <div className={styles.box2} onClick={openModal}>
+                            적금 계좌 만들기
                         </div>
-                    ) : (
-                        <div className={styles.nonBox}>
-                            <div className={styles.box1}>현재 적금 계좌가 없어요!</div>
-                            <div className={styles.box2} onClick={openModal}>
-                                적금 계좌 만들기
-                            </div>
-                            <Modal
-                                appElement={document.getElementById('root')}
-                                isOpen={modalIsOpen}
-                                onRequestClose={() => setModalIsOpen(false)}
-                                style={{
-                                    overlay: {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                        zIndex: '999',
-                                    },
-                                    content: {
-                                        backgroundColor: '#F8F3E7',
-                                        borderRadius: '15px',
-                                        width: '30vw',
-                                        height: '70vh',
-                                        margin: 'auto',
-                                        padding: '30px',
-                                        position: 'absolute',
-                                        zIndex: '999',
-                                    },
-                                }}
-                            >
-                                {currentTutorialIndex === 0 && (
-                                    <div className={styles.modalContainer}>
-                                        <div className={styles.circleContainer}>{renderPageDots()}</div>
-                                        <div className={styles.modalTitle}>4주동안 진행되는 적금</div>
-                                        <div className={styles.modalIcon}>
-                                            <img src={tuto1} style={{ width: '15vw' }} />
-                                        </div>
-                                        <div className={styles.modalContents}>
-                                            적금은 4주 동안 진행되며 안정적인 수익을 제공해요
+                        <Modal
+                            appElement={document.getElementById('root')}
+                            isOpen={modalIsOpen}
+                            onRequestClose={() => setModalIsOpen(false)}
+                            style={{
+                                overlay: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                    zIndex: '999',
+                                },
+                                content: {
+                                    backgroundColor: '#F8F3E7',
+                                    borderRadius: '15px',
+                                    width: '30vw',
+                                    height: '70vh',
+                                    margin: 'auto',
+                                    padding: '30px',
+                                    position: 'absolute',
+                                    zIndex: '999',
+                                },
+                            }}
+                        >
+                            {currentTutorialIndex === 0 && (
+                                <div className={styles.modalContainer}>
+                                    <div className={styles.circleContainer}>{renderPageDots()}</div>
+                                    <div className={styles.modalTitle}>4주동안 진행되는 적금</div>
+                                    <div className={styles.modalIcon}>
+                                        <img src={tuto1} style={{ width: '15vw' }} />
+                                    </div>
+                                    <div className={styles.modalContents}>
+                                        적금은 4주 동안 진행되며 안정적인 수익을 제공해요
+                                    </div>
+                                    <div
+                                        className={styles.modalOneBtn}
+                                        onClick={() => changeModalContent(currentTutorialIndex + 1)}
+                                    >
+                                        다음 페이지
+                                    </div>
+                                </div>
+                            )}
+                            {currentTutorialIndex === 1 && (
+                                <div className={styles.modalContainer}>
+                                    <div className={styles.circleContainer}>{renderPageDots()}</div>
+                                    <div className={styles.modalTitle}>만기시 이자율 5%</div>
+                                    <div className={styles.modalIcon}>
+                                        <img src={tuto2} style={{ width: '15vw' }} />
+                                    </div>
+                                    <div className={styles.modalContents}>
+                                        <div>원금 + 추가 5%</div>
+                                        <div>적금은 안정적인 수익을 제공해요</div>
+                                    </div>
+                                    <div className={styles.modalBtns}>
+                                        <div
+                                            className={styles.modalTwoBtn1}
+                                            onClick={() => changeModalContent(currentTutorialIndex - 1)}
+                                        >
+                                            이전 페이지
                                         </div>
                                         <div
-                                            className={styles.modalOneBtn}
+                                            className={styles.modalTwoBtn2}
                                             onClick={() => changeModalContent(currentTutorialIndex + 1)}
                                         >
                                             다음 페이지
                                         </div>
                                     </div>
-                                )}
-                                {currentTutorialIndex === 1 && (
-                                    <div className={styles.modalContainer}>
-                                        <div className={styles.circleContainer}>{renderPageDots()}</div>
-                                        <div className={styles.modalTitle}>만기시 이자율 5%</div>
-                                        <div className={styles.modalIcon}>
-                                            <img src={tuto2} style={{ width: '15vw' }} />
+                                </div>
+                            )}
+                            {currentTutorialIndex === 2 && (
+                                <div className={styles.modalContainer}>
+                                    <div className={styles.circleContainer}>{renderPageDots()}</div>
+                                    <div className={styles.modalTitle}>매주 납부요일 오전 9시에 자동 납입</div>
+                                    <div className={styles.modalIcon}>
+                                        <img src={tuto3} style={{ width: '15vw' }} />
+                                    </div>
+                                    <div className={styles.modalContents}>
+                                        <div>납기일은 적금시작 다음날!</div>
+                                        <div>매주 해당 요일에 돈이 빠져나가요</div>
+                                    </div>
+                                    <div className={styles.modalBtns}>
+                                        <div
+                                            className={styles.modalTwoBtn1}
+                                            onClick={() => changeModalContent(currentTutorialIndex - 1)}
+                                        >
+                                            이전 페이지
                                         </div>
-                                        <div className={styles.modalContents}>
-                                            <div>원금 + 추가 5%</div>
-                                            <div>적금은 안정적인 수익을 제공해요</div>
+                                        <div
+                                            className={styles.modalTwoBtn2}
+                                            onClick={() => changeModalContent(currentTutorialIndex + 1)}
+                                        >
+                                            다음 페이지
                                         </div>
-                                        <div className={styles.modalBtns}>
-                                            <div
-                                                className={styles.modalTwoBtn1}
-                                                onClick={() => changeModalContent(currentTutorialIndex - 1)}
-                                            >
-                                                이전 페이지
+                                    </div>
+                                </div>
+                            )}
+                            {currentTutorialIndex === 3 && (
+                                <div className={styles.modalContainer}>
+                                    <div className={styles.circleContainer}>{renderPageDots()}</div>
+                                    <div className={styles.modalTitle}>납부할 도토리가 없으면 미납처리</div>
+                                    <div className={styles.modalIcon}>
+                                        <img src={tuto4} style={{ width: '15vw' }} />
+                                    </div>
+                                    <div className={styles.modalContents}>납기일에 도토리가 부족하면 납부가 안돼요</div>
+                                    <div className={styles.modalBtns}>
+                                        <div
+                                            className={styles.modalTwoBtn1}
+                                            onClick={() => changeModalContent(currentTutorialIndex - 1)}
+                                        >
+                                            이전 페이지
+                                        </div>
+                                        <div
+                                            className={styles.modalTwoBtn2}
+                                            onClick={() => changeModalContent(currentTutorialIndex + 1)}
+                                        >
+                                            다음 페이지
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {currentTutorialIndex === 4 && (
+                                <div className={styles.modalContainer}>
+                                    <div className={styles.circleContainer}>{renderPageDots()}</div>
+                                    <div className={styles.modalTitle}>4번 중 3번이상 납부</div>
+                                    <div className={styles.modalIcon}>
+                                        <img src={tuto5} style={{ width: '15vw' }} />
+                                    </div>
+                                    <div className={styles.modalContents}>
+                                        4주동안 미납횟수가 2번이 되면 자동으로 해지돼요
+                                    </div>
+                                    <div className={styles.modalBtns}>
+                                        <div
+                                            className={styles.modalTwoBtn1}
+                                            onClick={() => changeModalContent(currentTutorialIndex - 1)}
+                                        >
+                                            이전 페이지
+                                        </div>
+                                        <div
+                                            className={styles.modalTwoBtn3}
+                                            onClick={() => {
+                                                changeModalContent(currentTutorialIndex + 1);
+                                            }}
+                                        >
+                                            적금 계좌 생성하러 가기
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {currentTutorialIndex === 5 && (
+                                <div className={styles.modalContainer}>
+                                    <div className={styles.modalTitle1}>적금 계좌 생성하기</div>
+                                    <div className={styles.modalContent5}>
+                                        <div className={styles.modalContent5Line}></div>
+                                        <div className={styles.modalContent5Head}>
+                                            <div className={styles.modalContent5Head1}>적금 만기 예정일</div>
+                                            <div className={styles.modalContent5Head1}>매주 납입할 요일</div>
+                                            <div className={styles.modalContent5Head1}>매주 납입할 금액</div>
+                                            <div className={styles.modalContent5Head1}>만기시 예상 환급액</div>
+                                        </div>
+                                        <div className={styles.modalContent5Body}>
+                                            <div className={styles.modalContent5Body1}>
+                                                {year}년 {month}월 {day}일
                                             </div>
-                                            <div
-                                                className={styles.modalTwoBtn2}
-                                                onClick={() => changeModalContent(currentTutorialIndex + 1)}
-                                            >
-                                                다음 페이지
+                                            <div className={styles.modalContent5Body1}>매주 {futureDayOfWeek}요일</div>
+                                            <div className={styles.modalContent5Body1}>
+                                                <input
+                                                    type="number"
+                                                    placeholder="도토리 개수 입력"
+                                                    value={payment}
+                                                    onChange={handleInputPaymentChange}
+                                                    className={styles.input}
+                                                />
+                                            </div>
+                                            <div className={styles.modalContent5Body2}>
+                                                <div className={styles.modalContent5Body2_1}>
+                                                    {payment === 0 || payment === ''
+                                                        ? '0 도토리'
+                                                        : Math.floor(parseInt(payment) + parseInt(payment) * 0.05) +
+                                                          ' 도토리'}
+                                                </div>
+                                                <img src={acornImg} style={{ width: '1.5vw', height: '1.5vw' }} />
                                             </div>
                                         </div>
                                     </div>
-                                )}
-                                {currentTutorialIndex === 2 && (
-                                    <div className={styles.modalContainer}>
-                                        <div className={styles.circleContainer}>{renderPageDots()}</div>
-                                        <div className={styles.modalTitle}>매주 납부요일 오전 9시에 자동 납입</div>
-                                        <div className={styles.modalIcon}>
-                                            <img src={tuto3} style={{ width: '15vw' }} />
+                                    <div className={styles.modalBtns}>
+                                        <div className={styles.modalTwoBtn1} onClick={() => setModalIsOpen(false)}>
+                                            창 닫기
                                         </div>
-                                        <div className={styles.modalContents}>
-                                            <div>납기일은 적금시작 다음날!</div>
-                                            <div>매주 해당 요일에 돈이 빠져나가요</div>
-                                        </div>
-                                        <div className={styles.modalBtns}>
-                                            <div
-                                                className={styles.modalTwoBtn1}
-                                                onClick={() => changeModalContent(currentTutorialIndex - 1)}
-                                            >
-                                                이전 페이지
-                                            </div>
-                                            <div
-                                                className={styles.modalTwoBtn2}
-                                                onClick={() => changeModalContent(currentTutorialIndex + 1)}
-                                            >
-                                                다음 페이지
-                                            </div>
+                                        <div
+                                            className={styles.modalTwoBtn3}
+                                            onClick={() => {
+                                                changeModalContent(currentTutorialIndex + 1);
+                                                setModalIsOpen(false);
+                                                // setIsSavingStart(true);
+                                            }}
+                                        >
+                                            적금 계좌 생성
                                         </div>
                                     </div>
-                                )}
-                                {currentTutorialIndex === 3 && (
-                                    <div className={styles.modalContainer}>
-                                        <div className={styles.circleContainer}>{renderPageDots()}</div>
-                                        <div className={styles.modalTitle}>납부할 도토리가 없으면 미납처리</div>
-                                        <div className={styles.modalIcon}>
-                                            <img src={tuto4} style={{ width: '15vw' }} />
-                                        </div>
-                                        <div className={styles.modalContents}>
-                                            납기일에 도토리가 부족하면 납부가 안돼요
-                                        </div>
-                                        <div className={styles.modalBtns}>
-                                            <div
-                                                className={styles.modalTwoBtn1}
-                                                onClick={() => changeModalContent(currentTutorialIndex - 1)}
-                                            >
-                                                이전 페이지
-                                            </div>
-                                            <div
-                                                className={styles.modalTwoBtn2}
-                                                onClick={() => changeModalContent(currentTutorialIndex + 1)}
-                                            >
-                                                다음 페이지
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                                {currentTutorialIndex === 4 && (
-                                    <div className={styles.modalContainer}>
-                                        <div className={styles.circleContainer}>{renderPageDots()}</div>
-                                        <div className={styles.modalTitle}>4번 중 3번이상 납부</div>
-                                        <div className={styles.modalIcon}>
-                                            <img src={tuto5} style={{ width: '15vw' }} />
-                                        </div>
-                                        <div className={styles.modalContents}>
-                                            4주동안 미납횟수가 2번이 되면 자동으로 해지돼요
-                                        </div>
-                                        <div className={styles.modalBtns}>
-                                            <div
-                                                className={styles.modalTwoBtn1}
-                                                onClick={() => changeModalContent(currentTutorialIndex - 1)}
-                                            >
-                                                이전 페이지
-                                            </div>
-                                            <div
-                                                className={styles.modalTwoBtn3}
-                                                onClick={() => {
-                                                    changeModalContent(currentTutorialIndex + 1),
-                                                        setIsSavingStart(true);
-                                                }}
-                                            >
-                                                적금 계좌 생성
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </Modal>
-                        </div>
-                    )}
+                                </div>
+                            )}
+                        </Modal>
+                    </div>
                 </div>
             )}
         </div>

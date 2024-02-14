@@ -16,7 +16,6 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../store/userInfoAtom.js';
 import { profileInfoState, parentProfileState } from '../store/profileInfoAtom.js';
 
-
 function ChildNav() {
     const userInfo = useRecoilValue(userInfoState);
     const profileInfo = useRecoilValue(profileInfoState);

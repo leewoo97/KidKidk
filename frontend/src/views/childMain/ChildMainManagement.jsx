@@ -11,7 +11,7 @@ import { getChild } from '@api/child.js';
 import { useRecoilValue } from 'recoil';
 import { profileInfoState, parentProfileState } from '../../store/profileInfoAtom.js';
 import { sendAlarm } from '../../apis/api/alarm.js';
-import { useResetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 // import Chart from 'chart.js/auto';
 
 ChartJS.register(ArcElement, Tooltip, Legend);

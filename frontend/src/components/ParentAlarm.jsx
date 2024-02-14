@@ -6,11 +6,8 @@ import styles from './ParentAlarm.module.css';
 
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
-import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-import { notificationsState } from '../store/alarmAtom';
+import { notificationsState} from '../store/alarmAtom';
 import { getChildIds } from '@store/childIdsAtom.js';
-import { getChildList } from '../apis/api/profile';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
 
 export default function ParentAlarm() {
@@ -75,13 +72,13 @@ export default function ParentAlarm() {
                                     {item.require === 'job' ? (
                                         <img
                                             src={alarmDoneStamp}
-                                            onClick={() => handleClickRead(item.key)}
+                                            onClick={() => handleClickJobDone(item.key, item.childId)}
                                             style={{ width: '100px', height: '30px', cursor: 'pointer' }}
                                         />
                                     ) : (
                                         <img
                                             src={alarmAcceptExchange}
-                                            onClick={() => handleClickRead(item.key)}
+                                            onClick={() => handleClickAcceptExchange(item.key, item.childId, item.amount)}
                                             style={{ width: '100px', height: '30px', cursor: 'pointer' }}
                                         />
                                     )}

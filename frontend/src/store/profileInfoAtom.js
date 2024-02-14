@@ -8,3 +8,9 @@ export const profileInfoState = atom({
     default: { profileId: '', nickname: '', type: '', coin: '', fundMoney: '', parentId: '', childId: '' },
     effects_UNSTABLE: [persistAtom],
 });
+
+export const parentProfileState = atom({
+    key: 'parentProfile',
+    default: {nickname : ''},
+    effects_UNSTABLE: [persistAtom],
+})

@@ -13,4 +13,5 @@ export const userInfoState = atom({
 export const childState = atom({
     key: 'childState', // 상태를 식별할 때 사용할 고유키
     default: {}, // 디폴트 값 설정
+    effects_UNSTABLE: [persistAtom],
 });

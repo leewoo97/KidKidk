@@ -6,39 +6,39 @@ import styles from './ParentAlarm.module.css';
 
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { notificationsState} from '../store/alarmAtom';
+import { getChildIds} from '@store/childIdsAtom.js';
+import { getChildList } from '../apis/api/profile';
+import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
 
 export default function ParentAlarm() {
-    const EventSource = EventSourcePolyfill || NativeEventSource;
-    const [sse, setSse] = useRecoilState(sseState);
-    const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
     const [notifications, setNotifications] = useRecoilState(notificationsState);
 
-    const [profileId, setProfileId] = useState(2);
-
-    const [userData, setUserData] = useState(['짱구', '짱아']);
+    const [childIdsData, setChildIdsData] = useRecoilState(getChildIds);
 
     const [selected, setSelected] = useState("전체");
 
-    const kafkaSub = () => {
-        setSse(new EventSource(`https://notification.silvstone.xyz/subscribe/${profileId}`, {
-            headers: {
-                "Last-Event-ID" : lastEventId,
+    const handleClickJobDone = (key, childId) => {
+        jobDone(childId,
+            (success) => {
+                sendAlarm(childId.toString(), "", "업무 완료 요청이 처리되었습니다!", "", "", 0, 0);
             },
-            heartbeatTimeout: 5*60*1000,
-        }).onmessage = (event) =>    {
-            console.log(event);
-            if(event.data !== "connected!"){
-                const jsonData = JSON.parse(event.data);
-                setNotifications(prev => [...prev, jsonData]);
-            }
-            setLastEventId(event.lastEventId);
-        });
+            (fail) => {
+                console.log(fail);
+            })
+        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    
     }
 
-    const handleClickRead = (key) => {
-        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));
+    const handleClickAcceptExchange = (key, childId, amount) => {
+        // acceptExchange(childId, amount,
+        //     (success) => {
+        //         sendAlarm(childId.toString(), "", "환전 요청이 처리되었습니다!", `${amount}도토리 출금`, "", 0, 0);
+        //     },
+        //     (fail) => {
+        //         console.log(fail);
+        //     })
+        sendAlarm(childId.toString(), "", "환전 요청이 처리되었습니다!", `${amount}도토리 출금`, "", 0, 0);
+        setNotifications(notifications.map(noti => noti.key === key ? {...noti, read: !noti.read} : noti ));    
     }
 
     const deleteReadNotifications = () => {
@@ -71,12 +71,12 @@ export default function ParentAlarm() {
                                 </div>
                                 {item.require === 'job' ? (
                                     <img src={alarmDoneStamp} 
-                                        onClick={() => handleClickRead(item.key)} 
+                                        onClick={() => handleClickJobDone(item.key, item.childId)} 
                                         style={{ width: '6vw', height: '2vw', cursor: 'pointer' }} />
                                 ) : (
                                     <img
                                         src={alarmAcceptExchange}
-                                        onClick={() => handleClickRead(item.key)}
+                                        onClick={() => handleClickAcceptExchange(item.key, item.childId, item.amount)}
                                         style={{ width: '6vw', height: '2vw', cursor: 'pointer' }}
                                     />
                                 )}
@@ -105,14 +105,13 @@ export default function ParentAlarm() {
     return (
         <>
             <div className={styles.parentAlarmContainer}>
-                <button onClick={kafkaSub}>카프카 연결 테스트</button>
                 <div className={styles.parentAlarmTitle}>
                     <p>알림 현황</p>
                 </div>
                 <div className={styles.parentAlarmButtons}>
                     <button value="전체" onClick={handleClickChild}>전체</button>
-                    {userData.map((child) => (
-                        <button key={child} value={child} onClick={handleClickChild}>{child}</button>
+                    {childIdsData.map((child) => (
+                        <button key={child.childId} value={child.nickname} onClick={handleClickChild}>{child.nickname}</button>
                     ))}
                 </div>
                 <div className={styles.parentAlarmInfo}>

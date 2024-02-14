@@ -5,7 +5,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getJob } from '@api/job.js';
-import { getFund } from '@api/fund.js';
+import { getFund, getStatus } from '@api/fund.js';
 import { getSaving } from '@api/saving.js';
 import { getChild } from '@api/child.js';
 import { useRecoilValue } from 'recoil';
@@ -26,15 +26,19 @@ export default function ManagementContent() {
     const [savingMoney, setSavingMoney] = useState(0);
     const [child, setChild] = useState([]);
     const [ratioPercentage, setRatioPercentage] = useState([]);
+<<<<<<< HEAD
+    const [fundStatus, setFundStatus] = useState([]);
+=======
     const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
 
+>>>>>>> 96a55275d27125ffd7d6a52051993dd677214a7f
 
     useEffect(() => {
         getJob(
             childId,
             (success) => {
                 setJob(success.data.Job);
-                console.log(success.data.Job);
+                //console.log(success.data.Job); // 직업이 없으면 undefined
             },
             (fail) => {
                 console.log(fail);
@@ -57,7 +61,27 @@ export default function ManagementContent() {
             }
         );
         return () => {
-            console.log('ChildManagement userEffect return');
+            // console.log('ChildManagement userEffect return');
+        };
+    }, []);
+
+    useEffect(() => {
+        // 투자 상태 조회
+        getStatus(
+            childId,
+            (success) => {
+                if (success.data.FundStatus) {
+                    setFundStatus(success.data.FundStatus);
+                } else {
+                    console.log('No fund status data available.');
+                }
+            },
+            (fail) => {
+                console.log(fail);
+            }
+        );
+        return () => {
+            // console.log('ChildManagement userEffect return');
         };
     }, []);
 
@@ -84,6 +108,7 @@ export default function ManagementContent() {
             childId,
             (success) => {
                 setChild(success.data);
+                // console.log(success.data);
             },
             (fail) => {
                 console.log(fail);
@@ -142,7 +167,6 @@ export default function ManagementContent() {
             </>
         );
     };
-    console.log(ratioPercentage);
 
 
     const handleClickJobDone = () => {
@@ -160,7 +184,7 @@ export default function ManagementContent() {
                         </div>
                         <div className={styles.infoContainer1}>
                             <div> 도토리 </div>
-                            {child.length > 0 ? <div> {child.coin}개 </div> : <>0개</>}
+                            <div> {child.coin}개 </div>
                         </div>
                     </div>
                     <div className={styles.refundContainer}>
@@ -182,19 +206,11 @@ export default function ManagementContent() {
                         <div className={styles.infoContainer2}>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#5FB776' }}></div>
-                                {child.length > 0 ? (
-                                    <div>주머니 : {child.coin} 도토리</div>
-                                ) : (
-                                    <div>주머니 : 0 도토리</div>
-                                )}
+                                <div>주머니 : {child.coin} 도토리</div>
                             </div>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#F1554C' }}></div>
-                                {child.length > 0 ? (
-                                    <div>투자 : {child.fundMoney} 도토리</div>
-                                ) : (
-                                    <div>투자 : 0 도토리</div>
-                                )}
+                                <div>투자 : {child.fundMoney + (fundStatus === '' ? fundStatus.amount : 0)} 도토리</div>
                             </div>
                             <div className={styles.boxdetail}>
                                 <div className={styles.colorbox} style={{ backgroundColor: '#FFD000' }}></div>

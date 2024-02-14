@@ -323,7 +323,6 @@ export default function ChildFundManagement() {
             },
         ],
     };
-    console.log(data.datasets[0].data[0]);
 
     // 아이의 투자 상태를 setChoice에 저장
     // fundStatus 객체가 변경될 때마다 useEffect 콜백 함수를 실행
@@ -331,7 +330,6 @@ export default function ChildFundManagement() {
     useEffect(() => {
         if (fundStatus && typeof fundStatus.amount !== 'undefined' && fundStatus.amount != 0) {
             setChoice(fundStatus.submit ? '성공' : '실패');
-            console.log(fundStatus.amount);
         } else {
             setChoice('선택 안함');
         }
@@ -392,7 +390,7 @@ export default function ChildFundManagement() {
                                 ) : null}
                             </div>
                             <div className={styles.card1_text1}>
-                                {fund.name === null ? (
+                                {isFundItem ? (
                                     <> {fund.content} </>
                                 ) : (
                                     <span style={{ color: '#C1B8AD' }}>오늘은 투자 항목이 없어요 ㅠㅠ </span>

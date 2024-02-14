@@ -60,7 +60,7 @@ public class FundHistory {
     public static FundHistory createFundHistory(FundHistoryDto fundHistoryDto) {
         FundHistory fundHistory = new FundHistory();
         fundHistory.dataLog = fundHistoryDto.getDataLog();
-        fundHistory.seedMoney = fundHistory.getSeedMoney();
+        fundHistory.seedMoney = fundHistoryDto.getSeedMoney();
         fundHistory.yield = fundHistoryDto.getYield();
         fundHistory.pnl = fundHistoryDto.getPnl();
         return fundHistory;

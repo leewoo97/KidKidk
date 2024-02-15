@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-
+import logo from '@images/logo.png';
 import ProfileNav from './ProfileNav';
 import Modal from 'react-modal';
 import { createRef, useEffect, useState, useRef } from 'react';
@@ -24,7 +24,7 @@ function ParentNav() {
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
-    const a = ['5vh', '15vh', '25vh'];
+    const a = ['6vh', '16vh', '26vh'];
 
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const [sse, setSse] = useRecoilState(sseState);
@@ -127,10 +127,16 @@ function ParentNav() {
         }
     };
 
+    const handleLogoClick = () => {
+        navigate('/parent/main');
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.nav}>
-                <div className={styles.logo}>KIDKIDK</div>
+                <div className={styles.logo}>
+                    <img src={logo} className={styles.logoImg} onClick={handleLogoClick} />
+                </div>
                 <div className={styles.menu}>
                     <Component num={0} title={'메인'} />
                     <Component num={1} title={'직업'} />

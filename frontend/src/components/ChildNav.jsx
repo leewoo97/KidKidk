@@ -189,6 +189,8 @@ function ChildNav() {
 
     // 입금 및 출금 모달 열기
     const openChargeModal = () => {
+        setChargeCoinIn('');
+        setChargeCoinOut('');
         setCurrentIndex(0);
         setChargeModalIsOpen(true);
     };

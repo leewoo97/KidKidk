@@ -14,7 +14,6 @@ import { getChildList } from '@api/profile.js';
 import styles from './ParentNav.module.css';
 import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import bell from '@images/bell.png';
-import kidImg from '@images/kidImg.jpg';
 
 function ParentNav() {
     const profileInfo = useRecoilValue(profileInfoState);
@@ -22,7 +21,7 @@ function ParentNav() {
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
-    const a = ['5.5%', '18%', '29.5%'];
+    const a = ['5vh', '15vh', '25vh'];
 
     useEffect(() => {
         // 페이지가 로드될 때 현재 URL을 확인하여 알맞은 탭을 활성화

@@ -19,7 +19,7 @@ import { profileInfoState, parentProfileState } from '../store/profileInfoAtom.j
 function ChildNav() {
     const userInfo = useRecoilValue(userInfoState);
     const profileInfo = useRecoilValue(profileInfoState);
-    // console.log('프로필정보', profileInfo);
+    console.log('프로필정보', profileInfo.profileImage);
 
     const userId = userInfo.userId;
     const childId = profileInfo.profileId;
@@ -36,7 +36,7 @@ function ChildNav() {
     const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
     const [childJob, setChildJob] = useState([]); // 아이 직업
 
-    const a = ['5.5%', '18%', '29.5%', '41.5%'];
+    const a = ['5vh', '15vh', '25vh', '41.5%'];
     // const [child, setChild] = useState([{
     //     coin : 0,
     //     fundMoney : 0
@@ -265,7 +265,6 @@ function ChildNav() {
                     <Component num={0} title={'메인'} />
                     <Component num={1} title={'투자'} />
                     <Component num={2} title={'적금'} />
-                    <Component num={3} title={'공부방'} />
                 </div>
                 <div className={styles.light} style={{ top: a[top] }}>
                     <div className={styles.rectangleRow}></div>
@@ -283,7 +282,7 @@ function ChildNav() {
             </div>
             <div className={styles.profile}>
                 <div className={styles.imgContainer}>
-                    <img src={kidImg} />
+                    <img src={profileInfo.profileImage} />
                 </div>
                 <div>{childProfile.nickname}</div>
                 {childJob !== undefined && <div>직업 : {childJob.name}</div>}

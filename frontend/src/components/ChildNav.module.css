@@ -57,7 +57,12 @@
     font-size: 30px;
     font-weight: 600;
     z-index: 1;
-    margin: 10%;
+    margin-top: 10%;
+    margin-bottom: 2%;
+    cursor: pointer;
+}
+.logoImg {
+    width: 12vw;
 }
 .menu {
     color: #ffffff;

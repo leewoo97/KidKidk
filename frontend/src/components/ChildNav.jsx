@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import kidImg from '@images/kidImg.jpg';
+import logo from '@images/logo.png';
 import bell from '@images/bell.png';
 import acornImg from '@images/acorn.png';
 import styles from './ChildNav.module.css';
@@ -15,13 +15,12 @@ import { getJob } from '@api/job.js';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../store/userInfoAtom.js';
 import { profileInfoState, parentProfileState } from '../store/profileInfoAtom.js';
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
-import { sseState,lastEventIdState, notificationsState } from "../store/alarmAtom";
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
+import { sseState, lastEventIdState, notificationsState } from '../store/alarmAtom';
 
 function ChildNav() {
     const userInfo = useRecoilValue(userInfoState);
     const profileInfo = useRecoilValue(profileInfoState);
-    console.log('프로필정보', profileInfo.profileImage);
 
     const userId = userInfo.userId;
     const childId = profileInfo.profileId;
@@ -38,7 +37,7 @@ function ChildNav() {
     const [parentProfile, setParentProfile] = useRecoilState(parentProfileState); // 부모 프로필
     const [childJob, setChildJob] = useState([]); // 아이 직업
 
-    const a = ['5vh', '15vh', '25vh', '41.5%'];
+    const a = ['6vh', '16vh', '26vh', '41.5%'];
     // const [child, setChild] = useState([{
     //     coin : 0,
     //     fundMoney : 0
@@ -65,7 +64,6 @@ function ChildNav() {
             })
         );
     };
-
 
     useEffect(() => {
         getChild(
@@ -282,10 +280,17 @@ function ChildNav() {
         }
     };
 
+    const handleLogoClick = () => {
+        navigate('/child/main');
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.nav}>
-                <div className={styles.logo}>KIDKIDK</div>
+                <div className={styles.logo}>
+                    <img src={logo} className={styles.logoImg} onClick={handleLogoClick} />
+                </div>
+
                 <div className={styles.menu}>
                     <Component num={0} title={'메인'} />
                     <Component num={1} title={'투자'} />
@@ -451,7 +456,12 @@ function ChildNav() {
                 </div>
             </Modal>
 
-            <div onClick={() => {setModalIsOpen(true); kafkaSub()}}>
+            <div
+                onClick={() => {
+                    setModalIsOpen(true);
+                    kafkaSub();
+                }}
+            >
                 <img src={bell} className={styles.alarm} />
             </div>
             <Modal

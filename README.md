@@ -149,3 +149,9 @@
 # 시스템 아키텍쳐
 
 ![시스템 아키텍쳐](/etc/assets/systemArchitecture.png){: width="70%"}
+
+- jenkins와 docker-compose를 통한 blue-green 방식의 무중단 배포를 진행하였습니다.<br/><br/>
+- 실시간 알림 구현을위해 kafka를 사용하였습니다.<br/><br/>
+- 리버스 프록시, 로드 밸런싱, ssl 보안을 위해 Nginx를 사용했습니다.<br/><br/>
+- 소셜 로그인을 위해 spring security, oauth2, jwt를 사용했습니다.<br/><br/>
+- gerrit 의 코드리뷰 와 jira의 이슈관리 등을 사용해 팀 프로젝트의 효율을 높였습니다.<br/><br/>

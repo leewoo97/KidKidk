@@ -4,7 +4,7 @@
 
 ## 프로젝트 소개
 
-<span style='background-color: #dcffe4'>키득!</span>
+<mark>키득!</mark>
 
 아이의 자산을 <span style='background-color: #dcffe4'>**키**</span>워 이<span style='background-color: #dcffe4'>**득**</span>을 보세요!
 

@@ -15,9 +15,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { profileInfoState } from '../store/profileInfoAtom';
 import { getChild } from '../apis/api/profile.js';
 
-import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
-import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-
 export default function UserProfile({ profileId, nickname, profile_image, userType }) {
     const navigate = useNavigate();
     const [nick, setNick] = useState('');
@@ -179,29 +176,6 @@ export default function UserProfile({ profileId, nickname, profile_image, userTy
         // console.log('바뀐 핀 : ' + loginUser.pin);
     };
 
-    const EventSource = EventSourcePolyfill || NativeEventSource;
-    const [sse, setSse] = useRecoilState(sseState);
-    const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
-    const [notifications, setNotifications] = useRecoilState(notificationsState);
-
-    const kafkaSub = () => {
-        setSse(
-            (new EventSource(`https://notification.silvstone.xyz/subscribe/${profileId}`, {
-                headers: {
-                    'Last-Event-ID': lastEventId,
-                },
-                heartbeatTimeout: 5 * 60 * 1000,
-            }).onmessage = (event) => {
-                if (event) {
-                    if (event.data !== 'connected!') {
-                        setNotifications((prev) => [...prev, JSON.parse(event.data)]);
-                    }
-                    setLastEventId(event.lastEventId);
-                }
-            })
-        );
-    };
-
     const loginClick = (e) => {
         e.preventDefault();
         profileLogin(
@@ -209,7 +183,6 @@ export default function UserProfile({ profileId, nickname, profile_image, userTy
             async (Data) => {
                 // console.log('로그인 성공', Data.data);
                 await setProfileInfo(Data.data);
-                kafkaSub();
                 if (Data.data.type) {
                     navigate('/parent');
                 } else {

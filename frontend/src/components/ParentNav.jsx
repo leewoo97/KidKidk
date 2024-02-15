@@ -11,6 +11,9 @@ import { getChildIds, childIdAtom, childNickNameAtom } from '@store/childIdsAtom
 import { userInfoState } from '@store/userInfoAtom.js';
 import { getChildList } from '@api/profile.js';
 
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { sseState,lastEventIdState, notificationsState } from "../store/alarmAtom";
+
 import styles from './ParentNav.module.css';
 import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import bell from '@images/bell.png';
@@ -23,6 +26,29 @@ function ParentNav() {
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
     const a = ['5.5%', '18%', '29.5%'];
+
+    const EventSource = EventSourcePolyfill || NativeEventSource;
+    const [sse, setSse] = useRecoilState(sseState);
+    const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
+    const [notifications, setNotifications] = useRecoilState(notificationsState);
+
+    const kafkaSub = () => {
+        setSse(
+            (new EventSource(`https://notification.silvstone.xyz/subscribe/${profileInfo.profileId}`, {
+                // headers: {
+                //     'Last-Event-ID': lastEventId,
+                // },
+                heartbeatTimeout: 5 * 60 * 1000,
+            }).onmessage = (event) => {
+                if (event) {
+                    if (event.data !== 'connected!') {
+                        setNotifications((prev) => [...prev, JSON.parse(event.data)]);
+                    }
+                    // setLastEventId(event.lastEventId);
+                }
+            })
+        );
+    };
 
     useEffect(() => {
         // 페이지가 로드될 때 현재 URL을 확인하여 알맞은 탭을 활성화
@@ -151,7 +177,7 @@ function ParentNav() {
                         );
                     })}
                 </div>
-                <div onClick={() => setparentAlarmOpen(true)}>
+                <div onClick={() => {setparentAlarmOpen(true); kafkaSub()}}>
                     <img src={bell} className={styles.alarm} />
                 </div>
                 {parentAlarmOpen ? (

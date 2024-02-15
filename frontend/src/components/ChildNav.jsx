@@ -15,6 +15,8 @@ import { getJob } from '@api/job.js';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../store/userInfoAtom.js';
 import { profileInfoState, parentProfileState } from '../store/profileInfoAtom.js';
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { sseState,lastEventIdState, notificationsState } from "../store/alarmAtom";
 
 function ChildNav() {
     const userInfo = useRecoilValue(userInfoState);
@@ -41,6 +43,29 @@ function ChildNav() {
     //     coin : 0,
     //     fundMoney : 0
     // }]);
+
+    const EventSource = EventSourcePolyfill || NativeEventSource;
+    const [sse, setSse] = useRecoilState(sseState);
+    const [lastEventId, setLastEventId] = useRecoilState(lastEventIdState);
+    const [notifications, setNotifications] = useRecoilState(notificationsState);
+
+    const kafkaSub = () => {
+        setSse(
+            (new EventSource(`https://notification.silvstone.xyz/subscribe/${profileInfo.profileId}`, {
+                // headers: {
+                //     'Last-Event-ID': lastEventId,
+                // },
+                heartbeatTimeout: 5 * 60 * 1000,
+            }).onmessage = (event) => {
+                if (event) {
+                    if (event.data !== 'connected!') {
+                        setNotifications((prev) => [...prev, JSON.parse(event.data)]);
+                    }
+                }
+            })
+        );
+    };
+
 
     useEffect(() => {
         getChild(
@@ -427,7 +452,7 @@ function ChildNav() {
                 </div>
             </Modal>
 
-            <div onClick={() => setModalIsOpen(true)}>
+            <div onClick={() => {setModalIsOpen(true); kafkaSub()}}>
                 <img src={bell} className={styles.alarm} />
             </div>
             <Modal

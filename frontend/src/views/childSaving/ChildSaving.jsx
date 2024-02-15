@@ -418,8 +418,9 @@ export default function ChildSaving() {
                                                 <div className={styles.modalContent5Body2_1}>
                                                     {payment === 0 || payment === ''
                                                         ? '0 도토리'
-                                                        : Math.floor(parseInt(payment) + parseInt(payment) * 0.05) +
-                                                          ' 도토리'}
+                                                        : Math.floor(
+                                                              parseInt(payment) * 4 + parseInt(payment) * 4 * 0.05
+                                                          ) + ' 도토리'}
                                                 </div>
                                                 <img src={acornImg} style={{ width: '1.5vw', height: '1.5vw' }} />
                                             </div>

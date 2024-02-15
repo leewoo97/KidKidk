@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-import { notificationsState } from '../store/alarmAtom';
+
 import { getChildIds } from '@store/childIdsAtom.js';
 import { getChildList } from '../apis/api/profile';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';

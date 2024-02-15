@@ -107,7 +107,7 @@ export default function ParentFundAccountGraph() {
                 font: {
                     size: 18, // 원하는 폰트 크기로 조절
                 },
-                color: 'black',
+                color: 'color: var(--nav-background)',
             },
         },
     };

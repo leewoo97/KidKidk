@@ -170,9 +170,18 @@
 > 아이가 모은 도토리들을 용돈으로 바꾸도록 신청할 수 있습니다
 >
 > 환전신청과 동시에 경제 퀴즈들을 풀어 더욱 많은 양의 용돈을 받을 수 있습니다.
-> <br/><br/>
 
-# 시스템 아키텍쳐
+<br/><br/><br/>
+
+# 설계
+
+## ERD
+
+![erd](/etc/assets/ERD.png)
+
+<br/><br/>
+
+## 시스템 아키텍쳐
 
 ![시스템 아키텍쳐](/etc/assets/systemArchitecture.png){: width="70%"}
 
@@ -181,3 +190,11 @@
 - 리버스 프록시, 로드 밸런싱, ssl 보안을 위해 Nginx를 사용했습니다.<br/><br/>
 - 소셜 로그인을 위해 spring security, oauth2, jwt를 사용했습니다.<br/><br/>
 - gerrit 의 코드리뷰 와 jira의 이슈관리 등을 사용해 팀 프로젝트의 효율을 높였습니다.<br/><br/>
+
+<br/><br/>
+
+## API 설계
+
+![api](/etc/assets/gif/api%20명세서.gif)
+
+[api 명세서 바로가기 ](https://notch-asparagus-0e8.notion.site/API-fce4671a509f4cbab7c91264eab5051d)

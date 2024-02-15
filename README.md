@@ -35,7 +35,7 @@
 
 |   **Name**   |      이우진      | 한성현  |      고은석       |       정준수        |        최다희         |  우찬명   |
 | :----------: | :--------------: | :-----: | :---------------: | :-----------------: | :-------------------: | :-------: |
-| **Position** | Team <br> Leader | Backend | Infra <br> Leader | Backend <br> Leader | Freontend <br> Leader | Freontend |
+| **Position** | Team <br> Leader | Backend | Infra, CI/CD <br> Leader | Backend <br> Leader | Freontend <br> Leader | Freontend |
 
 <br>
 

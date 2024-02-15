@@ -6,12 +6,10 @@ import styles from './ParentAlarm.module.css';
 
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
-import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-
+import { notificationsState } from '../store/alarmAtom';
 import { getChildIds } from '@store/childIdsAtom.js';
-import { getChildList } from '../apis/api/profile';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
+import { uniqBy } from 'lodash';
 
 export default function ParentAlarm() {
     const [notifications, setNotifications] = useRecoilState(notificationsState);
@@ -75,13 +73,15 @@ export default function ParentAlarm() {
                                     {item.require === 'job' ? (
                                         <img
                                             src={alarmDoneStamp}
-                                            onClick={() => handleClickRead(item.key)}
+                                            onClick={() => handleClickJobDone(item.key, item.childId)}
                                             style={{ width: '100px', height: '30px', cursor: 'pointer' }}
                                         />
                                     ) : (
                                         <img
                                             src={alarmAcceptExchange}
-                                            onClick={() => handleClickRead(item.key)}
+                                            onClick={() =>
+                                                handleClickAcceptExchange(item.key, item.childId, item.amount)
+                                            }
                                             style={{ width: '100px', height: '30px', cursor: 'pointer' }}
                                         />
                                     )}
@@ -128,11 +128,15 @@ export default function ParentAlarm() {
                 </div>
                 <div className={styles.parentAlarmInfo}>
                     {selected === '전체' ? (
-                        <span>미확인 알림 : {notifications.filter((noti) => !noti.read).length}개</span>
+                        <span>미확인 알림 : {uniqBy(notifications, 'key').filter((noti) => !noti.read).length}개</span>
                     ) : (
                         <span>
                             미확인 알림 :{' '}
-                            {notifications.filter((noti) => noti.pubName === selected && !noti.read).length}개
+                            {
+                                uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected && !noti.read)
+                                    .length
+                            }
+                            개
                         </span>
                     )}
                     <button onClick={deleteReadNotifications} className={styles.parentAlarmContainer}>
@@ -141,9 +145,11 @@ export default function ParentAlarm() {
                 </div>
                 <div className={styles.parentAlarmContents}>
                     {selected === '전체' ? (
-                        <AlarmContents parentAlarmData={notifications} />
+                        <AlarmContents parentAlarmData={uniqBy(notifications, 'key')} />
                     ) : (
-                        <AlarmContents parentAlarmData={notifications.filter((noti) => noti.pubName === selected)} />
+                        <AlarmContents
+                            parentAlarmData={uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected)}
+                        />
                     )}
                 </div>
             </div>

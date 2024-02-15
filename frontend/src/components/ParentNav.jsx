@@ -40,7 +40,6 @@ function ParentNav() {
                 // },
                 heartbeatTimeout: 5 * 60 * 1000,
             }).onmessage = (event) => {
-                console.log(event)
                 if (event) {
                     if (event.data !== 'connected!') {
                         setNotifications((prev) => [...prev, JSON.parse(event.data)]);

@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 import { notificationsState} from '../store/alarmAtom';
 import { getChildIds } from '@store/childIdsAtom.js';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
+import { uniqBy } from 'lodash';
 
 export default function ParentAlarm() {
     const [notifications, setNotifications] = useRecoilState(notificationsState);
@@ -125,11 +126,11 @@ export default function ParentAlarm() {
                 </div>
                 <div className={styles.parentAlarmInfo}>
                     {selected === '전체' ? (
-                        <span>미확인 알림 : {notifications.filter((noti) => !noti.read).length}개</span>
+                        <span>미확인 알림 : {uniqBy(notifications, 'key').filter((noti) => !noti.read).length}개</span>
                     ) : (
                         <span>
                             미확인 알림 :{' '}
-                            {notifications.filter((noti) => noti.pubName === selected && !noti.read).length}개
+                            {uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected && !noti.read).length}개
                         </span>
                     )}
                     <button onClick={deleteReadNotifications} className={styles.parentAlarmContainer}>
@@ -138,9 +139,9 @@ export default function ParentAlarm() {
                 </div>
                 <div className={styles.parentAlarmContents}>
                     {selected === '전체' ? (
-                        <AlarmContents parentAlarmData={notifications} />
+                        <AlarmContents parentAlarmData={uniqBy(notifications, 'key')} />
                     ) : (
-                        <AlarmContents parentAlarmData={notifications.filter((noti) => noti.pubName === selected)} />
+                        <AlarmContents parentAlarmData={uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected)} />
                     )}
                 </div>
             </div>

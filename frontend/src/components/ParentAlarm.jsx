@@ -6,7 +6,8 @@ import styles from './ParentAlarm.module.css';
 
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { notificationsState } from '../store/alarmAtom';
+import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { getChildIds } from '@store/childIdsAtom.js';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
 import { uniqBy } from 'lodash';

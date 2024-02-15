@@ -11,13 +11,12 @@ import { getChildIds, childIdAtom, childNickNameAtom } from '@store/childIdsAtom
 import { userInfoState } from '@store/userInfoAtom.js';
 import { getChildList } from '@api/profile.js';
 
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
-import { sseState,lastEventIdState, notificationsState } from "../store/alarmAtom";
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
+import { sseState, lastEventIdState, notificationsState } from '../store/alarmAtom';
 
 import styles from './ParentNav.module.css';
 import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import bell from '@images/bell.png';
-import kidImg from '@images/kidImg.jpg';
 
 function ParentNav() {
     const profileInfo = useRecoilValue(profileInfoState);
@@ -25,7 +24,7 @@ function ParentNav() {
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
-    const a = ['5.5%', '18%', '29.5%'];
+    const a = ['5vh', '15vh', '25vh'];
 
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const [sse, setSse] = useRecoilState(sseState);
@@ -177,7 +176,12 @@ function ParentNav() {
                         );
                     })}
                 </div>
-                <div onClick={() => {setparentAlarmOpen(true); kafkaSub()}}>
+                <div
+                    onClick={() => {
+                        setparentAlarmOpen(true);
+                        kafkaSub();
+                    }}
+                >
                     <img src={bell} className={styles.alarm} />
                 </div>
                 {parentAlarmOpen ? (

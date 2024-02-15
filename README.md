@@ -75,6 +75,14 @@
 
 </center>
 
+</br></br>
+
+# 주요 기능
+
+![메인화면](/etc/assets/gif/메인화면.gif)
+{: width="60%"}
+</br></br>
+
 ## 시스템 아키텍쳐
 
 ![시스템 아키텍쳐](/etc/assets/systemArchitecture.png){: width="70%"}

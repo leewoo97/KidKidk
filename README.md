@@ -17,8 +17,6 @@
 <details>
 <summary>Intellij 환경 통일</summary>
 
-<!-- summary 아래 한칸 공백 두어야함 -->
-
 ## SSAFY-B305-coding-convention.xml
 
 ```
@@ -245,7 +243,7 @@
   불필요한 편집기 구문강조도 방지할 수 있습니다.
   (ie. [mariadb 예약어 목록](https://mariadb.com/kb/en/reserved-words))
 
-2. KEY FIELDS
+  2. KEY FIELDS
 
 - 기본키 필드 이름은 id로 합니다.
 
@@ -286,7 +284,7 @@
   - Constraints
     - 명확한 제약 조건 이름 사용(team_member_team_id_fkey)
 
-3. 엔진, 문자 집합, 정렬 순서 지정
+  3. 엔진, 문자 집합, 정렬 순서 지정
 
 - ENGIN, DEFAULT CHARSET, COLLATE 설정
   ```sql

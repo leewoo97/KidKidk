@@ -120,9 +120,7 @@ export default function ParentSaving() {
                                                         // backgroundColor: 'lightgreen'
                                                         backgroundColor: data.amount > 0 ? '#35B356' : '#d3d3d3',
                                                     }}
-                                                >
-                                                    {data.id}
-                                                </td>
+                                                ></td>
                                             );
                                         })}
                                     </tr>

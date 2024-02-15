@@ -6,7 +6,8 @@ import styles from './ParentAlarm.module.css';
 
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { notificationsState} from '../store/alarmAtom';
+import { lastEventIdState, notificationsState, sseState } from '../store/alarmAtom';
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { getChildIds } from '@store/childIdsAtom.js';
 import { sendAlarm, jobDone, acceptExchange } from '../apis/api/alarm';
 import { uniqBy } from 'lodash';
@@ -79,7 +80,9 @@ export default function ParentAlarm() {
                                     ) : (
                                         <img
                                             src={alarmAcceptExchange}
-                                            onClick={() => handleClickAcceptExchange(item.key, item.childId, item.amount)}
+                                            onClick={() =>
+                                                handleClickAcceptExchange(item.key, item.childId, item.amount)
+                                            }
                                             style={{ width: '100px', height: '30px', cursor: 'pointer' }}
                                         />
                                     )}
@@ -130,7 +133,11 @@ export default function ParentAlarm() {
                     ) : (
                         <span>
                             미확인 알림 :{' '}
-                            {uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected && !noti.read).length}개
+                            {
+                                uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected && !noti.read)
+                                    .length
+                            }
+                            개
                         </span>
                     )}
                     <button onClick={deleteReadNotifications} className={styles.parentAlarmContainer}>
@@ -141,7 +148,9 @@ export default function ParentAlarm() {
                     {selected === '전체' ? (
                         <AlarmContents parentAlarmData={uniqBy(notifications, 'key')} />
                     ) : (
-                        <AlarmContents parentAlarmData={uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected)} />
+                        <AlarmContents
+                            parentAlarmData={uniqBy(notifications, 'key').filter((noti) => noti.pubName === selected)}
+                        />
                     )}
                 </div>
             </div>

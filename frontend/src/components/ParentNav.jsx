@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-
+import logo from '@images/logo.png';
 import ProfileNav from './ProfileNav';
 import Modal from 'react-modal';
 import { createRef, useEffect, useState, useRef } from 'react';
@@ -11,13 +11,12 @@ import { getChildIds, childIdAtom, childNickNameAtom } from '@store/childIdsAtom
 import { userInfoState } from '@store/userInfoAtom.js';
 import { getChildList } from '@api/profile.js';
 
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
-import { sseState,lastEventIdState, notificationsState } from "../store/alarmAtom";
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
+import { sseState, lastEventIdState, notificationsState } from '../store/alarmAtom';
 
 import styles from './ParentNav.module.css';
 import s from 'classnames'; /* 클래스네임을 여러개 쓰기 위함 */
 import bell from '@images/bell.png';
-import kidImg from '@images/kidImg.jpg';
 
 function ParentNav() {
     const profileInfo = useRecoilValue(profileInfoState);
@@ -25,7 +24,7 @@ function ParentNav() {
     const navigate = useNavigate();
     const location = useLocation(); // 현재 url을 확인
     const [top, setTop] = useState(0);
-    const a = ['5.5%', '18%', '29.5%'];
+    const a = ['6vh', '16vh', '26vh'];
 
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const [sse, setSse] = useRecoilState(sseState);
@@ -128,10 +127,16 @@ function ParentNav() {
         }
     };
 
+    const handleLogoClick = () => {
+        navigate('/parent/main');
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.nav}>
-                <div className={styles.logo}>KIDKIDK</div>
+                <div className={styles.logo}>
+                    <img src={logo} className={styles.logoImg} onClick={handleLogoClick} />
+                </div>
                 <div className={styles.menu}>
                     <Component num={0} title={'메인'} />
                     <Component num={1} title={'직업'} />
@@ -177,7 +182,12 @@ function ParentNav() {
                         );
                     })}
                 </div>
-                <div onClick={() => {setparentAlarmOpen(true); kafkaSub()}}>
+                <div
+                    onClick={() => {
+                        setparentAlarmOpen(true);
+                        kafkaSub();
+                    }}
+                >
                     <img src={bell} className={styles.alarm} />
                 </div>
                 {parentAlarmOpen ? (

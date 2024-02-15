@@ -366,6 +366,9 @@ export default function ChildFundManagement() {
             sumSeedMoney = sumSeedMoney == 0 ? 1 : sumSeedMoney;
             let pRate = (sumPnl / sumSeedMoney) * 100; // 이익률
 
+            avg = avg.toFixed(0);
+            pRate = pRate.toFixed(0);
+
             setAvgFundMoney(avg);
             setPnlRate(pRate);
         }

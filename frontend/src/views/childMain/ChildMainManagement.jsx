@@ -199,7 +199,6 @@ export default function ManagementContent() {
                 <div className={styles.card1_2}>
                     <div className={styles.title}>
                         <div>{profileInfo.nickname} 어린이가 가지고 있는 모든 도토리</div>
-                        <div className={styles.title_info}>i</div>
                     </div>
 
                     <div className={styles.iconContainer2}>

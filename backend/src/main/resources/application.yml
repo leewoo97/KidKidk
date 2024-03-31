@@ -22,13 +22,6 @@ spring:
     oauth2:
       client:
         registration:
-#          google:
-#            client-id:
-#            client-secret:
-#            scope: # 기본 값 openid,profile,email => profile, email 로 설정 변경
-#              - profile
-#              - email
-
           naver:
             client-id: WrQ8eEr5M6g904p49dGw
             client-secret: JX84uz6lNi

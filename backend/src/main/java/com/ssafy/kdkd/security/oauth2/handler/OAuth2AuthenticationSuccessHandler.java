@@ -78,9 +78,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         System.out.println(principal.getUserInfo().getEmail()+" | "+principal.getUserInfo().getAccessToken()+" | "+principal.getUserInfo().getId());
         if ("login".equalsIgnoreCase(mode)) {
-            // TODO: DB 저장
-            // TODO: 액세스 토큰, 리프레시 토큰 발급
-            // TODO: 리프레시 토큰 DB 저장
+            // DB 저장
+            // 액세스 토큰, 리프레시 토큰 발급
+            // 리프레시 토큰 DB 저장
             String accessToken = tokenProvider.createAccessToken(authentication);
             String refreshToken = "test_refresh_token";
             if(userService.isUserExists(principal.getUserInfo().getEmail())){
@@ -111,8 +111,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             String accessToken = principal.getUserInfo().getAccessToken();
             OAuth2Provider provider = principal.getUserInfo().getProvider();
 
-            // TODO: DB 삭제
-            // TODO: 리프레시 토큰 삭제
+            // DB 삭제
+            // 리프레시 토큰 삭제
             oAuth2UserUnlinkManager.unlink(provider, accessToken);
 
             return UriComponentsBuilder.fromUriString(targetUrl)

@@ -183,7 +183,7 @@
 
 ## 시스템 아키텍쳐
 
-![시스템 아키텍쳐](/etc/assets/systemArchitecture.png){: width="70%"}
+![시스템 아키텍쳐](/etc/assets/systemArchitecture.png)
 
 - jenkins와 docker-compose를 통한 blue-green 방식의 무중단 배포를 진행하였습니다.<br/><br/>
 - 실시간 알림 구현을위해 kafka를 사용하였습니다.<br/><br/>
